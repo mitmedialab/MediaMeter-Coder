@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  type: 
+  time: 2011-12-19 11:47:27
+  user: MyString
+  confidence: 1
+  answer: false
+
+two:
+  type: 
+  time: 2011-12-19 11:47:27
+  user: MyString
+  confidence: 1
+  answer: false

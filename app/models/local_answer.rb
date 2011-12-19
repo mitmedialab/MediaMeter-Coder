@@ -1,0 +1,2 @@
+class LocalAnswer < Answer
+end

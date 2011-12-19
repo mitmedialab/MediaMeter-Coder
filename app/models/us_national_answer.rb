@@ -1,0 +1,2 @@
+class UsNationalAnswer < Answer
+end
