@@ -23,3 +23,8 @@ or as a rake task (referring to `lib/tasks/scraper.db`):
 ```
 > rake scraper:all
 ```
+
+Watch the log for informative messages:
+```
+tail -f log/development.log 
+```

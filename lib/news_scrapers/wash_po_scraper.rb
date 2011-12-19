@@ -59,7 +59,6 @@ module NewsScrapers
             article.save
             NewsScrapers.logger.info "        saved"
           end
-          exit
         end
       end
       
