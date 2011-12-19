@@ -10,7 +10,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111219151230) do
+ActiveRecord::Schema.define(:version => 20111219164727) do
+
+  create_table "answers", :force => true do |t|
+    t.string   "type"
+    t.datetime "time"
+    t.string   "user"
+    t.integer  "confidence"
+    t.boolean  "answer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "articles", :force => true do |t|
     t.string   "source"
@@ -28,5 +38,13 @@ ActiveRecord::Schema.define(:version => 20111219151230) do
   end
 
   add_index "articles", ["src_url_md5"], :name => "src_url_md5_index", :unique => true
+
+  create_table "golds", :force => true do |t|
+    t.integer  "article_id"
+    t.string   "question"
+    t.boolean  "answer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end

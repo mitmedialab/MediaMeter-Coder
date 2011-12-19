@@ -17,8 +17,9 @@ module NewsScrapers
     (Date.new(2009,3,2)..Date.new(2009,3,6)).each { |d| dates << d }
     NewsScrapers.logger.info "Starting to scrape the Washington Post"
     scraper = NewsScrapers::WashPoScraper.new
-    NewsScrapers.logger.info "  Starting to Scrape"
-    scraper.scrape(dates[0])
+    dates.each do |d|
+      scraper.scrape(d)
+    end
   end
   
   def self.logger
