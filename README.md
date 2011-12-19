@@ -11,12 +11,15 @@ Running
 -------
 
 I code and test by running in the console (for good stack traces on errors):
-`
+
+```
 > rails console
 jruby-1.6.5 :001 > require 'news_scrapers'
 jruby-1.6.5 :001 > NewsScrapers.scrape_all
-`
+```
+
 or as a rake task (referring to `lib/tasks/scraper.db`):
-`
+
+```
 > rake scraper:all
-`
+```
