@@ -24,8 +24,7 @@ module NewsScrapers
         file_handle = open(full_url, 
           "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/534.52.7 (KHTML, like Gecko) Version/5.1.2 Safari/534.52.7",
           "Accept" => "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-          "Cache-Control:max-age" => "0",    
-          "Referer" => "http://pqasb.pqarchiver.com/washingtonpost/advancedsearch.html")
+          "Cache-Control:max-age" => "0")
         NewsScrapers.logger.debug("      fetched")
         contents = file_handle.read
         NewsScrapers.logger.debug("      got contents")
