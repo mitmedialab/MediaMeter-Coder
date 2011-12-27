@@ -12,6 +12,10 @@ module NewsScrapers
       @cache = NewsScrapers::WebpageCache.new( File.join("/tmp","scraper") )
     end
   
+    def scrape(d)
+      raise NotImplementedError.new("Hey! You gotta implement a public scrape method in your subclass!")
+    end
+  
     def fetch_url(base_url, params={})
       full_url = base_url + "?" + encode_url_params(params)
       NewsScrapers.logger.info("      fetch_url #{full_url}")
