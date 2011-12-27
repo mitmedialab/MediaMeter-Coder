@@ -6,6 +6,7 @@ require 'news_scrapers/historical_news_scraper'
 require 'news_scrapers/pro_quest_scraper'
 require 'news_scrapers/wash_po_scraper'
 require 'news_scrapers/la_times_scraper'
+require 'news_scrapers/new_york_times_scraper'
 
 module NewsScrapers
 
@@ -14,11 +15,12 @@ module NewsScrapers
   # Main Public API - scrape everything for all dates!
   def self.scrape_all
     dates = []
-    (Date.new(1979,3,5)..Date.new(1979,3,9)).each { |d| dates << d }
-    (Date.new(1989,3,6)..Date.new(1989,3,10)).each { |d| dates << d }
-    (Date.new(1999,3,1)..Date.new(1999,3,5)).each { |d| dates << d }
+    #(Date.new(1979,3,5)..Date.new(1979,3,9)).each { |d| dates << d }
+    #(Date.new(1989,3,6)..Date.new(1989,3,10)).each { |d| dates << d }
+    #(Date.new(1999,3,1)..Date.new(1999,3,5)).each { |d| dates << d }
     (Date.new(2009,3,2)..Date.new(2009,3,6)).each { |d| dates << d }
     NewsScrapers.logger.info "Starting to scrape:"
+    #scraper = NewsScrapers::NewYorkTimesScraper.new
     scraper = NewsScrapers::WashPoScraper.new
     #scraper = NewsScrapers::LaTimesScraper.new
     dates.each do |d|
@@ -38,5 +40,5 @@ module NewsScrapers
   
 end
 
-# for debugging in standalone mode (DEPRECATED)
+# for debugging in standalone mode
 #NewsScrapers::scrape_all
