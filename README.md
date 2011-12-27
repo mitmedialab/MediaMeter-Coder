@@ -10,7 +10,7 @@ For now it is using a sqlite db, located at db/development.sqlite3.  To create t
 Running
 -------
 
-I code and test by running in the console (for good stack traces on errors):
+You can code and test by running in the console:
 
 ```
 > rails console
@@ -21,7 +21,7 @@ jruby-1.6.5 :001 > NewsScrapers.scrape_all
 or as a rake task (referring to `lib/tasks/scraper.db`):
 
 ```
-> rake scraper:all
+> rake scraper:all --trace
 ```
 
 Watch the log for informative messages:
