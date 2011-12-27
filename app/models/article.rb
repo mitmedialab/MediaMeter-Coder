@@ -25,7 +25,6 @@ class Article < ActiveRecord::Base
 
   before_save   EncryptionWrapper.new('src_url','src_url_md5')
 
-  # auto populate some generated columns before save
   def self.scraped_already? src_url
     src_url_md5 = Digest::MD5.hexdigest(src_url)
     where("src_url_md5 = ?",src_url_md5).first
