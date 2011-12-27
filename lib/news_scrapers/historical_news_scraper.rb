@@ -13,31 +13,31 @@ module NewsScrapers
     end
   
     def fetch_url(base_url, params={})
-      #NewsScrapers.logger.info("      about to build url")
       full_url = base_url + "?" + encode_url_params(params)
-      NewsScrapers.logger.info("      fetch #{full_url}")
-      
+      NewsScrapers.logger.info("      fetch_url #{full_url}")
+
       if @cache.exists?(full_url)
-        #NewsScrapers.logger.info("      from cache")
+        NewsScrapers.logger.debug("      from cache")
         contents = @cache.get(full_url)
       else
-        #NewsScrapers.logger.info("      from interwebs")
+        NewsScrapers.logger.debug("      from interwebs")
         file_handle = open(full_url, 
           "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/534.52.7 (KHTML, like Gecko) Version/5.1.2 Safari/534.52.7",
           "Accept" => "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
           "Cache-Control:max-age" => "0",    
           "Referer" => "http://pqasb.pqarchiver.com/washingtonpost/advancedsearch.html")
-        #NewsScrapers.logger.info("      fetched")
+        NewsScrapers.logger.debug("      fetched")
         contents = file_handle.read
-        #NewsScrapers.logger.info("      got contents")
+        NewsScrapers.logger.debug("      got contents")
         @cache.put(full_url,contents)
       end
-      #NewsScrapers.logger.info("      about to parse")
+      NewsScrapers.logger.debug("      about to parse")
       Nokogiri::HTML(contents)
     end
     
     private
       
+      # needed to write my own to allow multiple parameteres with the same name (key maps to an array or values, not just one)
       def encode_url_params(value, key = nil)
         case value
         when Hash  then value.map { |k,v| 
