@@ -14,7 +14,7 @@ module NewsScrapers
   # Main Public API - scrape everything for all dates!
   def self.scrape_all
     dates = []
-    #(Date.new(1979,3,5)..Date.new(1979,3,9)).each { |d| dates << d }
+    (Date.new(1979,3,5)..Date.new(1979,3,9)).each { |d| dates << d }
     (Date.new(1989,3,6)..Date.new(1989,3,10)).each { |d| dates << d }
     (Date.new(1999,3,1)..Date.new(1999,3,5)).each { |d| dates << d }
     (Date.new(2009,3,2)..Date.new(2009,3,6)).each { |d| dates << d }
@@ -24,7 +24,6 @@ module NewsScrapers
     dates.each do |d|
       NewsScrapers.logger.info"  #{d}"
       scraper.scrape(d)
-      exit
     end
   end
   
