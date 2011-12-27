@@ -1,7 +1,8 @@
 Us vs. World News Coverage
 ==========================
 
-I put the scraper public methods in `lib/news_scrapers.rb`, which refers to classes in `lib/news_scrapers`.  The code that parses a single webpage is in `app/models/article.rb`, since it might generalize.
+I put the scraper public methods in `lib/news_scrapers.rb`, which refers to 
+classes in `lib/news_scrapers`.
 
 Installation
 ------------
