@@ -117,6 +117,17 @@ module NewsScrapers
         page_count
       end
    
+      def add_default_params(d, existing_params)
+        {
+          :frommonth=>d.month,
+          :fromday=>d.mday,
+          :fromyear=>d.year,
+          :tomonth=>d.month,
+          :today=>d.mday,
+          :toyear=>d.year,
+        }.merge(existing_params)
+      end
+      
    end
        
 end

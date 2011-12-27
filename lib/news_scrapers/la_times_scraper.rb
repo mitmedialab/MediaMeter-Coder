@@ -26,47 +26,33 @@ module NewsScrapers
       # get the params for a more recent search
       def search_params_post_1984(d)
         # http://pqasb.pqarchiver.com/latimes/results.html?st=advanced&QryTxt=*&type=current&sortby=CHRON&datetype=6&frommonth=03&fromday=06&fromyear=1989&tomonth=03&today=06&toyear=1989&By=&Title=&at_curr=ALL&at_hist=article&at_hist=editorial_article&Sect=ALL
-        {
-        :st=>"advanced",
-        :QryTxt=>"*",
-        :type=>"current",
-        :sortby=>"CHRON",
-        :datetype=>"6",
-        :frommonth=>d.month,
-        :fromday=>d.mday,
-        :fromyear=>d.year,
-        :tomonth=>d.month,
-        :today=>d.mday,
-        :toyear=>d.year,
-        :By=>"",
-        :Title=>"",
-        :at_curr=>"ALL",
-        :at_hist=>"article",
-        :at_hist=>"editorial_article",
-        :Sect=>"ALL"
-        }
+        add_default_params( d, {
+          :st=>"advanced",
+          :QryTxt=>"*",
+          :type=>"current",
+          :sortby=>"CHRON",
+          :datetype=>"6",
+          :By=>"",
+          :Title=>"",
+          :at_curr=>"ALL",
+          :Sect=>"ALL"
+        })
       end
     
       # get the params for an archival search
       def search_params_pre_1984(d)
         # http://pqasb.pqarchiver.com/latimes/results.html?st=advanced&QryTxt=&type=historic&sortby=RELEVANCE&datetype=6&frommonth=03&fromday=05&fromyear=1979&tomonth=03&today=05&toyear=1979&By=&Title=&at_curr=ALL&at_hist=article
-        {
-        :st=>"advanced",
-        :QryTxt=>"",
-        :type=>"historic",
-        :sortby=>"CHRON",
-        :datetype=>"6",
-        :frommonth=>d.month,
-        :fromday=>d.mday,
-        :fromyear=>d.year,
-        :tomonth=>d.month,
-        :today=>d.mday,
-        :toyear=>d.year,
-        :By=>"",
-        :Title=>"",
-        :at_curr=>"ALL",
-        :at_hist=>["article","editorial_article"]
-        }
+        add_default_params( d, {
+          :st=>"advanced",
+          :QryTxt=>"",
+          :type=>"historic",
+          :sortby=>"CHRON",
+          :datetype=>"6",
+          :By=>"",
+          :Title=>"",
+          :at_curr=>"ALL",
+          :at_hist=>["article","editorial_article"]
+        })
       end
   
   end
