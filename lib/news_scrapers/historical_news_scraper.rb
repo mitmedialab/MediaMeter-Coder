@@ -43,7 +43,7 @@ module NewsScrapers
       # needed to write my own to allow multiple parameteres with the same name (key maps to an array or values, not just one)
       def encode_url_params(value, key = nil)
         case value
-        when Hash  then value.map { |k,v| 
+        when Hash then value.map { |k,v| 
           str = ""
           if v.is_a? Array
             str = v.map { |v2| encode_url_params(v2, "#{k}") }.join('&')
@@ -62,7 +62,13 @@ module NewsScrapers
       def append_key(root_key, key)
         root_key.nil? ? key : "#{root_key}[#{key.to_s}]"
       end
-    
+   
+      def prefix_with_zero number
+        fixed = number
+        fixed = "0" + number.to_s if number < 10
+        fixed
+      end
+          
   end
 
 end

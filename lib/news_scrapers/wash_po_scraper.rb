@@ -30,14 +30,9 @@ module NewsScrapers
       def search_params_post_1986(d)
         # http://pqasb.pqarchiver.com/washingtonpost/results.html?st=advanced&uid=&MAC=50a23aa1f3f5c6104e90e36051420d61&QryTxt=*&sortby=RELEVANCE&datetype=6&frommonth=03&fromday=06&fromyear=1989&tomonth=12&today=03&toyear=2011&By=&Title=&Sect=ALL
         add_default_params( d, {
-          :st=>"advanced",
           :uid=>"",
           :MAC=>"50a23aa1f3f5c6104e90e36051420d61",
           :QryTxt=>"*",
-          :sortby=>"CHRON",
-          :datetype=>"6",
-          :By=>"",
-          :Title=>"",
           :Sect=>"ALL",
         })
       end
@@ -46,14 +41,9 @@ module NewsScrapers
       def search_params_pre_1986(d)
         # http://pqasb.pqarchiver.com/washingtonpost_historical/results.html?st=advanced&uid=&MAC=50a23aa1f3f5c6104e90e36051420d61&QryTxt=&sortby=CHRON&datetype=6&frommonth=3&fromday=5&fromyear=1979&tomonth=3&today=5&toyear=1979&By=&Title=&at_hist=article&at_hist=editorial_article
         add_default_params( d, {
-          :st=>"advanced",
           :uid=>"",
           :MAC=>"50a23aa1f3f5c6104e90e36051420d61",
           :QryTxt=>"",
-          :sortby=>"CHRON",
-          :datetype=>"6",
-          :By=>"",
-          :Title=>"",
           :at_hist=>["article","editorial_article"]
         })
       end

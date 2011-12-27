@@ -6,6 +6,7 @@ require 'news_scrapers/historical_news_scraper'
 require 'news_scrapers/pro_quest_scraper'
 require 'news_scrapers/wash_po_scraper'
 require 'news_scrapers/la_times_scraper'
+require 'news_scrapers/chicago_tribune_scraper'
 require 'news_scrapers/new_york_times_scraper'
 
 module NewsScrapers
@@ -21,9 +22,10 @@ module NewsScrapers
     (Date.new(2009,3,2)..Date.new(2009,3,6)).each { |d| dates << d }
     NewsScrapers.logger.info "Starting to scrape:"
     scrapers = []
-    #scrapers.push( NewsScrapers::NewYorkTimesScraper.new )
+    scrapers.push( NewsScrapers::ChicagoTribuneScraper.new )
     scrapers.push( NewsScrapers::WashPoScraper.new )
     scrapers.push( NewsScrapers::LaTimesScraper.new )
+    #scrapers.push( NewsScrapers::NewYorkTimesScraper.new )
     dates.each do |d|
       NewsScrapers.logger.info"  #{d}"
       scrapers.each do |scraper|

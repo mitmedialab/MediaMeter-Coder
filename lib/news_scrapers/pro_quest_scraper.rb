@@ -21,7 +21,7 @@ module NewsScrapers
       #figure out number of result pages
       page_count = parse_out_page_count(doc)
       NewsScrapers.logger.info "    #{page_count} pages of results"
-      
+
       #for each page of results
       article_count = 0
       (0..page_count-1).each do |current_page|
@@ -29,8 +29,8 @@ module NewsScrapers
         search_params[:start] = 10 * current_page
         doc = fetch_url(search_url, search_params)  # will refetch from cache the first time - no biggie
         #  for each article link
-        parse_out_article_urls(doc).each do |article_path|
-          article_url = BASE_URL + article_path
+        parse_out_article_links(doc).each do |article_info|
+          article_url = BASE_URL + article_info[:url]
           NewsScrapers.logger.info "      Article #{article_url}"
           if Article.scraped_already? article_url
             # skip it if we've already fetched this link
@@ -41,7 +41,10 @@ module NewsScrapers
             article = parse_out_article_info(article_doc)
             article.src_url = article_url
             article.pub_date = d
+            article.headline = article_info[:headline] if article.headline == nil
             populate_article_before_save(article) # delegate to child for source, etc.            
+            #pp article
+            #exit
             article.save
             article_count = article_count + 1
             NewsScrapers.logger.info "        saved"
@@ -56,7 +59,7 @@ module NewsScrapers
   
       def parse_out_article_info(doc)
         article = Article.new
-        doc.css('div#container > table tr td > table tr').each do |row|
+        doc.css('div#container table tr td table tr').each do |row|
           if (row>('td.docTitle')).length > 0
             if (row>('td.docTitle')).children[0].name!="img"
               article.headline = (row>('td.docTitle')).children[0].content  
@@ -81,13 +84,22 @@ module NewsScrapers
             article.section = (row>('td'))[1].content
           end
         end
+        # hack for Chicago Tribune
+        if (doc.css('div.docTitle').length > 0) && (article.abstract == nil) 
+          if (doc.css('div.docTitle').first.parent.children.length >= 12)
+            article.abstract = doc.css('div.docTitle').first.parent.children[11].content.strip
+          end
+        end
         article
       end
   
       # take a parsed results page and get all the urls for articles
-      def parse_out_article_urls(doc)
+      def parse_out_article_links(doc)
         doc.css('font.result_title > a').collect do |a|
-          a.attribute('href').value
+          metadata = {}
+          metadata[:url] = a.attribute('href').value
+          metadata[:headline] = a.content.strip
+          metadata
         end
       end
 
@@ -119,12 +131,17 @@ module NewsScrapers
    
       def add_default_params(d, existing_params)
         {
-          :frommonth=>d.month,
-          :fromday=>d.mday,
+          :datetype=>"6",
+          :frommonth=>prefix_with_zero(d.month),
+          :fromday=>prefix_with_zero(d.day),
           :fromyear=>d.year,
-          :tomonth=>d.month,
-          :today=>d.mday,
+          :tomonth=>prefix_with_zero(d.month),
+          :today=>prefix_with_zero(d.day),
           :toyear=>d.year,
+          :st=>"advanced",
+          :By=>"",
+          :Title=>"",
+          :sortby=>"CHRON"
         }.merge(existing_params)
       end
       

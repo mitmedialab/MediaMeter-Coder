@@ -172,12 +172,6 @@ module NewsScrapers
         :year2=>d.year
         }
       end
-   
-      def prefix_with_zero number
-        fixed = number
-        fixed = "0" + number.to_s if number < 10
-        fixed
-      end
         
    end
        
