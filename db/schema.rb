@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111219164727) do
+ActiveRecord::Schema.define(:version => 20111227162232) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(:version => 20111219164727) do
     t.integer  "total_pages"
     t.integer  "word_count"
     t.string   "src_url_md5"
+    t.string   "section"
   end
 
   add_index "articles", ["src_url_md5"], :name => "src_url_md5_index", :unique => true
