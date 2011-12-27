@@ -32,7 +32,7 @@ class Article < ActiveRecord::Base
   end
   
   def self.count_without_abstracts
-    count(:all,:conditions=>['abstract is null'])
+    where("abstract is null").count
   end
 
 end
