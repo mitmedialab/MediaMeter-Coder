@@ -13,3 +13,4 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
+lib/news_scrapers_development.log
