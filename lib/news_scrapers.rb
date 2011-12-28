@@ -13,6 +13,8 @@ module NewsScrapers
 
   @@logger_instance = nil
   
+  @@cache = nil
+  
   # Main Public API - scrape everything for all dates!
   def self.scrape_all
     dates = []
@@ -25,13 +27,20 @@ module NewsScrapers
     scrapers.push( NewsScrapers::ChicagoTribuneScraper.new )
     scrapers.push( NewsScrapers::WashPoScraper.new )
     scrapers.push( NewsScrapers::LaTimesScraper.new )
-    #scrapers.push( NewsScrapers::NewYorkTimesScraper.new )
+    scrapers.push( NewsScrapers::NewYorkTimesScraper.new )
     dates.each do |d|
       NewsScrapers.logger.info"  #{d}"
       scrapers.each do |scraper|
         scraper.scrape(d)
       end
     end
+  end
+  
+  def self.cache
+    if @@cache == nil
+      @@cache = NewsScrapers::WebpageCache.new( File.join("/tmp","scraper") )
+    end
+    @@cache
   end
   
   # Be smart about logging whiel running inside or outside of Rails
