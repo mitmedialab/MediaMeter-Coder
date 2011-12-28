@@ -3,7 +3,7 @@ require 'digest/md5'
 
 module NewsScrapers
 
-  # Simple file-based caching of webpage contents, keyed by the url
+  # Simple file-based caching of webpage contents, key_fored by the url
   class WebpageCache
   
     def initialize(dir)
@@ -13,27 +13,25 @@ module NewsScrapers
     
     def put url, page_contents, overwrite=true
       return if (!overwrite && exists?(url) )
-      File.open(path(url), 'w') {|f| f.write(page_contents) }
+      File.open(path_for(url), 'w') {|f| f.write(page_contents) }
     end
     
     def get url
       return nil if !exists?(url)
-      IO.read(path(url))
+      IO.read(path_for(url))
     end
     
     def exists? url
-      File.exists? path(url)
+      File.exists? path_for(url)
     end
       
-    private
-    
-      def path url
-        File.join(@base_dir,key(url))
-      end
-    
-      def key url
-        Digest::MD5.hexdigest(url)
-      end
+    def path_for url
+      File.join(@base_dir,key_for(url))
+    end
+  
+    def key_for url
+      Digest::MD5.hexdigest(url)
+    end
       
   end
 
