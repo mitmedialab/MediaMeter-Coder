@@ -7,8 +7,6 @@ gem 'rails', '3.1.3'
 
 gem 'activerecord-jdbcsqlite3-adapter'
 
-gem 'nokogiri'
-
 gem 'jruby-openssl'
 gem 'json'
 
@@ -41,3 +39,8 @@ platforms :jruby do
     gem 'therubyrhino'
   end
 end
+
+# custom gems required for the US-World-Coverage app
+gem 'nokogiri', "~> 1.5.0"
+gem "nytimes-articles", "~> 0.4.1"
+
