@@ -141,7 +141,8 @@ module NewsScrapers
           :st=>"advanced",
           :By=>"",
           :Title=>"",
-          :sortby=>"CHRON"
+          :sortby=>"CHRON",
+          :at_hist=>"",
         }.merge(existing_params)
       end
       

@@ -40,7 +40,6 @@ module NewsScrapers
         add_default_params( d, {
           :QryTxt=>"",
           :type=>"historic",
-          :at_hist=>["article","editorial_article"]
         })
       end
   

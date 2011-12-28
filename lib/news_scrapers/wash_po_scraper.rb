@@ -44,7 +44,6 @@ module NewsScrapers
           :uid=>"",
           :MAC=>"50a23aa1f3f5c6104e90e36051420d61",
           :QryTxt=>"",
-          :at_hist=>["article","editorial_article"]
         })
       end
   

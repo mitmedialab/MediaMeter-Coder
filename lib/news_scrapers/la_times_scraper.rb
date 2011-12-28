@@ -41,7 +41,6 @@ module NewsScrapers
           :QryTxt=>"",
           :type=>"historic",
           :at_curr=>"ALL",
-          :at_hist=>["article","editorial_article"]
         })
       end
   
