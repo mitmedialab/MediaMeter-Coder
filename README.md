@@ -6,6 +6,9 @@ classes in `lib/news_scrapers`.
 
 Installation
 ------------
+
+There is a dependency on the Nokogiri parser - see their [installation instructions](http://nokogiri.org/tutorials/installing_nokogiri.html).
+
 For now it is using a sqlite db, located at db/development.sqlite3.  To create the db, run `rake db:migrate`.
 
 Running
