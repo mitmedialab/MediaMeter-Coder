@@ -4,13 +4,14 @@ require 'digest/md5'
 # helper to encrypt the content of one colunm into another before saving
 class EncryptionWrapper
 
-  def initialize(src,dest)
-    @src_col = src
-    @dest_col = dest
-  end
-
   def before_save(record)
-    record.send("#{@dest_col}=",encrypt(record.send("#{@src_col}")))
+    return if record.src_url_md5 !=nil
+    if record.has_url?
+      url = record.src_url
+    else 
+      url = record.fake_url   
+    end
+    record.src_url_md5 = encrypt( url )
   end
   
   private
@@ -23,7 +24,16 @@ end
 
 class Article < ActiveRecord::Base
 
-  before_save   EncryptionWrapper.new('src_url','src_url_md5')
+  before_save   EncryptionWrapper.new
+
+  # HACK for NYT edge case where some articles from the API don't have URLs :-(
+  def fake_url
+    return source.to_s + pub_date.to_s + headline.to_s
+  end
+  
+  def has_url?
+    return src_url!=nil &&  !src_url.empty?
+  end
 
   def self.scraped_already? src_url
     src_url_md5 = Digest::MD5.hexdigest(src_url)
