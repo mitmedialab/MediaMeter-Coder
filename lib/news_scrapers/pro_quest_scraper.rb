@@ -142,7 +142,7 @@ module NewsScrapers
           :By=>"",
           :Title=>"",
           :sortby=>"CHRON",
-          :at_hist=>"",
+          :at_hist=>["article","editorial_article"],
         }.merge(existing_params)
       end
       
