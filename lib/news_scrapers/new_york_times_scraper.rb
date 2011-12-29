@@ -13,7 +13,7 @@ module NewsScrapers
 
     def initialize
       super
-      Nytimes::Articles::Base.api_key = ''
+      Nytimes::Articles::Base.api_key = ''  # ASK RAHUL FOR THIS!
     end
   
     def scrape(d)
@@ -64,7 +64,6 @@ module NewsScrapers
               NewsScrapers.logger.info "        saved"
             end
           end
-          exit
         end
       end
       
@@ -88,7 +87,7 @@ module NewsScrapers
                       :byline, :date, :word_count, :page_facet, :nytd_section_facet], 
             :offset=>0 )
           NewsScrapers.cache.put fake_url, YAML::dump(result_set) 
-          #TODO: throttle by half sec?
+          sleep 0.2 # throttle  a little
         end
         result_set
       end
