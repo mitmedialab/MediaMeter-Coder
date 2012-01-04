@@ -19,9 +19,9 @@ module NewsScrapers
       full_url = base_url + "?" + encode_url_params(params)
       NewsScrapers.logger.info("      fetch_url #{full_url}")
 
-      if NewScrapers.cache.exists?(full_url)
+      if NewsScrapers.cache.exists?(full_url)
         NewsScrapers.logger.debug("      from cache")
-        contents = NewScrapers.cache.get(full_url)
+        contents = NewsScrapers.cache.get(full_url)
       else
         NewsScrapers.logger.debug("      from interwebs")
         file_handle = open(full_url, 
@@ -31,7 +31,7 @@ module NewsScrapers
         NewsScrapers.logger.debug("      fetched")
         contents = file_handle.read
         NewsScrapers.logger.debug("      got contents")
-        NewScrapers.cache.put(full_url,contents)
+        NewsScrapers.cache.put(full_url,contents)
       end
       NewsScrapers.logger.debug("      about to parse")
       Nokogiri::HTML(contents)

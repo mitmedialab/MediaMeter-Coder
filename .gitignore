@@ -14,3 +14,4 @@
 /log/*.log
 /tmp
 lib/news_scrapers_development.log
+*.swp
