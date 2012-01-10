@@ -1,4 +1,5 @@
 require 'rubygems'
+require 'mechanize'
 require 'open-uri'
 require 'cgi'
 require 'nokogiri'
@@ -8,7 +9,13 @@ module NewsScrapers
 
   class HistoricalNewsScraper
     
+    MECHANIZE_LOG_FILE = "mechanize.log"
+    USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/534.52.7 (KHTML, like Gecko) Version/5.1.2 Safari/534.52.7"
+    
     def initialize
+      @requester = Mechanize.new
+      @requester.log = Logger.new MECHANIZE_LOG_FILE
+      @requester.user_agent_alias = 'Mac Safari'
     end
   
     def scrape(d)
@@ -24,13 +31,9 @@ module NewsScrapers
         contents = NewsScrapers.cache.get(full_url)
       else
         NewsScrapers.logger.debug("      from interwebs")
-        file_handle = open(full_url, 
-          "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/534.52.7 (KHTML, like Gecko) Version/5.1.2 Safari/534.52.7",
-          "Accept" => "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-          "Cache-Control:max-age" => "0")
+        page = @requester.get(full_url)
+        contents = page.body
         NewsScrapers.logger.debug("      fetched")
-        contents = file_handle.read
-        NewsScrapers.logger.debug("      got contents")
         NewsScrapers.cache.put(full_url,contents)
       end
       NewsScrapers.logger.debug("      about to parse")

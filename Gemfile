@@ -5,9 +5,6 @@ gem 'rails', '3.1.3'
 # Bundle edge Rails instead:
 # gem 'rails',     :git => 'git://github.com/rails/rails.git'
 
-gem 'activerecord-jdbcsqlite3-adapter'
-
-gem 'jruby-openssl'
 gem 'json'
 
 # Gems used only for assets and not required
@@ -32,15 +29,9 @@ gem 'jquery-rails'
 # To use debugger
 # gem 'ruby-debug'
 
-
-# the javascript engine for execjs gem
-platforms :jruby do
-  group :assets do
-    gem 'therubyrhino'
-  end
-end
-
 # custom gems required for the US-World-Coverage app
+gem 'mysql2'  # on os x lion you may need to run: sudo ln -s /usr/local/mysql/lib/libmysqlclient.18.dylib /usr/lib/libmysqlclient.18.dylib
 gem 'nokogiri', "~> 1.5.0"
+gem 'mechanize'
 gem "nytimes-articles", "~> 0.4.1"
 
