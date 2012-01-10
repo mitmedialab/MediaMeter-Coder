@@ -17,10 +17,12 @@ module NewsScrapers
       def get_search_url_and_params(d)
         if(d.year <= 1984)
           params = search_params_pre_1984 d
+          url = PublicProQuestExtractor::BASE_URL + SEARCH_PATH
         else
           params = search_params_post_1984 d
+          url = PublicProQuestExtractor::BASE_URL + SEARCH_PATH
         end
-        return (BASE_URL + SEARCH_PATH), params        
+        return url, params        
       end
   
       # get the params for a more recent search
