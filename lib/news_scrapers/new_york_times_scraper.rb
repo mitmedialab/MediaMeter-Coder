@@ -77,7 +77,7 @@ module NewsScrapers
           result_set = YAML::load(NewsScrapers.cache.get fake_url)
         else
           NewsScrapers.logger.debug("      from interwebs")
-          result_set = Nytimes::Articles::Article.search (
+          result_set = Nytimes::Articles::Article.search(
             :body=>'the', 
             :source=>'The New York Times', 
             :begin_date=>'19890306',
@@ -85,7 +85,7 @@ module NewsScrapers
             :rank=>:oldest, 
             :fields=>[:lead_paragraph, :section_page_facet, :abstract, :body, :title, 
                       :byline, :date, :word_count, :page_facet, :nytd_section_facet], 
-            :offset=>0 )
+            :offset=>0)
           NewsScrapers.cache.put fake_url, YAML::dump(result_set) 
           sleep 0.2 # throttle  a little
         end
