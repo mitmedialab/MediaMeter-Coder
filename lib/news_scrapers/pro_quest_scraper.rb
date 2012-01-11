@@ -2,17 +2,120 @@ module NewsScrapers
 
   class BaseProQuestExtractor
     
+    def name
+      self.class.name
+    end
+    
+    def get_base_url
+    end
+    
+    def get_results_page_url_param
+    end
+
+    def extract_page_count(doc)
+    end
+    
+    def extract_articles_from_results_list(doc)
+    end
+    
+    def extract_article_info!(article, doc)
+    end
+    
+    def extract_scanned_file_url(article, doc)
+    end
+    
+    # Use this to bypass the cache on the first request for results, so the cookie gets
+    # initialized correctly!
+    def needs_cookies?
+      false
+    end
+    
   end
 
   class MitProQuestExtractor < NewsScrapers::BaseProQuestExtractor
     
+    BASE_URL = "http://proquest.umi.com.libproxy.mit.edu"
+    
     def initialize
       super
+    end
+
+    def get_base_url
+      BASE_URL  
+    end
+
+    def needs_cookies?
+      # we need to bypass the cache on the first lookup to get the cookie
+      true
+    end
+
+    def get_results_page_url_param
+      :firstIndex
+    end
+    
+    def extract_page_count(doc)
+      page_count = 0
+      text = doc.css('#pageNavLine div.left').first.content
+      matches = text.match(/(.*)-(.*) of (.*)/)
+      if matches
+        matches = matches.to_a
+        start_idx = matches[1].to_i
+        end_idx = matches[2].to_i
+        total_results = matches[3].to_i
+        results_per_page = end_idx  - start_idx + 1
+        page_count = (total_results.to_f / results_per_page.to_f).ceil
+      end
+      page_count
+    end
+
+    def extract_articles_from_results_list(doc)
+      doc.css('#results .resultsItemBody').collect do |elem|
+        article = Article.new
+        article.headline = elem.css('.resultsHLL a').first.content
+        matches = elem.css('.resultsHLL').first.content.strip.match(/p\. (.*) \((.*) page\)/) 
+        if matches
+          matches = matches.to_a
+          article.page = matches[1]
+          article.total_pages = matches[2].to_i
+        end
+        abstract_links = elem.css(".resultsFormats ul li a[title='Abstract']") 
+        if abstract_links.length > 0
+          article.src_url = get_base_url + abstract_links.first.attribute('href').value
+        else 
+          article.src_url = get_base_url + elem.css('.resultsHLL a').first.attribute('href').value
+        end
+        scan_links = elem.css(".resultsFormats ul li a[title='Article image - PDF (Scanned Image)']") 
+        if scan_links.length > 0
+          article.scan_src_url = get_base_url + scan_links.first.attribute('href').value
+        end
+        article
+      end
+    end
+    
+    def extract_article_info!(article, doc)
+      article.abstract = doc.css('.docSection > div.textMedium p').first.content
+      doc.css('#tableIndexTerms tr').each do |row|
+        token = row.css('td strong').first.content
+        if token=="Author(s):"
+          article.byline = row.css('td')[1].content
+        end
+        if token=="Section:"
+          article.section = row.css('td')[1].content
+        end
+        if token=="Text Word Count"
+          article.section = row.css('td')[1].content.to_i
+        end
+      end
+    end
+
+    def extract_scanned_file_url(article, doc)
+      article.scan_file_url = get_base_url + doc.css("frame")[1].attribute('src').value
     end
     
   end
  
   class PublicProQuestExtractor < NewsScrapers::BaseProQuestExtractor
+    
     BASE_URL = "http://pqasb.pqarchiver.com"
     
     def initialize
@@ -21,6 +124,10 @@ module NewsScrapers
     
     def get_base_url
       BASE_URL  
+    end
+
+    def get_results_page_url_param
+      :start
     end
 
     # pass in the first page of results, and get back the number of pages of results 
@@ -41,13 +148,13 @@ module NewsScrapers
     end
     
     # take a parsed results page and get all the urls for articles
-    def extract_article_links(doc)
-      doc.css('font.result_title > a').collect do |a|
-        metadata = {}
-        metadata[:url] = get_base_url + a.attribute('href').value
-        metadata[:headline] = a.content.strip
-        metadata
-       end
+    def extract_articles_from_results_list(doc)
+      doc.css('font.result_title > a').collect do |elem|
+        article = Article.new
+        article.src_url = get_base_url + elem.attribute('href').value
+        article.headline = elem.content.strip
+        article
+      end
     end
     
     def extract_article_info!(article, doc)
@@ -63,7 +170,7 @@ module NewsScrapers
         if (row>('td p')).length > 0
           article.abstract = (row>('td p')).children[0].content
         end
-        if (row>('td'))[0].content == "Author:"
+        if (row>('td')).content == "Author:"
           article.byline = (row>('td'))[1].content
         end
         if (row>('td'))[0].content == "Start Page:"
@@ -101,9 +208,9 @@ module NewsScrapers
 
       search_url, search_params = get_search_url_and_params(d)
 
-      doc = fetch_url( search_url, search_params)
-
       extractor = get_extractor(d)
+
+      doc = fetch_url( search_url, search_params, extractor.needs_cookies?)
 
       #figure out number of result pages
       page_count = extractor.extract_page_count(doc)
@@ -112,66 +219,70 @@ module NewsScrapers
       #for each page of results
       article_count = 0      
       (0..page_count-1).each do |current_page|
-        NewsScrapers.logger.info "    Page #{current_page}"
-        search_params[:start] = 10 * current_page
+        NewsScrapers.logger.info "    Page #{current_page} of #{page_count}"
+        search_params[extractor.get_results_page_url_param] = 10 * current_page
         doc = fetch_url(search_url, search_params)  # will refetch from cache the first time - no biggie
         #  for each article link
-        extractor.extract_article_links(doc).each do |article_info|
-          NewsScrapers.logger.info "      Article #{article_info[:url]}"
-          if Article.scraped_already? article_info[:url]
+        extractor.extract_articles_from_results_list(doc).each do |article|
+          NewsScrapers.logger.info "      Article #{article.src_url}"
+          if Article.scraped_already? article.src_url
             # skip it if we've already fetched this link
             NewsScrapers.logger.info "        scraped already - skipping"
           else
-            article = Article.new(:src_url  => article_info[:url],
-                                  :headline => article_info[:headline])
             populate_article_before_save(article) # delegate to child for source
             article.set_queue_status(:queued)
             article.pub_date = d
             article.save
             article_count += 1
-            NewsScrapers.logger.info "        created"
+            NewsScrapers.logger.info "        created article with #{extractor.name}"
           end
         end
       end
       article_count
     end
      
-    def get_extractor(d)
-      extractor = nil
-      #if d.year > 1984
-        extractor = PublicProQuestExtractor.new
-      #else
-      #  extractor = MitProQuestExtractor.new
-      #end
-      extractor
-    end
-     
+
     def scrape_article(article)
       article.set_queue_status(:in_progress)
       article.save
       # load an article page and parse it to fill in an Article object, save it
-      article_doc = fetch_url(article.src_url)
-      #modify
       extractor = get_extractor(article.pub_date)
-      extractor.extract_article_info!(article, article_doc)
+      if article.src_url != article.scan_src_url
+        # if there is no abstract url, just a scan url, then skip this
+        article_doc = fetch_url(article.src_url)
+        extractor.extract_article_info!(article, article_doc)
+      end
+      if article.has_scan_src_url?
+        article_scan_doc = fetch_url(article.scan_src_url)
+        extractor.extract_scanned_file_url(article,article_scan_doc)
+        if article.has_scan_file_url?
+          scan_dir = article.path_to_scan_dir
+          extension = article.scan_file_url.split('.').pop()
+          article.scan_local_filename = article.id.to_s + "." + extension
+          @requester.get(article.scan_file_url).save( File.join(scan_dir, article.scan_local_filename) )
+        end
+      end
       article.set_queue_status(:complete)
       article.save 
-      NewsScrapers.logger.info "        scraped"
+      NewsScrapers.logger.info "        scraped with #{extractor.name}"
       article
-      exit
     end
   
     # get all the articles on a particlar day and insert them into the db
     def scrape(d)
       scrape_index(d)
-      while(Article.where("queue_status='queued'").count > 0)
-        Article.where("queue_status='queued'").find(:all, :limit=>10) do |article|
+      while(Article.where(:queue_status=>:queued).count > 0)
+        Article.where(:queue_status=>:queued).find(:all, :limit=>10) do |article|
           scrape_article(article) 
         end
       end
     end
 
     private
+
+    def get_extractor(d)
+      PublicProQuestExtractor.new
+    end
     
     def populate_article_before_save(article)
       raise NotImplementedError.new("Hey! You must implement populte_article_before_save in your subclass")

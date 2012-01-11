@@ -15,3 +15,5 @@
 /tmp
 lib/news_scrapers_development.log
 *.swp
+
+public/article_scans

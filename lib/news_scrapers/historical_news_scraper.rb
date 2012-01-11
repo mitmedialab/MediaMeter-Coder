@@ -22,12 +22,12 @@ module NewsScrapers
       raise NotImplementedError.new("Hey! You gotta implement a public scrape method in your subclass!")
     end
   
-    def fetch_url(base_url, params={})
+    def fetch_url(base_url, params={}, bypass_cache=false)
       full_url = base_url + "?" + encode_url_params(params)
       NewsScrapers.logger.info("      fetch_url #{full_url}")
 
-      if NewsScrapers.cache.exists?(full_url)
-        NewsScrapers.logger.debug("      from cache")
+      if !bypass_cache && NewsScrapers.cache.exists?(full_url)
+        NewsScrapers.logger.debug("      from cache ("+NewsScrapers.cache.path_for(full_url)+")")
         contents = NewsScrapers.cache.get(full_url)
       else
         NewsScrapers.logger.debug("      from interwebs")

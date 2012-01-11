@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120104165128) do
+ActiveRecord::Schema.define(:version => 20120111155948) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -38,6 +38,9 @@ ActiveRecord::Schema.define(:version => 20120104165128) do
     t.string   "src_url_md5"
     t.string   "section"
     t.string   "queue_status"
+    t.string   "scan_src_url"
+    t.string   "scan_local_filename"
+    t.string   "scan_file_url"
   end
 
   add_index "articles", ["queue_status"], :name => "index_articles_on_queue_status"
