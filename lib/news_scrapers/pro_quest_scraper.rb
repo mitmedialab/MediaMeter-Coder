@@ -24,6 +24,9 @@ module NewsScrapers
     def extract_scanned_file_url(article, doc)
     end
     
+    def get_default_params(d)
+    end
+    
     # Use this to bypass the cache on the first request for results, so the cookie gets
     # initialized correctly!
     def needs_cookies?
@@ -35,6 +38,7 @@ module NewsScrapers
   class MitProQuestExtractor < NewsScrapers::BaseProQuestExtractor
     
     BASE_URL = "http://proquest.umi.com.libproxy.mit.edu"
+    SEACH_PATH = "/pqdweb" 
     
     def initialize
       super
@@ -48,13 +52,35 @@ module NewsScrapers
       # we need to bypass the cache on the first lookup to get the cookie
       true
     end
+    
+    def get_default_params(d)
+      {
+        :author=>'',
+        :AT=>'article',
+        :beforeDate=>'',
+        :clientId=>'5482',
+        :date=>'ON',
+        :fromDate=>'',
+        :FT=>'1',
+        :h_pmid=>'',
+        :h_pubtitle=>'',
+        :JSEnabled=>'1',
+        :moreOptState=>'OPEN',
+        :onDate=>NewsScrapers.prefix_with_zero(d.month).to_s+"/"+NewsScrapers.prefix_with_zero(d.day).to_s+"/"+d.year.to_s,
+        :querySyntax=>'PQ',
+        :RQT=>'305',
+        :searchInterface=>'1',
+        :sortby=>'CHRON',
+        :toDate=>'',
+        :TS=>'1326312163',
+      }
+    end
 
     def get_results_page_url_param
       :firstIndex
     end
     
     def extract_page_count(doc)
-      page_count = 0
       text = doc.css('#pageNavLine div.left').first.content
       matches = text.match(/(.*)-(.*) of (.*)/)
       if matches
@@ -129,6 +155,23 @@ module NewsScrapers
     def get_results_page_url_param
       :start
     end
+    
+    def get_default_params d
+      {
+        :datetype=>"6",
+        :frommonth=>NewsScrapers.prefix_with_zero(d.month),
+        :fromday=>NewsScrapers.prefix_with_zero(d.day),
+        :fromyear=>d.year,
+        :tomonth=>NewsScrapers.prefix_with_zero(d.month),
+        :today=>NewsScrapers.prefix_with_zero(d.day),
+        :toyear=>d.year,
+        :st=>"advanced",
+        :By=>"",
+        :Title=>"",
+        :sortby=>"CHRON",
+        :Sect=>'ALL',
+      }
+    end
 
     # pass in the first page of results, and get back the number of pages of results 
     def extract_page_count(doc)
@@ -158,7 +201,7 @@ module NewsScrapers
     end
     
     def extract_article_info!(article, doc)
-      doc.css('div#container table tr td table tr').each do |row|
+      doc.css('div#container table tr td table')[1].css('tr').each do |row|
         if(article.headline.nil?)
           if (row>('td.docTitle')).length > 0
             if (row>('td.docTitle')).children[0].name!="img"
@@ -166,24 +209,25 @@ module NewsScrapers
             end
           end
         end
-
         if (row>('td p')).length > 0
           article.abstract = (row>('td p')).children[0].content
         end
-        if (row>('td')).content == "Author:"
-          article.byline = (row>('td'))[1].content
-        end
-        if (row>('td'))[0].content == "Start Page:"
-          article.page = (row>('td'))[1].content
-        end
-        if (row>('td'))[0].content == "Pages:"
-          article.total_pages = (row>('td'))[1].content.to_i
-        end
-        if (row>('td'))[0].content == "Text Word Count:"
-          article.word_count = (row>('td'))[1].content.to_i
-        end
-        if (row>('td'))[0].content == "Section:"
-          article.section = (row>('td'))[1].content
+        if( row.css('td').length==2)
+          if (row.css('td'))[0].content == "Author:"
+            article.byline = (row>('td'))[1].content
+          end
+          if (row.css('td'))[0].content == "Start Page:"
+            article.page = (row>('td'))[1].content
+          end
+          if (row.css('td'))[0].content == "Pages:"
+            article.total_pages = (row>('td'))[1].content.to_i
+          end
+          if (row.css('td'))[0].content == "Text Word Count:"
+            article.word_count = (row>('td'))[1].content.to_i
+          end
+          if (row.css('td'))[0].content == "Section:"
+            article.section = (row>('td'))[1].content
+          end
         end
       end
       # hack for Chicago Tribune
@@ -193,7 +237,6 @@ module NewsScrapers
         end
       end
     end
-    
   end
 
   # Descend from this and override a few methods to handle results from proquest archives
@@ -214,6 +257,10 @@ module NewsScrapers
 
       #figure out number of result pages
       page_count = extractor.extract_page_count(doc)
+      if page_count == nil
+        NewsScrapers.logger.error("Didn't find page count with #{extractor.name}")
+        exit
+      end
       NewsScrapers.logger.info "    #{page_count} pages of results"
 
       #for each page of results
@@ -281,7 +328,13 @@ module NewsScrapers
     private
 
     def get_extractor(d)
-      PublicProQuestExtractor.new
+      extractor = nil
+      if d.year > 1980
+        extractor = PublicProQuestExtractor.new
+      else
+        extractor = MitProQuestExtractor.new
+      end
+      extractor
     end
     
     def populate_article_before_save(article)
@@ -294,20 +347,8 @@ module NewsScrapers
     end
    
     def add_default_params(d, existing_params)
-      {
-        :datetype=>"6",
-        :frommonth=>prefix_with_zero(d.month),
-        :fromday=>prefix_with_zero(d.day),
-        :fromyear=>d.year,
-        :tomonth=>prefix_with_zero(d.month),
-        :today=>prefix_with_zero(d.day),
-        :toyear=>d.year,
-        :st=>"advanced",
-        :By=>"",
-        :Title=>"",
-        :sortby=>"CHRON",
-        :at_hist=>["article","editorial_article"],
-      }.merge(existing_params)
+      get_extractor(d).get_default_params(d).merge(existing_params)
     end
+    
   end  
 end

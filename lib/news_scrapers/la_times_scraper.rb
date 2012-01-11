@@ -17,7 +17,7 @@ module NewsScrapers
       def get_search_url_and_params(d)
         if(d.year <= 1984)
           params = search_params_pre_1984 d
-          url = PublicProQuestExtractor::BASE_URL + SEARCH_PATH
+          url = MitProQuestExtractor::BASE_URL + MitProQuestExtractor::SEACH_PATH
         else
           params = search_params_post_1984 d
           url = PublicProQuestExtractor::BASE_URL + SEARCH_PATH
@@ -38,11 +38,9 @@ module NewsScrapers
     
       # get the params for an archival search
       def search_params_pre_1984(d)
-        # http://pqasb.pqarchiver.com/latimes/results.html?st=advanced&QryTxt=&type=historic&sortby=RELEVANCE&datetype=6&frommonth=03&fromday=05&fromyear=1979&tomonth=03&today=05&toyear=1979&By=&Title=&at_curr=ALL&at_hist=article
+        # http://proquest.umi.com.libproxy.mit.edu/pqdweb?SQ=&DBId=14075&date=ON&onDate=03%2F05%2F1979&beforeDate=&fromDate=&toDate=&FT=1&AT=article&author=&sortby=CHRON&RQT=305&querySyntax=PQ&searchInterface=1&moreOptState=OPEN&TS=1326312163&h_pubtitle=&h_pmid=&clientId=5482&JSEnabled=1
         add_default_params( d, {
-          :QryTxt=>"",
-          :type=>"historic",
-          :at_curr=>"ALL",
+          :DBId=>'14075',
         })
       end
   
