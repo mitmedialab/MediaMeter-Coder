@@ -1,2 +1,2 @@
-class InternationalNonUsAnswer < Answer
+class SportsAnswer < Answer
 end

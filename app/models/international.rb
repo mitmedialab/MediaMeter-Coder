@@ -1,0 +1,2 @@
+class InternationalAnswer < Answer
+end
