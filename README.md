@@ -7,9 +7,9 @@ classes in `lib/news_scrapers`.
 Installation
 ------------
 
-There is a dependency on the Nokogiri parser - see their [installation instructions](http://nokogiri.org/tutorials/installing_nokogiri.html).
-
-For now it is using a sqlite db, located at db/development.sqlite3.  To create the db, run `rake db:migrate`.
+Make sure you have Ruby 1.9.2 (we use rvm to get it).
+Run `bundle` to get all the dependencies.
+To create the db, run `rake db:migrate`.
 
 Running
 -------
@@ -28,7 +28,7 @@ or as a rake task (referring to `lib/tasks/scraper.db`):
 > rake scraper:all --trace
 ```
 
-Watch the log for informative messages:
+Watch the log for lots of informative messages:
 ```
 tail -f log/development.log 
 ```
