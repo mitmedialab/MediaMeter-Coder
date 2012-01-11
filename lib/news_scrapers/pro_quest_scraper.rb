@@ -203,6 +203,38 @@ module NewsScrapers
       super
     end
 
+    def blacklist_scrape_index(d, params, tag)
+      d = add_defailt_params(d, params)
+      NewsScrapers.logger.info "    Blacklist scraping with #{d}"
+      extractor = get_extractor(d)
+      doc = fetch_url( search_url, search_params, extractor.needs_cookies?)
+      page_count = extractor.extract_page_count(doc)
+      NewsScrapers.logger.info "    #{page_count} pages of results"
+      article_count = 0      
+      (0..page_count-1).each do |current_page|
+        NewsScrapers.logger.info "    (blacklisting) Page #{current_page} of #{page_count}"
+        extractor.extract_articles_from_results_list(doc).each do |article|
+          NewsScrapers.logger.info "      (blacklist) Article #{article.src_url}"
+          database_article = Article.scraped_already? article.src_url
+          if !database_article.nil?
+            #BLACKLIST
+            database_article.add_blacklist_tag(tag)
+            NewsScrapers.logger.info "      (blacklist article tagged with '#{tag}')"
+            database_article.save
+          else
+            #SAVE AND BLACKLIST
+            populate_article_before_save(article) # delegate to child for source
+            article.add_blacklist_tag(tag)
+            article.set_queue_status(:blacklisted)
+            article.pub_date = d
+            article.save
+            article_count += 1
+            NewsScrapers.logger.info "        created article with #{extractor.name}"
+          end
+        end
+      end
+    end
+
     def scrape_index(d)
       NewsScrapers.logger.info "    Scraping with #{d}"
 
@@ -229,6 +261,7 @@ module NewsScrapers
             # skip it if we've already fetched this link
             NewsScrapers.logger.info "        scraped already - skipping"
           else
+            sleep(1)
             populate_article_before_save(article) # delegate to child for source
             article.set_queue_status(:queued)
             article.pub_date = d
