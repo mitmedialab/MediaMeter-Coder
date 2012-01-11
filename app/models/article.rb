@@ -60,8 +60,20 @@ class Article < ActiveRecord::Base
   end
 
   def set_queue_status(val)
-    raise ArgumentError.new("Argument is not a valid queue status. Received :#{val.to_s}. Valid responses include :queued, :in_progress, :complete") if !([:queued, :in_progress, :complete].include? val)
+    raise ArgumentError.new("Argument is not a valid queue status. Received :#{val.to_s}. Valid responses include :queued, :in_progress, :complete, :blacklisted") if !([:queued, :in_progress, :complete, :blacklisted].include? val)
     self.queue_status = val.to_s
+  end
+
+  def add_blacklist_tag(tag)
+    if blacklist_tags.nil?
+      blacklist_tags =""
+    end
+    return nil if get_blacklist_tags.include? tag
+    blacklist_tags +=",#{tag}"
+  end
+
+  def get_blacklist_tags()
+    blacklist_tags.split(",")
   end
 
 end
