@@ -64,13 +64,7 @@ module NewsScrapers
       def append_key(root_key, key)
         root_key.nil? ? key : "#{root_key}[#{key.to_s}]"
       end
-   
-      def prefix_with_zero number
-        fixed = number
-        fixed = "0" + number.to_s if number < 10
-        fixed
-      end
-          
+
   end
 
 end

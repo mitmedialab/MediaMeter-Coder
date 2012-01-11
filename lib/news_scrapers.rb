@@ -36,6 +36,12 @@ module NewsScrapers
     end
   end
   
+  def self.prefix_with_zero number
+    fixed = number
+    fixed = "0" + number.to_s if number < 10
+    fixed
+  end
+  
   def self.cache
     if @@cache == nil
       @@cache = NewsScrapers::WebpageCache.new( File.join("/tmp","scraper") )
