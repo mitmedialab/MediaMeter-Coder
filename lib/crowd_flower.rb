@@ -39,8 +39,6 @@ module CrowdFlower
         answer.judgements = row[ col_indices["_trusted_judgments"] ].to_i
         answer.article_id = row[ col_indices["id"] ].to_i
         answer.save
-        pp answer
-        exit
       end
       row_count = row_count + 1
     end
