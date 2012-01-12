@@ -247,35 +247,49 @@ module NewsScrapers
     end
 
     def blacklist_scrape_index(d, params, tag)
-      d = add_defailt_params(d, params)
-      NewsScrapers.logger.info "    Blacklist scraping with #{d}"
+      search_url, search_params = get_search_url_and_params(d, params)
+
+      NewsScrapers.logger.info "    ==Blacklist Scraping with #{d}"
+
       extractor = get_extractor(d)
+
       doc = fetch_url( search_url, search_params, extractor.needs_cookies?)
+
       page_count = extractor.extract_page_count(doc)
-      NewsScrapers.logger.info "    #{page_count} pages of results"
-      article_count = 0      
+      if page_count == nil
+        NewsScrapers.logger.error("Didn't find page count with #{extractor.name}")
+        exit
+      end
+      NewsScrapers.logger.info "    #{page_count} pages of results to blacklist"
+
+   #for each page of results
+      article_count = 0
       (0..page_count-1).each do |current_page|
-        NewsScrapers.logger.info "    (blacklisting) Page #{current_page} of #{page_count}"
+        NewsScrapers.logger.info "    Page #{current_page} of #{page_count}"
+        search_params[extractor.get_results_page_url_param] = 10 * current_page
+        doc = fetch_url(search_url, search_params)  # will refetch from cache the first time - no biggie
+        #  for each article link
         extractor.extract_articles_from_results_list(doc).each do |article|
-          NewsScrapers.logger.info "      (blacklist) Article #{article.src_url}"
-          database_article = Article.scraped_already? article.src_url
-          if !database_article.nil?
-            #BLACKLIST
+          NewsScrapers.logger.info "      Article #{article.src_url}"
+          if Article.scraped_already? article.src_url
+            database_article = Article.scraped_already? article.src_url
+            pp article if database_article.nil?
             database_article.add_blacklist_tag(tag)
-            NewsScrapers.logger.info "      (blacklist article tagged with '#{tag}')"
+            article.set_queue_status(:blacklisted)
             database_article.save
+            NewsScrapers.logger.info "        scraped already - blacklisting"
           else
-            #SAVE AND BLACKLIST
             populate_article_before_save(article) # delegate to child for source
-            article.add_blacklist_tag(tag)
             article.set_queue_status(:blacklisted)
             article.pub_date = d
+            article.add_blacklist_tag(tag)
             article.save
             article_count += 1
-            NewsScrapers.logger.info "        created article with #{extractor.name}"
+            NewsScrapers.logger.info "        created and blacklisted article with #{extractor.name}"
           end
         end
       end
+      article_count
     end
 
     def scrape_index(d)
@@ -351,8 +365,8 @@ module NewsScrapers
     # get all the articles on a particlar day and insert them into the db
     def scrape(d)
       scrape_index(d)
-      while(Article.where(:queue_status=>:queued).count > 0)
-        Article.where(:queue_status=>:queued).find(:all, :limit=>10) do |article|
+      while(Article.where({:queue_status=>:queued, :source=>get_source_name}).count > 0)
+        Article.where({:queue_status=>:queued, :source=>get_source_name}).find(:all, :limit=>10) do |article|
           scrape_article(article) 
         end
       end
@@ -371,12 +385,20 @@ module NewsScrapers
     end
     
     def populate_article_before_save(article)
-      raise NotImplementedError.new("Hey! You must implement populte_article_before_save in your subclass")
+      article.source = get_source_name
+    end
+
+    def get_source_name
+      raise NotImplementedError.new("Hey! You must implement get_source_type in your subclass")
     end
 
     # override this and return the full url
     def get_search_url_and_params(d)
       raise NotImplementedError.new("Hey! You must implement get_search_url in your subclass")
+    end
+
+    def blacklist_scrape(d)
+      raise NotImplementedError.new("Hey! You must implement blacklist_scrape in your subclass")
     end
    
     def add_default_params(d, existing_params)
