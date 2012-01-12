@@ -65,15 +65,18 @@ class Article < ActiveRecord::Base
   end
 
   def add_blacklist_tag(tag)
-    if blacklist_tags.nil?
-      blacklist_tags =""
+    if self.blacklist_tag.nil?
+      self.blacklist_tag =""
     end
     return nil if get_blacklist_tags.include? tag
-    blacklist_tags +=",#{tag}"
+    divider =""
+    divider ="," if get_blacklist_tags.size > 0
+    self.blacklist_tag +="#{divider}#{tag}"
   end
 
   def get_blacklist_tags()
-    blacklist_tags.split(",")
+    return [] if self.blacklist_tag.nil?
+    self.blacklist_tag.split(",")
   end
 
 end
