@@ -7,18 +7,27 @@ module NewsScrapers
     def initialize
       super
     end
+
+    def blacklist_scrape(d)
+      if(d.year <= 1984)
+        #TODO: PUT HERE
+      else
+        #ProQuest does not permit article type search from 1085 onward
+      end
+    end
   
     private
       def get_source_name
         "Chicago Tribune"
       end
 
-      def get_search_url_and_params(d)
+      def get_search_url_and_params(d, additional_params={})
         if(d.year <= 1984)
           params = search_params_pre_1984 d
           url = MitProQuestExtractor::BASE_URL + MitProQuestExtractor::SEACH_PATH
         else
           params = search_params_post_1984 d
+          params.merge!(additional_params)
           url = PublicProQuestExtractor::BASE_URL + SEARCH_PATH
         end
         return url, params        
