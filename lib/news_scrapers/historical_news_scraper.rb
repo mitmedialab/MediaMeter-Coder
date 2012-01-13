@@ -31,6 +31,7 @@ module NewsScrapers
         contents = NewsScrapers.cache.get(full_url)
       else
         NewsScrapers.logger.debug("      from interwebs")
+        sleep(0.2)
         page = @requester.get(full_url)
         contents = page.body
         NewsScrapers.logger.debug("      fetched")

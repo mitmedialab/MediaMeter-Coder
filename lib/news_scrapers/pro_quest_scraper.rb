@@ -277,7 +277,7 @@ module NewsScrapers
             database_article = Article.scraped_already? article.src_url
             pp article if database_article.nil?
             database_article.add_blacklist_tag(tag)
-            database_article.set_queue_status(:blacklisted)
+#            database_article.set_queue_status(:blacklisted)
             database_article.save
             NewsScrapers.logger.info "        scraped already - blacklisting"
           else
