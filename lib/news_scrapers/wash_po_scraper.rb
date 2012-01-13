@@ -8,19 +8,30 @@ module NewsScrapers
     def initialize
       super
     end
+
+    def blacklist_scrape(d)
+      if(d.year <= 1984)
+        #TODO: PUT HERE
+      else
+        #NO ARTICLE TYPE QUERYING FOR THE WASHINGTON POST
+      end
+    end
+
+
   
     private
       def get_source_name
         "Washington Post"
       end
     
-      def get_search_url_and_params(d)
+      def get_search_url_and_params(d, additional_params={})
         if(d.year <= 1986)
          params = search_params_pre_1986 d
           url = MitProQuestExtractor::BASE_URL + MitProQuestExtractor::SEACH_PATH
         else
           search_path = SEARCH_PATH_POST_1986
           params = search_params_post_1986 d
+          params.merge!(additional_params)
           url = PublicProQuestExtractor::BASE_URL + search_path
         end
         return url, params        
