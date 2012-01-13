@@ -10,11 +10,10 @@ module NewsScrapers
     end
   
     private
-    
-      def populate_article_before_save(article)
-        article.source = "Washington Post"
+      def get_source_name
+        "Washington Post"
       end
-  
+    
       def get_search_url_and_params(d)
         if(d.year <= 1986)
          params = search_params_pre_1986 d

@@ -258,13 +258,15 @@ module NewsScrapers
       page_count = extractor.extract_page_count(doc)
       if page_count == nil
         NewsScrapers.logger.error("Didn't find page count with #{extractor.name}")
-        exit
+        page_count = 0
+        #exit
       end
       NewsScrapers.logger.info "    #{page_count} pages of results to blacklist"
 
    #for each page of results
       article_count = 0
       (0..page_count-1).each do |current_page|
+        sleep(1)
         NewsScrapers.logger.info "    Page #{current_page} of #{page_count}"
         search_params[extractor.get_results_page_url_param] = 10 * current_page
         doc = fetch_url(search_url, search_params)  # will refetch from cache the first time - no biggie
@@ -275,7 +277,7 @@ module NewsScrapers
             database_article = Article.scraped_already? article.src_url
             pp article if database_article.nil?
             database_article.add_blacklist_tag(tag)
-            article.set_queue_status(:blacklisted)
+            database_article.set_queue_status(:blacklisted)
             database_article.save
             NewsScrapers.logger.info "        scraped already - blacklisting"
           else
@@ -372,6 +374,10 @@ module NewsScrapers
       end
     end
 
+    def blacklist_scrape(d)
+      raise NotImplementedError.new("Hey! You must implement blacklist_scrape in your subclass")
+    end
+
     private
 
     def get_extractor(d)
@@ -397,9 +403,6 @@ module NewsScrapers
       raise NotImplementedError.new("Hey! You must implement get_search_url in your subclass")
     end
 
-    def blacklist_scrape(d)
-      raise NotImplementedError.new("Hey! You must implement blacklist_scrape in your subclass")
-    end
    
     def add_default_params(d, existing_params)
       get_extractor(d).get_default_params(d).merge(existing_params)

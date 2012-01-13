@@ -9,9 +9,8 @@ module NewsScrapers
     end
   
     private
-
-      def populate_article_before_save(article)
-        article.source = "Chicago Tribune"
+      def get_source_name
+        "Chicago Tribune"
       end
 
       def get_search_url_and_params(d)

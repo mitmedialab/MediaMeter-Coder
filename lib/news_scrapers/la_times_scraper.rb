@@ -7,19 +7,31 @@ module NewsScrapers
     def initialize
       super
     end
+
+    def blacklist_scrape(d)
+      if(d.year <= 1984)
+        #TODO: PUT HERE
+      else
+        puts "BLACKLIST SCRAPING"
+        puts blacklist_scrape_index(d, {:at_curr=>"Letters to the Editor"}, "Letters to the Editor")
+        puts blacklist_scrape_index(d, {:at_curr=>"Recipe"}, "Recipe")
+        puts blacklist_scrape_index(d, {:at_curr=>"Recording"}, "Recording")
+      end
+    end
   
     private
-
-      def populate_article_before_save(article)
-        article.source = "LA Times"
+      def get_source_name
+        "LA Times"
       end
           
-      def get_search_url_and_params(d)
+      def get_search_url_and_params(d, additional_params={})
         if(d.year <= 1984)
           params = search_params_pre_1984 d
+          
           url = MitProQuestExtractor::BASE_URL + MitProQuestExtractor::SEACH_PATH
         else
           params = search_params_post_1984 d
+          params.merge!(additional_params)
           url = PublicProQuestExtractor::BASE_URL + SEARCH_PATH
         end
         return url, params        
@@ -43,6 +55,7 @@ module NewsScrapers
           :DBId=>'14075',
         })
       end
+
   
   end
 
