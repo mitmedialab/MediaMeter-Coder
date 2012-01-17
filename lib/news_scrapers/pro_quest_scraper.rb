@@ -81,15 +81,18 @@ module NewsScrapers
     end
     
     def extract_page_count(doc)
-      text = doc.css('#pageNavLine div.left').first.content
-      matches = text.match(/(.*)-(.*) of (.*)/)
-      if matches
-        matches = matches.to_a
-        start_idx = matches[1].to_i
-        end_idx = matches[2].to_i
-        total_results = matches[3].to_i
-        results_per_page = end_idx  - start_idx + 1
-        page_count = (total_results.to_f / results_per_page.to_f).ceil
+      page_count = nil
+      if(doc.css('#pageNavLine div.left').length > 0)
+        text = doc.css('#pageNavLine div.left').first.content
+        matches = text.match(/(.*)-(.*) of (.*)/)
+        if matches
+          matches = matches.to_a
+          start_idx = matches[1].to_i
+          end_idx = matches[2].to_i
+          total_results = matches[3].to_i
+          results_per_page = end_idx  - start_idx + 1
+          page_count = (total_results.to_f / results_per_page.to_f).ceil
+        end
       end
       page_count
     end
