@@ -45,6 +45,26 @@ module CrowdFlower
     CrowdFlower.logger.info("Imported #{row_count} rows")
   end
   
+  def self.export(answer_type, file_path)
+    row_count = 0
+    CSV.open(file_path, "wb") do |csv|
+      csv << ["id", "newspaper", "page", "headline","date","abstract","byline","content_url"]
+      Article.all.each do |a|
+        csv << [  a.id, 
+                  a.source, 
+                  a.page, 
+                  a.headline, 
+                  (a.pub_date.year.to_s+"/"+a.pub_date.month.to_s+"/"+a.pub_date.day.to_s),
+                  a.abstract,
+                  a.byline,
+                  a.scan_file_url
+                ]
+        row_count = row_count + 1
+      end
+    end
+    CrowdFlower.logger.info("Exported #{row_count} rows to #{file_path}")
+  end
+  
   # Be smart about logging whiel running inside or outside of Rails
   def self.logger
     return Rails.logger if defined? Rails
