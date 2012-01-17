@@ -24,8 +24,15 @@ end
 
 class Article < ActiveRecord::Base
 
-  before_save   EncryptionWrapper.new
+  has_many      :arts_answers
+  has_many      :foreign_answers
+  has_many      :international_answers
+  has_many      :local_answers
+  has_many      :national_answers
+  has_many      :sports_answers 
 
+  before_save   EncryptionWrapper.new
+  
   # HACK for NYT edge case where some articles from the API don't have URLs :-(
   def fake_url
     return source.to_s + pub_date.to_s + headline.to_s
