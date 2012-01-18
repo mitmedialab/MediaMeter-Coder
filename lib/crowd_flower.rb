@@ -5,7 +5,7 @@ module CrowdFlower
 
   @@logger_instance = nil
   
-  # Main Public API
+  # import aggregated reports from a CrowdFlower job
   def self.import(answer_type, file, answer_col, confidence_col)
     row_count = 0
     col_headers = Array.new
@@ -45,11 +45,13 @@ module CrowdFlower
     CrowdFlower.logger.info("Imported #{row_count} rows")
   end
   
+  # export a file with all the article info for crowdflower
   def self.export(answer_type, file_path)
     row_count = 0
     CSV.open(file_path, "wb") do |csv|
       csv << ["id", "newspaper", "page", "headline","date","abstract","byline","content_url"]
       Article.all.each do |a|
+        # TODO: need to include the gold answer here 
         csv << [  a.id, 
                   a.source, 
                   a.page, 
