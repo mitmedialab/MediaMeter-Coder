@@ -17,13 +17,12 @@ module NewsScrapers
       end
     end
 
+    def get_source_name
+      "Washington Post"
+    end
 
-  
     private
-      def get_source_name
-        "Washington Post"
-      end
-    
+        
       def get_search_url_and_params(d, additional_params={})
         if(d.year <= 1986)
          params = search_params_pre_1986 d

@@ -19,10 +19,11 @@ module NewsScrapers
       end
     end
   
+    def get_source_name
+      "LA Times"
+    end
+
     private
-      def get_source_name
-        "LA Times"
-      end
           
       def get_search_url_and_params(d, additional_params={})
         if(d.year <= 1984)
