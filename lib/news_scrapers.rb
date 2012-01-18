@@ -27,6 +27,7 @@ module NewsScrapers
   def self.scrape_washington_post
     NewsScrapers.logger.info "---------------------------------------------------------------"
     NewsScrapers.logger.info "Starting to scrape Washingon Post:"
+    self.scrape(self.all_dates, [NewsScrapers::WashPoScraper.new])
   end
 
   def self.scrape_chicago_tribune
