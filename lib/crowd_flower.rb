@@ -65,7 +65,7 @@ module CrowdFlower
     CrowdFlower.logger.info("Exported #{row_count} rows to #{file_path}")
   end
   
-  # Be smart about logging whiel running inside or outside of Rails
+  # Be smart about logging while running inside or outside of Rails
   def self.logger
     return Rails.logger if defined? Rails
     if @@logger_instance == nil
