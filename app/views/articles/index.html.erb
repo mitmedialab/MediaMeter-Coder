@@ -1,0 +1,55 @@
+<h1>Listing articles</h1>
+
+<table>
+  <tr>
+    <th>Source</th>
+    <th>Pub date</th>
+    <th>Byline</th>
+    <th>Headline</th>
+    <th>Page</th>
+    <th>Src url</th>
+    <th>Abstract</th>
+    <th>Created at</th>
+    <th>Updated at</th>
+    <th>Total pages</th>
+    <th>Word count</th>
+    <th>Src url md5</th>
+    <th>Section</th>
+    <th>Queue status</th>
+    <th>Scan src url</th>
+    <th>Scan local filename</th>
+    <th>Scan file url</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @articles.each do |article| %>
+  <tr>
+    <td><%= article.source %></td>
+    <td><%= article.pub_date %></td>
+    <td><%= article.byline %></td>
+    <td><%= article.headline %></td>
+    <td><%= article.page %></td>
+    <td><%= article.src_url %></td>
+    <td><%= article.abstract %></td>
+    <td><%= article.created_at %></td>
+    <td><%= article.updated_at %></td>
+    <td><%= article.total_pages %></td>
+    <td><%= article.word_count %></td>
+    <td><%= article.src_url_md5 %></td>
+    <td><%= article.section %></td>
+    <td><%= article.queue_status %></td>
+    <td><%= article.scan_src_url %></td>
+    <td><%= article.scan_local_filename %></td>
+    <td><%= article.scan_file_url %></td>
+    <td><%= link_to 'Show', article %></td>
+    <td><%= link_to 'Edit', edit_article_path(article) %></td>
+    <td><%= link_to 'Destroy', article, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Article', new_article_path %>
