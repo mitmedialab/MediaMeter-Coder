@@ -26,6 +26,10 @@ or as a rake task (referring to `lib/tasks/scraper.rake`):
 
 ```
 > rake scraper:all --trace
+> rake scraper:nytimes --trace
+> rake scraper:latimes --trace
+> rake scraper:chictrib --trace
+> rake scraper:washpo --trace
 ```
 
 Watch the log for lots of informative messages:
@@ -42,10 +46,24 @@ You can import aggregated answers from CrowdFlower by running a rake task like s
 rake crowd:import[sports,../crowdflower-round-2/a77851.csv,is_this_article_about_sports,is_this_article_about_sports:confidence]
 ```
 
-The arguments are
+The arguments are:
 
 * answer type - one of arts, foreign, international, local, national, or sports
 * path to csv file
 * column in the csv that has the aggregated answer
 * column in the csv that has CrowdFlower's confidence in that answer
 
+
+Exporting
+---------
+
+You can export aggregated answers to CrowdFlower by running a rake task like so
+
+```
+rake crowd:export[sports,tmp] --trace
+```
+
+The arguments are:
+
+* answer type - one of arts, foreign, international, local, national, or sports
+* folder to write the csv file that is generated
