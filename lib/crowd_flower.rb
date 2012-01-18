@@ -57,7 +57,7 @@ module CrowdFlower
                   (a.pub_date.year.to_s+"/"+a.pub_date.month.to_s+"/"+a.pub_date.day.to_s),
                   a.abstract,
                   a.byline,
-                  a.scan_file_url
+                  a.url_to_scan_local_file
                 ]
         row_count = row_count + 1
       end
