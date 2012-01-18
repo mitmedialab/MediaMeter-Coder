@@ -17,12 +17,15 @@ module NewsScrapers
     end
   
     def scrape(d)
-      NewsScrapers.logger.info "    Scraping with #{d}"
       if d.year < 1981
         website_scrape d
       else
         api_scrape d
       end
+    end
+
+    def get_source_name
+      "New York Times"
     end
   
     private
@@ -38,7 +41,7 @@ module NewsScrapers
           rs = api_get_results(d, current_page)
           rs.each do |nyt_article|
             article = Article.new
-            article.source = "New York Times"
+            article.source = ""
             article.pub_date = d
             article.byline = nyt_article.byline
             article.headline = nyt_article.title
@@ -124,7 +127,7 @@ module NewsScrapers
               article = website_parse_out_article_info(d, article_doc)
               article.src_url = article_info[:url]
               article.pub_date = d
-              article.source = "New York Times"
+              article.source = get_source_name
               article.headline = article_info[:headline] if article.headline == nil
               article.section = article_info[:section] if article.section == nil
               article.byline = article_info[:byline] if article.byline == nil
@@ -222,11 +225,11 @@ module NewsScrapers
         :submit=>"sub",
         :hdlquery=>"",
         :bylquery=>"",
-        :mon1=>prefix_with_zero(d.month),
-        :day1=>prefix_with_zero(d.mday),
+        :mon1=>NewsScrapers::prefix_with_zero(d.month),
+        :day1=>NewsScrapers::prefix_with_zero(d.mday),
         :year1=>d.year,
-        :mon2=>prefix_with_zero(d.month),
-        :day2=>prefix_with_zero(d.mday),
+        :mon2=>NewsScrapers::prefix_with_zero(d.month),
+        :day2=>NewsScrapers::prefix_with_zero(d.mday),
         :year2=>d.year,
         }
       end
@@ -245,11 +248,11 @@ module NewsScrapers
         :hdlquery=>"",
         :bylquery=>"",
         :daterange=>"period",
-        :mon1=>prefix_with_zero(d.month),
-        :day1=>prefix_with_zero(d.mday),
+        :mon1=>NewsScrapers::prefix_with_zero(d.month),
+        :day1=>NewsScrapers::prefix_with_zero(d.mday),
         :year1=>d.year,
-        :mon2=>prefix_with_zero(d.month),
-        :day2=>prefix_with_zero(d.mday),
+        :mon2=>NewsScrapers::prefix_with_zero(d.month),
+        :day2=>NewsScrapers::prefix_with_zero(d.mday),
         :year2=>d.year
         }
       end
