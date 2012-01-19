@@ -35,13 +35,24 @@ module NewsScrapers
         rs = api_get_results(d)
         page_count = rs.total_pages + 0
         NewsScrapers.logger.info "    #{page_count} pages of results"
+        more_valid_results = true
 
         (0..page_count).each do |current_page|
+          if !more_valid_results
+            NewsScrapers.logger.info "      Not finding anymore articles with the right date - bailing!"
+            return
+          end
           NewsScrapers.logger.info "    Page #{current_page}"
           rs = api_get_results(d, current_page)
-          rs.each do |nyt_article|
+          # get rid of the artiles with the wrong date (because we can't search for just one day!)
+          nyt_article_array = rs.results.reject do |nyt_article|
+            nyt_article.date != d
+          end
+          more_valid_results = false if rs.results.length > nyt_article_array.length
+          # now add all the articles found
+          nyt_article_array.each do |nyt_article|
             article = Article.new
-            article.source = ""
+            article.source = get_source_name
             article.pub_date = d
             article.byline = nyt_article.byline
             article.headline = nyt_article.title
@@ -59,11 +70,9 @@ module NewsScrapers
               NewsScrapers.logger.info "      Article #{article.fake_url}"
             end
             if Article.scraped_already? article.fake_url
-              NewsScrapers.logger.info "        scraped already - skipping"              
+              NewsScrapers.logger.info "        scraped already - skipping"    
             else 
               article.save 
-              pp article
-              exit             
               NewsScrapers.logger.info "        saved"
             end
           end
@@ -74,21 +83,22 @@ module NewsScrapers
       def api_get_results(d,offset=0)
         start_date = d
         end_date = d + 1   
-        fake_url = start_date.to_s + end_date.to_s + offset.to_s
+        fake_url = start_date.to_s + "_to_" + end_date.to_s + "_page" + offset.to_s
         if NewsScrapers.cache.exists? fake_url
-          NewsScrapers.logger.debug("      from cache")
+          NewsScrapers.logger.debug("      from cache #{fake_url}")
           result_set = YAML::load(NewsScrapers.cache.get fake_url)
         else
-          NewsScrapers.logger.debug("      from interwebs")
+          NewsScrapers.logger.debug("      from interwebs #{fake_url}")
+          end_date = d + 1 
           result_set = Nytimes::Articles::Article.search(
             :body=>'the', 
             :source=>'The New York Times', 
-            :begin_date=>'19890306',
-            :end_date=>'19890307', 
+            :begin_date=>d.year.to_s + NewsScrapers::prefix_with_zero(d.month) + NewsScrapers.prefix_with_zero(d.day), #'19890306',
+            :end_date=>end_date.year.to_s + NewsScrapers::prefix_with_zero(end_date.month) + NewsScrapers.prefix_with_zero(end_date.day), #'19890307', 
             :rank=>:oldest, 
             :fields=>[:lead_paragraph, :section_page_facet, :abstract, :body, :title, 
                       :byline, :date, :word_count, :page_facet, :nytd_section_facet], 
-            :offset=>0)
+            :offset=>offset)
           NewsScrapers.cache.put fake_url, YAML::dump(result_set) 
           sleep 0.2 # throttle  a little
         end
@@ -123,8 +133,8 @@ module NewsScrapers
               NewsScrapers.logger.info "        scraped already - skipping"
             else
               # load an article page and parse it to fill in an Article object, save it
-              article_doc = fetch_url(article_info[:url])
-              article = website_parse_out_article_info(d, article_doc)
+              article_doc = fetch_url(article_info[:url],{},false, false)  # fetch without mechanize to avoid "\x8B" from ASCII-8BIT to UTF-8 encoding problem
+              article = website_parse_out_article_info(article_doc)
               article.src_url = article_info[:url]
               article.pub_date = d
               article.source = get_source_name
@@ -132,10 +142,7 @@ module NewsScrapers
               article.section = article_info[:section] if article.section == nil
               article.byline = article_info[:byline] if article.byline == nil
               article.word_count = article_info[:word_count] if article.word_count == nil
-              pp article
-              pp article_info
-              exit
-              #article.save
+              article.save
               article_count = article_count + 1
               NewsScrapers.logger.info "        saved"
             end
@@ -145,26 +152,17 @@ module NewsScrapers
         article_count
       end
       
-      def website_parse_out_article_info(d, doc)
+      def website_parse_out_article_info(doc)
         article = Article.new
-        if d.year <= 1980
-          article.headline = doc.css("h1.abstractHeadline").first.content
-          article.abstract = doc.css("p.summaryText").first.content
-          bylines = doc.css(".abstractView h6.byline")
-          if bylines.length>0
-            article.byline = bylines[0].content.strip
-            parts = bylines[2].content.strip.split(",")
-            article.section = parts[1].strip.delete("Section ")
-            article.page = parts[2].strip.delete("Page ")
-            article.word_count = parts[4].strip.delete("words").strip
-          end
-        else
-          article.headline = doc.css("h1").first.content
-          if doc.css("#mod-article-byline > span").length > 0
-            article.byline = doc.css("#mod-article-byline > span").first.content
-          end
-          
-          article.abstract = (doc.css("#mod-a-body-first-para p").collect {|t| t.content}).join(" ")
+        article.headline = doc.css("h1.abstractHeadline").first.content
+        article.abstract = doc.css("p.summaryText").first.content
+        bylines = doc.css(".abstractView h6.byline")
+        if bylines.length>0
+          article.byline = bylines[0].content.strip
+          parts = bylines[2].content.strip.split(",")
+          article.section = parts[1].strip.delete("Section ")
+          article.page = parts[2].strip.delete("Page ")
+          article.word_count = parts[4].strip.delete("words").strip
         end
         article
       end
@@ -203,11 +201,7 @@ module NewsScrapers
   
       def website_get_search_url_and_params d
         params = []
-        if d.year <= 1980
-          params = website_search_params_pre_1980 d
-        else 
-          params = website_search_params_post_1980 d
-        end
+        params = website_search_params_pre_1980 d
         return (BASE_URL + SEARCH_URL), params
       end
   
@@ -233,30 +227,7 @@ module NewsScrapers
         :year2=>d.year,
         }
       end
-   
-      def website_search_params_post_1980 d
-        # http://query.nytimes.com/search/query?frow=0&n=10&srcht=a&query=&srchst=nyt&submit.x=34&submit.y=15&submit=sub&hdlquery=&bylquery=&daterange=period&mon1=03&day1=06&year1=1989&mon2=03&day2=06&year2=1989
-        {
-        :frow=>"0",
-        :n=>"10",
-        :srcht=>"a",
-        :query=>"",
-        :srchst=>"nyt",
-        "submit.x"=>"34",
-        "submit.y"=>"15",
-        :submit=>"sub",
-        :hdlquery=>"",
-        :bylquery=>"",
-        :daterange=>"period",
-        :mon1=>NewsScrapers::prefix_with_zero(d.month),
-        :day1=>NewsScrapers::prefix_with_zero(d.mday),
-        :year1=>d.year,
-        :mon2=>NewsScrapers::prefix_with_zero(d.month),
-        :day2=>NewsScrapers::prefix_with_zero(d.mday),
-        :year2=>d.year
-        }
-      end
-        
+
    end
        
 end
