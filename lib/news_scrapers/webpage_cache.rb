@@ -13,6 +13,10 @@ module NewsScrapers
     
     def put url, page_contents, overwrite=true
       return if (!overwrite && exists?(url) )
+      
+      # fix for NYT web article retrival, which was failing with ""\xE2" from ASCII-8BIT to UTF-8" error
+      page_contents.force_encoding("UTF-8") if page_contents.encoding.name == "ASCII-8BIT"
+      
       File.open(path_for(url), 'w') {|f| f.write(page_contents) }
     end
     
