@@ -2,16 +2,20 @@ require 'digest/md5'
 
 
 # helper to encrypt the content of one colunm into another before saving
-class EncryptionWrapper
+class ArticlePrepper
 
-  def before_save(record)
-    return if record.src_url_md5 !=nil
-    if record.has_url?
-      url = record.src_url
+  def before_save(article)
+    # make the cache hash
+    return if article.src_url_md5 !=nil
+    if article.has_url?
+      url = article.src_url
     else 
-      url = record.fake_url   
+      url = article.fake_url   
     end
-    record.src_url_md5 = encrypt( url )
+    article.src_url_md5 = encrypt( url )
+    # clean some strings
+    article.headline.strip!
+    article.abstract.strip!
   end
   
   private
@@ -31,7 +35,7 @@ class Article < ActiveRecord::Base
   has_many      :national_answers
   has_many      :sports_answers 
 
-  before_save   EncryptionWrapper.new
+  before_save   ArticlePrepper.new
   
   def url_to_scan_local_file
     #TODO: how do we figure out the base url of the current server?
