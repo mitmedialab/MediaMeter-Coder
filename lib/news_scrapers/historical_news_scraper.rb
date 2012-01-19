@@ -22,9 +22,10 @@ module NewsScrapers
       raise NotImplementedError.new("Hey! You gotta implement a public scrape method in your subclass!")
     end
   
-    def fetch_url(base_url, params={}, bypass_cache=false)
+    def fetch_url(base_url, params={}, bypass_cache=false, fetch_with_mechanize=true)
       full_url = base_url + "?" + encode_url_params(params)
       NewsScrapers.logger.info("      fetch_url #{full_url}")
+      NewsScrapers.logger.info("        forcing bypass cache") if bypass_cache
 
       if !bypass_cache && NewsScrapers.cache.exists?(full_url)
         NewsScrapers.logger.debug("      from cache ("+NewsScrapers.cache.path_for(full_url)+")")
@@ -32,10 +33,18 @@ module NewsScrapers
       else
         NewsScrapers.logger.debug("      from interwebs")
         sleep(0.1)
-        page = @requester.get(full_url)
-        contents = page.body
+        if fetch_with_mechanize
+          page = @requester.get(full_url)
+          contents = page.body          
+        else
+          file_handle = open(full_url, 
+            "User-Agent" => "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/534.52.7 (KHTML, like Gecko) Version/5.1.2 Safari/534.52.7",
+            "Accept" => "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            "Cache-Control:max-age" => "0")
+          contents = file_handle.read
+        end
         NewsScrapers.logger.debug("      fetched")
-        NewsScrapers.cache.put(full_url,contents)
+        NewsScrapers.cache.put(full_url,contents) unless bypass_cache
       end
       NewsScrapers.logger.debug("      about to parse")
       Nokogiri::HTML(contents)
