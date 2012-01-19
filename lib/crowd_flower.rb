@@ -12,6 +12,12 @@ module CrowdFlower
     col_indices = {
       "id"=>nil,
       "_trusted_judgments"=>nil,
+      "newspaper"=>nil,
+      "page"=>nil,
+      "headline"=>nil,
+      "date"=>nil,
+      "content"=>nil,
+      "byline"=>nil,
       answer_col=>nil,
       confidence_col=>nil,
     }
@@ -34,10 +40,10 @@ module CrowdFlower
       else
         # create and save an answer
         answer = Answer.new_by_type(answer_type)
+        answer.article_id = row[ col_indices["id"] ].to_i
         answer.confidence = row[ col_indices[confidence_col] ].to_f
         answer.answer = (row[ col_indices[answer_col] ] == "Yes")
-        answer.judgements = row[ col_indices["_trusted_judgments"] ].to_i
-        answer.article_id = row[ col_indices["id"] ].to_i
+        answer.judgements = row[ col_indices["_trusted_judgments"] ].to_i        
         answer.save
       end
       row_count = row_count + 1
@@ -49,7 +55,7 @@ module CrowdFlower
   def self.export(answer_type, file_path)
     row_count = 0
     CSV.open(file_path, "wb") do |csv|
-      csv << ["id", "newspaper", "page", "headline","date","abstract","byline","content_url"]
+      csv << ["id", "newspaper", "page", "headline","date","content","byline","content_url"]
       Article.all.each do |a|
         # TODO: need to include the gold answer here 
         csv << [  a.id, 
