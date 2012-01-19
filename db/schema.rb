@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120111194452) do
+ActiveRecord::Schema.define(:version => 20120119184224) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20120111194452) do
     t.datetime "updated_at"
     t.integer  "judgements"
     t.integer  "article_id"
+    t.string   "source",     :default => "CrowdFlower"
   end
 
   create_table "articles", :force => true do |t|
@@ -41,6 +42,8 @@ ActiveRecord::Schema.define(:version => 20120111194452) do
     t.string   "scan_src_url"
     t.string   "scan_local_filename"
     t.string   "scan_file_url"
+    t.string   "blacklist_tag"
+    t.boolean  "golden",              :default => false
   end
 
   add_index "articles", ["queue_status"], :name => "index_articles_on_queue_status"
