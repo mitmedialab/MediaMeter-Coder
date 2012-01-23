@@ -80,7 +80,7 @@ class Article < ActiveRecord::Base
   end
 
   def set_queue_status(val)
-    raise ArgumentError.new("Argument is not a valid queue status. Received :#{val.to_s}. Valid responses include :queued, :in_progress, :complete, :blacklisted") if !([:queued, :in_progress, :complete, :blacklisted].include? val)
+    raise ArgumentError.new("Argument is not a valid queue status. Received :#{val.to_s}. Valid responses include :queued, :in_progress, :complete, :blacklisted, :in_progress_error") if !([:queued, :in_progress, :complete, :blacklisted, :in_progress_error].include? val)
     self.queue_status = val.to_s
   end
 

@@ -19,6 +19,7 @@ module NewsScrapers
     end
     
     def extract_article_info!(article, doc)
+      return false
     end
     
     def extract_scanned_file_url(article, doc)
@@ -122,7 +123,9 @@ module NewsScrapers
     end
     
     def extract_article_info!(article, doc)
-      article.abstract = doc.css('.docSection > div.textMedium p').first.content
+      abstract_container = doc.css('.docSection > div.textMedium p')
+      return false if (abstract_container.length==0) || (abstract_container.first==nil) 
+      article.abstract = abstract_container.first.content
       doc.css('#tableIndexTerms tr').each do |row|
         token = row.css('td strong').first.content
         if token=="Author(s):"
@@ -135,6 +138,7 @@ module NewsScrapers
           article.section = row.css('td')[1].content.to_i
         end
       end
+      return true
     end
 
     def extract_scanned_file_url(article, doc)
@@ -204,7 +208,9 @@ module NewsScrapers
     end
     
     def extract_article_info!(article, doc)
+      found_info = false
       doc.css('div#container table tr td table')[1].css('tr').each do |row|
+        found_info = true # if we found anything it worked
         if(article.headline.nil?)
           if (row>('td.docTitle')).length > 0
             if (row>('td.docTitle')).children[0].name!="img"
@@ -236,10 +242,13 @@ module NewsScrapers
       # hack for Chicago Tribune
       if (doc.css('div.docTitle').length > 0) && (article.abstract == nil) 
         if (doc.css('div.docTitle').first.parent.children.length >= 12)
-           article.abstract = doc.css('div.docTitle').first.parent.children[11].content.strip
+          found_info = true # if we found anything it worked
+          article.abstract = doc.css('div.docTitle').first.parent.children[11].content.strip
         end
       end
+      found_info
     end
+
   end
 
   # Descend from this and override a few methods to handle results from proquest archives
@@ -349,7 +358,13 @@ module NewsScrapers
       if article.src_url != article.scan_src_url
         # if there is no abstract url, just a scan url, then skip this
         article_doc = fetch_url(article.src_url)
-        extractor.extract_article_info!(article, article_doc)
+        worked = extractor.extract_article_info!(article, article_doc)
+        if worked==false
+          NewsScrapers.logger.error "extract_article_info! failed on {# article.src_url}"
+          article.set_queue_status(:in_progress_error)
+          article.save
+          return          
+        end 
       end
       if article.has_scan_src_url?
         article_scan_doc = fetch_url(article.scan_src_url)
