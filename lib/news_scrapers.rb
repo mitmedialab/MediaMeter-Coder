@@ -31,7 +31,10 @@ module NewsScrapers
     dates.each do |d|
       NewsScrapers.logger.info"  #{d}"
       scrapers.each do |scraper|
+        #note: this is inefficient, since it scrapes all individual articles
+        #including ones which will be later blaclisted
         scraper.scrape(d)
+        scraper.blacklist_scrape(d)
       end
     end
   end
