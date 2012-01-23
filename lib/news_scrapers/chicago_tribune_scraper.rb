@@ -15,11 +15,12 @@ module NewsScrapers
         #ProQuest does not permit article type search from 1085 onward
       end
     end
+
+    def get_source_name
+      "Chicago Tribune"
+    end
   
     private
-      def get_source_name
-        "Chicago Tribune"
-      end
 
       def get_search_url_and_params(d, additional_params={})
         if(d.year <= 1984)

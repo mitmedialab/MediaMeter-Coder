@@ -1,0 +1,90 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Source:</b>
+  <%= @article.source %>
+</p>
+
+<p>
+  <b>Pub date:</b>
+  <%= @article.pub_date %>
+</p>
+
+<p>
+  <b>Byline:</b>
+  <%= @article.byline %>
+</p>
+
+<p>
+  <b>Headline:</b>
+  <%= @article.headline %>
+</p>
+
+<p>
+  <b>Page:</b>
+  <%= @article.page %>
+</p>
+
+<p>
+  <b>Src url:</b>
+  <%= @article.src_url %>
+</p>
+
+<p>
+  <b>Abstract:</b>
+  <%= @article.abstract %>
+</p>
+
+<p>
+  <b>Created at:</b>
+  <%= @article.created_at %>
+</p>
+
+<p>
+  <b>Updated at:</b>
+  <%= @article.updated_at %>
+</p>
+
+<p>
+  <b>Total pages:</b>
+  <%= @article.total_pages %>
+</p>
+
+<p>
+  <b>Word count:</b>
+  <%= @article.word_count %>
+</p>
+
+<p>
+  <b>Src url md5:</b>
+  <%= @article.src_url_md5 %>
+</p>
+
+<p>
+  <b>Section:</b>
+  <%= @article.section %>
+</p>
+
+<p>
+  <b>Queue status:</b>
+  <%= @article.queue_status %>
+</p>
+
+<p>
+  <b>Scan src url:</b>
+  <%= @article.scan_src_url %>
+</p>
+
+<p>
+  <b>Scan local filename:</b>
+  <%= @article.scan_local_filename %>
+</p>
+
+<p>
+  <b>Scan file url:</b>
+  <%= @article.scan_file_url %>
+</p>
+
+
+<%= link_to 'Edit', edit_article_path(@article) %> |
+<%= link_to 'Back', articles_path %>
