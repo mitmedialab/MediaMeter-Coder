@@ -3,3 +3,8 @@
 
 en:
   hello: "Hello world"
+  scraper:
+    dashboard: "Scraper Dashboard"
+    count_by_status: "Articles by Queue Status"
+    count_by_date: "Articles by Published Date"
+    count_by_source: "Articles by Newspaper"
