@@ -373,7 +373,14 @@ module NewsScrapers
           scan_dir = article.path_to_scan_dir
           extension = article.scan_file_url.split('.').pop()
           article.scan_local_filename = article.id.to_s + "." + extension
-          @requester.get(article.scan_file_url).save( File.join(scan_dir, article.scan_local_filename) )
+          begin
+            @requester.get(article.scan_file_url).save( File.join(scan_dir, article.scan_local_filename) )
+          rescue Exception => e
+            NewsScrapers.logger.error "scraping article scan file url failed! #{article.scan_file_url}"
+            article.set_queue_status(:in_progress_error)
+            article.save
+            return          
+          end
         end
       end
       article.set_queue_status(:complete)
