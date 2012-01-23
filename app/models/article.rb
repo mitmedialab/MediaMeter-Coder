@@ -14,8 +14,8 @@ class ArticlePrepper
     end
     article.src_url_md5 = encrypt( url )
     # clean some strings
-    article.headline.strip!
-    article.abstract.strip!
+    article.headline.strip! if article.headline!=nil
+    article.abstract.strip! if article.abstract!=nil 
   end
   
   private
