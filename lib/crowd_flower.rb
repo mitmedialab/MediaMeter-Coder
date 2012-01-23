@@ -21,8 +21,6 @@ module CrowdFlower
       answer_col=>nil,
       confidence_col=>nil,
     }
-    answer_col_index = nil
-    confidence_col_index = nil
     CSV.foreach(file) do |row|
       if row_count==0
         # check out col headers and validate we can find the 3 cols we need (id, _trusted_judgments, answer, confidence)
