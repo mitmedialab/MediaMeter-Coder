@@ -6,13 +6,14 @@ class ArticlePrepper
 
   def before_save(article)
     # make the cache hash
-    return if article.src_url_md5 !=nil
-    if article.has_url?
-      url = article.src_url
-    else 
-      url = article.fake_url   
+    if article.src_url_md5 ==nil
+      if article.has_url?
+        url = article.src_url
+      else 
+        url = article.fake_url
+      end
+      article.src_url_md5 = encrypt( url )
     end
-    article.src_url_md5 = encrypt( url )
     # clean some strings
     article.headline.strip! if article.headline!=nil
     article.abstract.strip! if article.abstract!=nil 
