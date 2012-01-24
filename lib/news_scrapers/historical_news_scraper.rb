@@ -47,8 +47,12 @@ module NewsScrapers
             "Cache-Control:max-age" => "0")
           contents = file_handle.read
         end
-        NewsScrapers.logger.debug("      fetched")
-        NewsScrapers.cache.put(full_url,contents) unless bypass_cache
+        if bypass_cache
+          NewsScrapers.logger.debug("      fetched")  
+        else
+          NewsScrapers.cache.put(full_url,contents)
+          NewsScrapers.logger.debug("      fetched (cached to "+NewsScrapers.cache.path_for(full_url)+")")
+        end
       end
       NewsScrapers.logger.debug("      about to parse")
       Nokogiri::HTML(contents)
