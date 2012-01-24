@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120124144453) do
+ActiveRecord::Schema.define(:version => 20120124153935) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -27,11 +27,11 @@ ActiveRecord::Schema.define(:version => 20120124144453) do
   create_table "articles", :force => true do |t|
     t.string   "source"
     t.date     "pub_date"
-    t.string   "byline"
-    t.string   "headline"
+    t.string   "byline",              :limit => 500
+    t.string   "headline",            :limit => 500
     t.string   "page"
-    t.string   "src_url"
-    t.string   "abstract"
+    t.string   "src_url",             :limit => 1000
+    t.string   "abstract",            :limit => 2000
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "total_pages"
@@ -39,11 +39,11 @@ ActiveRecord::Schema.define(:version => 20120124144453) do
     t.string   "src_url_md5"
     t.string   "section"
     t.string   "queue_status"
-    t.string   "scan_src_url"
+    t.string   "scan_src_url",        :limit => 1000
     t.string   "scan_local_filename"
-    t.string   "scan_file_url"
+    t.string   "scan_file_url",       :limit => 1000
     t.string   "blacklist_tag"
-    t.boolean  "golden",              :default => false
+    t.boolean  "golden",                              :default => false
   end
 
   add_index "articles", ["queue_status"], :name => "index_articles_on_queue_status"
