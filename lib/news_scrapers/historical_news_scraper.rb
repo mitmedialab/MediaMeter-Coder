@@ -18,7 +18,7 @@ module NewsScrapers
       @requester.user_agent_alias = 'Mac Safari'
     end
   
-    def blacklist_scrape
+    def blacklist_scrape(d)
       # by default this doesn't do anything
     end
   
