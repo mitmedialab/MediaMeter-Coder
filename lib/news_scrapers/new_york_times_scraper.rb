@@ -52,6 +52,7 @@ module NewsScrapers
           # now add all the articles found
           nyt_article_array.each do |nyt_article|
             article = Article.new
+            article.set_queue_status(:in_progress)
             article.source = get_source_name
             article.pub_date = d
             article.byline = nyt_article.byline
@@ -72,6 +73,7 @@ module NewsScrapers
             if Article.scraped_already? article.fake_url
               NewsScrapers.logger.info "        scraped already - skipping"    
             else 
+              article.set_queue_status(:complete)
               article.save 
               NewsScrapers.logger.info "        saved"
             end
@@ -100,7 +102,7 @@ module NewsScrapers
                       :byline, :date, :word_count, :page_facet, :nytd_section_facet], 
             :offset=>offset)
           NewsScrapers.cache.put fake_url, YAML::dump(result_set) 
-          sleep 0.2 # throttle  a little
+          sleep 1 # throttle  a little
         end
         result_set
       end
@@ -142,11 +144,14 @@ module NewsScrapers
               article.section = article_info[:section] if article.section == nil
               article.byline = article_info[:byline] if article.byline == nil
               article.word_count = article_info[:word_count] if article.word_count == nil
+              article.set_queue_status(:complete)
               article.save
               article_count = article_count + 1
               NewsScrapers.logger.info "        saved"
+              sleep 0.2 # throttle each article request
             end
           end
+          sleep 1 # throttle each page request
         end      
       
         article_count
@@ -154,6 +159,7 @@ module NewsScrapers
       
       def website_parse_out_article_info(doc)
         article = Article.new
+        article.set_queue_status(:in_progress)
         article.headline = doc.css("h1.abstractHeadline").first.content
         article.abstract = doc.css("p.summaryText").first.content
         bylines = doc.css(".abstractView h6.byline")

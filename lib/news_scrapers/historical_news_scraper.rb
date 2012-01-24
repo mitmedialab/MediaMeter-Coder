@@ -18,6 +18,10 @@ module NewsScrapers
       @requester.user_agent_alias = 'Mac Safari'
     end
   
+    def blacklist_scrape
+      # by default this doesn't do anything
+    end
+  
     def scrape(d)
       raise NotImplementedError.new("Hey! You gotta implement a public scrape method in your subclass!")
     end
