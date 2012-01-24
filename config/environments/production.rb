@@ -59,6 +59,6 @@ UsWorldCoverage::Application.configure do
   config.active_support.deprecation = :notify
   
   # tell the logger to autoflush
-  Rails.logger.auto_flushing = 1
+  config.logger.auto_flushing = true
   
 end
