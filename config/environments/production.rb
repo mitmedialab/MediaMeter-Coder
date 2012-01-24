@@ -58,7 +58,4 @@ UsWorldCoverage::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
   
-  # tell the logger to autoflush
-  config.logger.auto_flushing = true
-  
 end
