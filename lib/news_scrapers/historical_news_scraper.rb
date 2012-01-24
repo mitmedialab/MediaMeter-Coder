@@ -25,9 +25,13 @@ module NewsScrapers
     def scrape(d)
       raise NotImplementedError.new("Hey! You gotta implement a public scrape method in your subclass!")
     end
-  
+    
+    def in_cache?(base_url,params={})
+      NewsScrapers.cache.exists?( get_full_url(base_url, params) )
+    end
+    
     def fetch_url(base_url, params={}, bypass_cache=false, fetch_with_mechanize=true)
-      full_url = base_url + "?" + encode_url_params(params)
+      full_url = get_full_url(base_url,params)
       NewsScrapers.logger.info("      fetch_url #{full_url}")
       NewsScrapers.logger.info("        forcing bypass cache") if bypass_cache
 
@@ -59,6 +63,10 @@ module NewsScrapers
     end
     
     private
+      
+      def get_full_url(base_url,params)
+        base_url + "?" + encode_url_params(params)
+      end
       
       # needed to write my own to allow multiple parameteres with the same name (key maps to an array or values, not just one)
       def encode_url_params(value, key = nil)

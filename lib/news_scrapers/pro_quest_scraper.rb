@@ -278,7 +278,6 @@ module NewsScrapers
    #for each page of results
       article_count = 0
       (0..page_count-1).each do |current_page|
-        sleep(1)
         NewsScrapers.logger.info "    Page #{current_page} of #{page_count}"
         search_params[extractor.get_results_page_url_param] = 10 * current_page
         doc = fetch_url(search_url, search_params)  # will refetch from cache the first time - no biggie
@@ -300,6 +299,7 @@ module NewsScrapers
             article.save
             article_count += 1
             NewsScrapers.logger.info "        created and blacklisted article with #{extractor.name}"
+            sleep(1) if !in_cache?(search_url, search_params)  # don't swamp their servers
           end
         end
       end
@@ -336,13 +336,13 @@ module NewsScrapers
             # skip it if we've already fetched this link
             NewsScrapers.logger.info "        scraped already - skipping"
           else
-            sleep(1)
             populate_article_before_save(article) # delegate to child for source
             article.set_queue_status(:queued)
             article.pub_date = d
             article.save
             article_count += 1
             NewsScrapers.logger.info "        created article with #{extractor.name}"
+            sleep(1) if !in_cache?(search_url, search_params)  # don't swamp their servers
           end
         end
       end
@@ -364,8 +364,9 @@ module NewsScrapers
           NewsScrapers.logger.error "extract_article_info! failed on {# article.src_url}"
           article.set_queue_status(:in_progress_error)
           article.save
-          return          
-        end 
+          return
+        end
+        sleep(0.2) if !in_cache?(article.src_url)  # don't swamp their servers
       end
       if article.has_scan_src_url?
         article_scan_doc = fetch_url(article.scan_src_url)
@@ -382,6 +383,7 @@ module NewsScrapers
             article.save
             return          
           end
+          sleep(0.2) if !in_cache?(article.scan_src_url)  # don't swamp their servers
         end
       end
       article.set_queue_status(:complete)
