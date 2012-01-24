@@ -38,7 +38,7 @@ class Article < ActiveRecord::Base
 
   before_save   ArticlePrepper.new
   
-  scope :completed, where(:queue_status=>:completed)
+  scope :completed, where(:queue_status=>:complete)
   
   def url_to_scan_local_file
     #TODO: how do we figure out the base url of the current server?
