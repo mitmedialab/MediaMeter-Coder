@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120119184224) do
+ActiveRecord::Schema.define(:version => 20120124144453) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20120119184224) do
   end
 
   add_index "articles", ["queue_status"], :name => "index_articles_on_queue_status"
+  add_index "articles", ["source"], :name => "source_index"
   add_index "articles", ["src_url_md5"], :name => "src_url_md5_index", :unique => true
 
   create_table "golds", :force => true do |t|
