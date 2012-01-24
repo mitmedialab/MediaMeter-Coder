@@ -209,7 +209,7 @@ module NewsScrapers
     
     def extract_article_info!(article, doc)
       found_info = false
-      doc.css('div#container table tr td table')[1].css('tr').each do |row|
+      doc.css('div#container table tr td table tr').each do |row|
         found_info = true # if we found anything it worked
         if(article.headline.nil?)
           if (row>('td.docTitle')).length > 0
@@ -307,7 +307,7 @@ module NewsScrapers
     end
 
     def scrape_index(d)
-      NewsScrapers.logger.info "    Scraping with #{d}"
+      NewsScrapers.logger.info "    Scraping indexes with #{d}"
 
       search_url, search_params = get_search_url_and_params(d)
 
@@ -346,6 +346,7 @@ module NewsScrapers
           end
         end
       end
+      NewsScrapers.logger.info "    Dones scraping indexes for #{d}"
       article_count
     end
      
@@ -392,6 +393,7 @@ module NewsScrapers
     # get all the articles on a particlar day and insert them into the db
     def scrape(d)
       scrape_index(d)
+      NewsScrapers.logger.info "    Scraping article contents"
       while(Article.where({:queue_status=>:queued, :source=>get_source_name}).count > 0)
         Article.where({:queue_status=>:queued, :source=>get_source_name}).find(:all, :limit=>10) do |article|
           scrape_article(article) 
