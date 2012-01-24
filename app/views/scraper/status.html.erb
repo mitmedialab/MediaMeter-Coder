@@ -1,6 +1,6 @@
 <h1><%=t '.title'%></h1>
 
-<h2><%=t '.count_by_status'%></h2>
+<h2><%=@count%> <%=t '.total_articles'%></h2>
 <ul>
 <% @count_by_status.each_pair do |k,v| %>
   <li><em><%=k%>:</em> <%=v%>
@@ -23,7 +23,6 @@
 
 <h2><%=t '.other_counts'%></h2>
 <ul>
-	<li><em><%=t '.total_articles'%>:</em> <%=@count%></li>
 	<li><em><%=t '.completed_but_no_abstract'%>:</em> <%=@completed_but_no_abstract%></li>
 	<li><em><%=t '.articles_with_media'%>:</em> <%=@count_with_media%> 
 		<small>(<%=@count_with_local_media%> <%=t '.downloaded_locally'%>)</small></li>
