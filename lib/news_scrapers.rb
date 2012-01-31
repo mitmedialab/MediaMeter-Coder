@@ -77,7 +77,7 @@ module NewsScrapers
   
   # TODO: replace with sprintf (this is dumb, but was quick and easy)
   def self.prefix_with_zero number
-    fixed = number
+    fixed = number.to_s
     fixed = "0" + number.to_s if number < 10
     fixed
   end
