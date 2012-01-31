@@ -41,8 +41,7 @@ class Article < ActiveRecord::Base
   scope :completed, where(:queue_status=>:complete)
   
   def url_to_scan_local_file
-    #TODO: how do we figure out the base url of the current server?
-    return File.join(scan_dir, scan_local_filename) if has_scan_local_filename?
+    return "http://"+File.join(NewsScrapers::public_base_url, scan_dir, scan_local_filename) if has_scan_local_filename?
     return ""  
   end
   
