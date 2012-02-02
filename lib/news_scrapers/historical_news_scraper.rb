@@ -18,12 +18,20 @@ module NewsScrapers
       @requester.user_agent_alias = 'Mac Safari'
     end
   
+    def blacklist_scrape(d)
+      # by default this doesn't do anything
+    end
+  
     def scrape(d)
       raise NotImplementedError.new("Hey! You gotta implement a public scrape method in your subclass!")
     end
-  
+    
+    def in_cache?(base_url,params={})
+      NewsScrapers.cache.exists?( get_full_url(base_url, params) )
+    end
+    
     def fetch_url(base_url, params={}, bypass_cache=false, fetch_with_mechanize=true)
-      full_url = base_url + "?" + encode_url_params(params)
+      full_url = get_full_url(base_url,params)
       NewsScrapers.logger.info("      fetch_url #{full_url}")
       NewsScrapers.logger.info("        forcing bypass cache") if bypass_cache
 
@@ -43,14 +51,22 @@ module NewsScrapers
             "Cache-Control:max-age" => "0")
           contents = file_handle.read
         end
-        NewsScrapers.logger.debug("      fetched")
-        NewsScrapers.cache.put(full_url,contents) unless bypass_cache
+        if bypass_cache
+          NewsScrapers.logger.debug("      fetched")  
+        else
+          NewsScrapers.cache.put(full_url,contents)
+          NewsScrapers.logger.debug("      fetched (cached to "+NewsScrapers.cache.path_for(full_url)+")")
+        end
       end
       NewsScrapers.logger.debug("      about to parse")
       Nokogiri::HTML(contents)
     end
     
     private
+      
+      def get_full_url(base_url,params)
+        base_url + "?" + encode_url_params(params)
+      end
       
       # needed to write my own to allow multiple parameteres with the same name (key maps to an array or values, not just one)
       def encode_url_params(value, key = nil)

@@ -19,6 +19,7 @@ module NewsScrapers
     end
     
     def extract_article_info!(article, doc)
+      return false
     end
     
     def extract_scanned_file_url(article, doc)
@@ -122,7 +123,9 @@ module NewsScrapers
     end
     
     def extract_article_info!(article, doc)
-      article.abstract = doc.css('.docSection > div.textMedium p').first.content
+      abstract_container = doc.css('.docSection > div.textMedium p')
+      return false if (abstract_container.length==0) || (abstract_container.first==nil) 
+      article.abstract = abstract_container.first.content
       doc.css('#tableIndexTerms tr').each do |row|
         token = row.css('td strong').first.content
         if token=="Author(s):"
@@ -135,6 +138,7 @@ module NewsScrapers
           article.section = row.css('td')[1].content.to_i
         end
       end
+      return true
     end
 
     def extract_scanned_file_url(article, doc)
@@ -204,7 +208,9 @@ module NewsScrapers
     end
     
     def extract_article_info!(article, doc)
-      doc.css('div#container table tr td table')[1].css('tr').each do |row|
+      found_info = false
+      doc.css('div#container table tr td table tr').each do |row|
+        found_info = true # if we found anything it worked
         if(article.headline.nil?)
           if (row>('td.docTitle')).length > 0
             if (row>('td.docTitle')).children[0].name!="img"
@@ -236,10 +242,13 @@ module NewsScrapers
       # hack for Chicago Tribune
       if (doc.css('div.docTitle').length > 0) && (article.abstract == nil) 
         if (doc.css('div.docTitle').first.parent.children.length >= 12)
-           article.abstract = doc.css('div.docTitle').first.parent.children[11].content.strip
+          found_info = true # if we found anything it worked
+          article.abstract = doc.css('div.docTitle').first.parent.children[11].content.strip
         end
       end
+      found_info
     end
+
   end
 
   # Descend from this and override a few methods to handle results from proquest archives
@@ -269,7 +278,6 @@ module NewsScrapers
    #for each page of results
       article_count = 0
       (0..page_count-1).each do |current_page|
-        sleep(1)
         NewsScrapers.logger.info "    Page #{current_page} of #{page_count}"
         search_params[extractor.get_results_page_url_param] = 10 * current_page
         doc = fetch_url(search_url, search_params)  # will refetch from cache the first time - no biggie
@@ -291,6 +299,7 @@ module NewsScrapers
             article.save
             article_count += 1
             NewsScrapers.logger.info "        created and blacklisted article with #{extractor.name}"
+            sleep(1) if !in_cache?(search_url, search_params)  # don't swamp their servers
           end
         end
       end
@@ -298,7 +307,7 @@ module NewsScrapers
     end
 
     def scrape_index(d)
-      NewsScrapers.logger.info "    Scraping with #{d}"
+      NewsScrapers.logger.info "    Scraping indexes with #{d}"
 
       search_url, search_params = get_search_url_and_params(d)
 
@@ -327,16 +336,17 @@ module NewsScrapers
             # skip it if we've already fetched this link
             NewsScrapers.logger.info "        scraped already - skipping"
           else
-            sleep(1)
             populate_article_before_save(article) # delegate to child for source
             article.set_queue_status(:queued)
             article.pub_date = d
             article.save
             article_count += 1
             NewsScrapers.logger.info "        created article with #{extractor.name}"
+            sleep(1) if !in_cache?(search_url, search_params)  # don't swamp their servers
           end
         end
       end
+      NewsScrapers.logger.info "    Dones scraping indexes for #{d}"
       article_count
     end
      
@@ -349,7 +359,14 @@ module NewsScrapers
       if article.src_url != article.scan_src_url
         # if there is no abstract url, just a scan url, then skip this
         article_doc = fetch_url(article.src_url)
-        extractor.extract_article_info!(article, article_doc)
+        worked = extractor.extract_article_info!(article, article_doc)
+        if worked==false
+          NewsScrapers.logger.error "extract_article_info! failed on {# article.src_url}"
+          article.set_queue_status(:in_progress_error)
+          article.save
+          return
+        end
+        sleep(0.2) if !in_cache?(article.src_url)  # don't swamp their servers
       end
       if article.has_scan_src_url?
         article_scan_doc = fetch_url(article.scan_src_url)
@@ -358,7 +375,15 @@ module NewsScrapers
           scan_dir = article.path_to_scan_dir
           extension = article.scan_file_url.split('.').pop()
           article.scan_local_filename = article.id.to_s + "." + extension
-          @requester.get(article.scan_file_url).save( File.join(scan_dir, article.scan_local_filename) )
+          begin
+            @requester.get(article.scan_file_url).save( File.join(scan_dir, article.scan_local_filename) )
+          rescue Exception => e
+            NewsScrapers.logger.error "scraping article scan file url failed! #{article.scan_file_url}"
+            article.set_queue_status(:in_progress_error)
+            article.save
+            return          
+          end
+          sleep(0.2) if !in_cache?(article.scan_src_url)  # don't swamp their servers
         end
       end
       article.set_queue_status(:complete)
@@ -370,6 +395,7 @@ module NewsScrapers
     # get all the articles on a particlar day and insert them into the db
     def scrape(d)
       scrape_index(d)
+      NewsScrapers.logger.info "    Scraping article contents"
       while(Article.where({:queue_status=>:queued, :source=>get_source_name}).count > 0)
         Article.where({:queue_status=>:queued, :source=>get_source_name}).find(:all, :limit=>10) do |article|
           scrape_article(article) 

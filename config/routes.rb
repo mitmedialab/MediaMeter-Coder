@@ -1,6 +1,11 @@
 UsWorldCoverage::Application.routes.draw do
   resources :articles
 
+  get '/scraper' => 'scraper#status'
+  get '/scraper/:action' => 'scraper' 
+
+  root :to => 'scraper#status'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

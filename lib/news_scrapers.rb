@@ -14,6 +14,11 @@ module NewsScrapers
   @@logger_instance = nil
   
   @@cache = nil
+    
+  class << self
+    # static @@public_base_url attr_accessor, as described here http://www.ruby-forum.com/topic/72967
+    attr_accessor 'public_base_url'
+  end
   
   def self.all_dates
     dates = []
@@ -72,7 +77,7 @@ module NewsScrapers
   
   # TODO: replace with sprintf (this is dumb, but was quick and easy)
   def self.prefix_with_zero number
-    fixed = number
+    fixed = number.to_s
     fixed = "0" + number.to_s if number < 10
     fixed
   end
@@ -89,7 +94,7 @@ module NewsScrapers
   def self.logger
     return Rails.logger if defined? Rails
     if @@logger_instance == nil
-      @@logger_instance = Logger.new("news_scrapers_development.log")
+      @@logger_instance = Logger.new("news_scrapers_#{Rails.env}.log")
     end
     @@logger_instance
   end

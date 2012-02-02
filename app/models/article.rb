@@ -6,16 +6,17 @@ class ArticlePrepper
 
   def before_save(article)
     # make the cache hash
-    return if article.src_url_md5 !=nil
-    if article.has_url?
-      url = article.src_url
-    else 
-      url = article.fake_url   
+    if article.src_url_md5 ==nil
+      if article.has_url?
+        url = article.src_url
+      else 
+        url = article.fake_url
+      end
+      article.src_url_md5 = encrypt( url )
     end
-    article.src_url_md5 = encrypt( url )
     # clean some strings
-    article.headline.strip!
-    article.abstract.strip! if !article.abstract.nil?
+    article.headline.strip! if article.headline!=nil
+    article.abstract.strip! if article.abstract!=nil 
   end
   
   private
@@ -37,9 +38,10 @@ class Article < ActiveRecord::Base
 
   before_save   ArticlePrepper.new
   
+  scope :completed, where(:queue_status=>:complete)
+  
   def url_to_scan_local_file
-    #TODO: how do we figure out the base url of the current server?
-    return File.join(scan_dir, scan_local_filename) if has_scan_local_filename?
+    return "http://"+File.join(NewsScrapers::public_base_url, scan_dir, scan_local_filename) if has_scan_local_filename?
     return ""  
   end
   
@@ -80,7 +82,7 @@ class Article < ActiveRecord::Base
   end
 
   def set_queue_status(val)
-    raise ArgumentError.new("Argument is not a valid queue status. Received :#{val.to_s}. Valid responses include :queued, :in_progress, :complete, :blacklisted") if !([:queued, :in_progress, :complete, :blacklisted].include? val)
+    raise ArgumentError.new("Argument is not a valid queue status. Received :#{val.to_s}. Valid responses include :queued, :in_progress, :complete, :blacklisted, :in_progress_error") if !([:queued, :in_progress, :complete, :blacklisted, :in_progress_error].include? val)
     self.queue_status = val.to_s
   end
 
