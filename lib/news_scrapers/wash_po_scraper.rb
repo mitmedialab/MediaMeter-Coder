@@ -11,7 +11,53 @@ module NewsScrapers
 
     def blacklist_scrape(d)
       if(d.year <= 1984)
-        #TODO: PUT HERE
+        blacklist_scrape_index(d, {:OpAT=>'AND',
+          :RQT=>'512',
+          :SrchMode=>'2',
+          :moreOptState=>'CLOSED',
+          :Opauthor=>'AND',
+          :autor=>'',
+          :AT=>'any',
+          :SQ=> '',
+          :FO==>'AT',
+          :OP1=>'OR',
+          :FO1=>'AT',
+          :SQ1=>'birth_notice',
+          :OP2=>'OR',
+          :SQ2=>'editorial_cartoon',
+          :FO2=>'AT',
+          :OP3=>'OR',
+          :SQ3=>'display_ad',
+          :FO3=>'AT',
+          :OP4=>'OR',
+          :SQ4=>'classified_ad',
+          :FO4=>'AT'}, "birth_notice;editorial_cartoon;display_ad;classified_ad");
+
+        blacklist_scrape_index(d, {:OpAT=>'AND',
+          :RQT=>'512',
+          :SrchMode=>'2',
+          :moreOptState=>'CLOSED',
+          :Opauthor=>'AND',
+          :autor=>'',
+          :AT=>'any',
+          :SQ=> '',
+          :FO==>'AT',
+          :OP5=>'OR',
+          :SQ5=>'letter',
+          :FO5=>'AT',
+          :OP6=>'OR',
+          :SQ6=>'lottery_numbers',
+          :FO6=>'AT',
+          :OP7=>'OR',
+          :SQ7=>'photo_standalone',
+          :FO7=>'AT',
+          :OP8=>'OR',
+          :SQ8=>'stock_quote',
+          :FO8=>'AT',
+          :OP9=>'OR',
+          :SQ9=>'tbl_of_contents',
+          :FO9=>'AT'
+        }, "letter;lottery_numbers;photo_standalone;stock_quote;tbl_of_contents");
       else
         #NO ARTICLE TYPE QUERYING FOR THE WASHINGTON POST
       end
