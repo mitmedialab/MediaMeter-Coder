@@ -10,7 +10,6 @@ module NewsScrapers
 
     def blacklist_scrape(d)
       if(d.year <= 1984)
-        puts "BLACKLIST SCRAPING < 1984"
         blacklist_scrape_index(d, {:OpAT=>'AND',
           :RQT=>'512',
           :SrchMode=>'2',
@@ -61,10 +60,9 @@ module NewsScrapers
 
 
       else
-        puts "BLACKLIST SCRAPING"
-        puts blacklist_scrape_index(d, {:at_curr=>"Letters to the Editor"}, "Letters to the Editor")
-        puts blacklist_scrape_index(d, {:at_curr=>"Recipe"}, "Recipe")
-        puts blacklist_scrape_index(d, {:at_curr=>"Recording"}, "Recording")
+        blacklist_scrape_index(d, {:at_curr=>"Letters to the Editor"}, "Letters to the Editor")
+        blacklist_scrape_index(d, {:at_curr=>"Recipe"}, "Recipe")
+        blacklist_scrape_index(d, {:at_curr=>"Recording"}, "Recording")
       end
     end
   
