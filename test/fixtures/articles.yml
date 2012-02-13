@@ -1,19 +1,19 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  source: MyString
+  source: LA Times
   pub_date: 2011-12-16
   byline: MyString
-  headline: MyString
+  headline: Zombie Aliens Drink Tea with Charles Dickens
   page: MyString
   src_url: MyString
-  abstract: MyString
+  abstract: "Anonymous sources report strange happenings in Satis House involving zombie alien overlords, tea, and 19th century authors Thursday night."
 
 two:
-  source: MyString
+  source: New York Times
   pub_date: 2011-12-16
   byline: MyString
-  headline: MyString
+  headline: "Fire Report: Feral Cat Plays Accordion"
   page: MyString
   src_url: MyString
-  abstract: MyString
+  abstract: "Fire marshalls from the local chapter of the Seventh Street Hibernian Volunteer Brigade were unable to halt a conflagration in Bleecker Street created by a feral musician on a rampage of sound last Friday."

@@ -2,14 +2,12 @@
 
 one:
   type: 
-  time: 2011-12-19 11:47:27
-  user: MyString
+  created_at: "2011-12-19 11:47:27"
   confidence: 1
   answer: false
 
 two:
   type: 
-  time: 2011-12-19 11:47:27
-  user: MyString
+  created_at: "2011-12-19 11:47:27"
   confidence: 1
   answer: false

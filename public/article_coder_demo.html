@@ -1,0 +1,106 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="stylesheets/bootstrap.css"/>
+    <script type="text/javascript" language="Javascript" src="scripts/prototype.js"></script>
+    <title>Coding interface demo</title>
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        background-color: #fff;
+        line-height: 1.5385em;
+      }
+    </style>
+
+     <script language="Javascript" type="text/javascript">
+      function alertmsg(e){
+        var evtobj=window.event? event : e //distinguish between IE's explicit event object (window.event) and Firefox's implicit.
+        var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
+        var actualkey=String.fromCharCode(unicode)
+        var current = $('articles').firstDescendant().firstDescendant();
+        while(current!=null && (current.hasClassName('yes') || current.hasClassName('no'))){
+          current = current.up().next().firstDescendant();
+        }
+        if(current == null){
+          return null;
+        }
+        if(actualkey=="y"){
+          current.addClassName('yes');
+        }else if(actualkey=="n"){
+           current.addClassName('no');
+        }
+      }
+     </script>
+  </head>
+  <body onload="document.onkeypress=alertmsg">
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="container">
+        <a class="brand" href="/">MediaMirror Coder</a>
+        <ul class="nav">
+          <li class="active"><a href="/">International</a></li>
+          <li><a href="/sessions/browse">International in National Interest</a></li>
+          <li><a href="/sessions/submit">National</a></li>
+          <li><a href="/sessions/browse">Local</a></li>
+          <li><a href="/Another thing/">Sport</a></li>
+          <li><a href="/Another thing/">The Arts</a></li>
+        </ul>
+        <ul class="nav secondary-nav">
+          
+       <!--  <li><a href="/accounts/login">Sign in</a></li>-->
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="row">
+      <div class="hero-unit">
+        <h1>Is this an International Story?</h1>
+        <div class="container" id="articles">
+
+          <div class="row">
+            <div class="well">
+               <h2>this is a title</h2>
+               <p>This is content, yeah</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="well">
+               <h2>this is a title</h2>
+               <p>This is content, yeah</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="well">
+               <h2>this is a title</h2>
+               <p>This is content, yeah</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="well">
+               <h2>this is a title</h2>
+               <p>This is content, yeah</p>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="well">
+               <h2>this is a title</h2>
+               <p>This is content, yeah</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  </body>
+
+</html>

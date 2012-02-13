@@ -1,0 +1,10 @@
+As a coder, I want to be redirected to enter my name if I don't have a session
+As a coder, I want to see the next, current, and previous articles to code
+As a coder, I only want to see and code articles that have been sampled
+As a coder, I want to have a yes/no question for each article
+As a coder, I want to answer only one question at a time
+As a coder, I want to type "y" to code an article "yes" in response to the question
+As a coder, I want to type "n" to code an article "no" in response to the question
+As a coder, I don't need to edit my answers
+As a coder, I only want to see articles that I haven't answered before
+As a coder, I want to know how many articles I haven't coded for a given question.
