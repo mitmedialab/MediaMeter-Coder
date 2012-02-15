@@ -1,6 +1,7 @@
 class Answer < ActiveRecord::Base
 
   belongs_to      :article
+  belongs_to      :user
 
   ANSWER_TYPES = {
     "arts"=>"ArtsAnswer",

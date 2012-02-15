@@ -6,6 +6,9 @@ UsWorldCoverage::Application.routes.draw do
 
   root :to => 'scraper#status'
 
+  match 'code/international' => 'code#international'
+  match 'code/answer' => 'code#answer'
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -1,4 +1,5 @@
 class ArticlesController < ApplicationController
+  layout nil
 
   # GET /articles
   # GET /articles.json
