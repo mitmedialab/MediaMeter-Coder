@@ -18,11 +18,12 @@ class CodeController < ApplicationController
     return if !(["yes", "no"].include? params[:answer])
     
     article = Article.find_by_id(params[:id]) 
-    answer = Answer.new_by_type(params[:answer_type])
-    answer.user = @user
-    answer.answer = 1 if params[:answer] == "yes"
-    answer.answer = 0 if params[:answer] == "no"
-    answer.save
+    @answer = Answer.new_by_type(params[:answer_type])
+    @answer.user = @user
+    @answer.article = article
+    @answer.answer = 1 if params[:answer] == "yes"
+    @answer.answer = 0 if params[:answer] == "no"
+    @answer.save
 
     #TODO finish while conscious
    

@@ -3,7 +3,7 @@ require 'test_helper'
 class CodeControllerTest < ActionController::TestCase
   setup do
     @article = articles(:one)
-    @user = users(:one)
+    @user = users(:bob)
   end
 
   test "answer" do
@@ -12,7 +12,8 @@ class CodeControllerTest < ActionController::TestCase
         post :answer, 
              {:id=> @article.id, :answer_type=>"international", :answer=>"yes"},
              {:username=>@user.username}
-             
+        assert assigns[:answer]
+        assert_equal @article.id, assigns[:answer].article.id
       end
     end
 
