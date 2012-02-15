@@ -17,9 +17,9 @@ class Answer < ActiveRecord::Base
     ANSWER_TYPES[answer_type]
   end
 
-  def self.new_by_type(answer_type)
+  def self.new_by_type(answer_type, args={})
     classname = self.classname_for_type(answer_type)
-    classname.constantize.new
+    classname.constantize.new(args)
   end
 
 end
