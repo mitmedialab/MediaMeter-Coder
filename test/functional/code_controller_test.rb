@@ -2,11 +2,19 @@ require 'test_helper'
 
 class CodeControllerTest < ActionController::TestCase
   setup do
-    @article = articles(:one)
+    @article = articles(:two)
     @user = users(:bob)
   end
 
   test "answer" do
+
+    assert_no_difference('Answer.count') do
+      post :answer,
+        {:answer_type=>"international"},
+        {:username=>@user.username}
+        assert_equal articles(:one), assigns[:article]
+    end
+
     assert_difference('Answer.count') do
       assert_difference('InternationalAnswer.count') do
         post :answer, 
@@ -15,6 +23,7 @@ class CodeControllerTest < ActionController::TestCase
         assert assigns[:answer]
         assert_equal @article.id, assigns[:answer].article.id
         assert_equal "MediaMeter Coder", assigns[:answer].source
+        assert_equal articles(:one), assigns[:article]
       end
     end
 

@@ -15,6 +15,10 @@ class CodeController < ApplicationController
     return if session[:username].nil?
     @user = User.find_by_username(session[:username])
     return if @user.nil? or params[:answer_type].nil?
+    if(params[:answer].nil? or params[:id].nil?)
+      @article = @user.get_next_unanswered_article
+      return
+    end
     return if !(["yes", "no"].include? params[:answer])
 
     answer = nil
@@ -24,7 +28,6 @@ class CodeController < ApplicationController
     article = Article.find_by_id(params[:id]) 
     @answer = Answer.new_by_type(params[:answer_type], {:user=>@user, :article=>article, :source=>"MediaMeter Coder", :answer=>answer})
     @answer.save
-  
-    #TODO: Get this to return the next unused answer
+    @article = @user.get_next_unanswered_article
   end
 end

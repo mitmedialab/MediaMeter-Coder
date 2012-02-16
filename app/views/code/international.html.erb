@@ -30,27 +30,40 @@
         */
         if(actualkey=="y"){
           current.addClassName('yes');
-          loadNextArticle();
+          codeArticle("yes");
         }else if(actualkey=="n"){
            current.addClassName('no');
-           loadNextArticle();
+           codeArticle("no");
         }
 
       }
-      
-      function loadNextArticle(){
-        new Ajax.Request("/articles/"+article_counter, {
-          method: 'get',
+
+      //TODO: INCOMPLETE
+      function codeArticle(answer){
+        new Ajax.Request("/code/answer", {
+          method: 'post',
+          parameters: {id: 1, answer_type: "international", answer: answer},
           onSuccess: function(transport) {
             var notice = $('notice');
             $('articles').insert({top:transport.responseText});
-            article_counter += 1;
+          }
+        });
+        
+      }
+      
+      function loadFirstArticle(){
+        new Ajax.Request("/code/answer", {
+          method: 'post',
+          parameters: { answer_type: "international"},
+          onSuccess: function(transport) {
+            var notice = $('notice');
+            $('articles').insert({top:transport.responseText});
           }
         });
       }
      </script>
   </head>
-  <body onload="document.onkeypress=alertmsg; loadNextArticle();">
+  <body onload="document.onkeypress=alertmsg; loadFirstArticle();">
   <div class="topbar">
     <div class="topbar-inner">
       <div class="container">
