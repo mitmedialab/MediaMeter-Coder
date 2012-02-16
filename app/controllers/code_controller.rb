@@ -1,4 +1,5 @@
 class CodeController < ApplicationController
+  layout nil
   before_filter :require_username
  
   def international

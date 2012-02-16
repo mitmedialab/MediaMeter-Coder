@@ -19,6 +19,7 @@
         var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
         var actualkey=String.fromCharCode(unicode)
         var current = $('articles').firstDescendant().firstDescendant();
+        var article_id = current.getAttribute("id");
 
         /*
         while(current!=null && (current.hasClassName('yes') || current.hasClassName('no'))){
@@ -30,19 +31,20 @@
         */
         if(actualkey=="y"){
           current.addClassName('yes');
-          codeArticle("yes");
+          codeArticle(article_id, "yes");
         }else if(actualkey=="n"){
            current.addClassName('no');
-           codeArticle("no");
+           codeArticle(article_id, "no");
         }
 
       }
 
       //TODO: INCOMPLETE
-      function codeArticle(answer){
+      function codeArticle(article_id, answer){
         new Ajax.Request("/code/answer", {
           method: 'post',
-          parameters: {id: 1, answer_type: "international", answer: answer},
+          parameters: {id: article_id, answer_type: "international", answer: answer,
+                       authenticity_token: '<%= form_authenticity_token %>'},
           onSuccess: function(transport) {
             var notice = $('notice');
             $('articles').insert({top:transport.responseText});
@@ -54,7 +56,7 @@
       function loadFirstArticle(){
         new Ajax.Request("/code/answer", {
           method: 'post',
-          parameters: { answer_type: "international"},
+          parameters: { answer_type: "international", authenticity_token: '<%= form_authenticity_token %>'},
           onSuccess: function(transport) {
             var notice = $('notice');
             $('articles').insert({top:transport.responseText});
@@ -64,6 +66,7 @@
      </script>
   </head>
   <body onload="document.onkeypress=alertmsg; loadFirstArticle();">
+
   <div class="topbar">
     <div class="topbar-inner">
       <div class="container">
