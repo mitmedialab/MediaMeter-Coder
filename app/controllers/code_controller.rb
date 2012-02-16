@@ -24,9 +24,7 @@ class CodeController < ApplicationController
     article = Article.find_by_id(params[:id]) 
     @answer = Answer.new_by_type(params[:answer_type], {:user=>@user, :article=>article, :source=>"MediaMeter Coder", :answer=>answer})
     @answer.save
-
-    #TODO finish while conscious
-   
-    
+  
+    #TODO: Get this to return the next unused answer
   end
 end

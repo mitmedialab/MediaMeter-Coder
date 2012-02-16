@@ -14,6 +14,7 @@ class CodeControllerTest < ActionController::TestCase
              {:username=>@user.username}
         assert assigns[:answer]
         assert_equal @article.id, assigns[:answer].article.id
+        assert_equal "MediaMeter Coder", assigns[:answer].source
       end
     end
 
