@@ -8,6 +8,8 @@ UsWorldCoverage::Application.routes.draw do
 
   match 'code/international' => 'code#international'
   match 'code/answer' => 'code#answer'
+  match 'session/new' => 'session#new'
+  match 'session/create' => 'session#create'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,4 +1,6 @@
 class CodeController < ApplicationController
+  before_filter :require_username
+ 
   def international
   end
 
@@ -12,9 +14,7 @@ class CodeController < ApplicationController
   end
  
   def answer 
-    return if session[:username].nil?
-    @user = User.find_by_username(session[:username])
-    return if @user.nil? or params[:answer_type].nil?
+    return if params[:answer_type].nil?
     if(params[:answer].nil? or params[:id].nil?)
       @article = @user.get_next_unanswered_article
       return
