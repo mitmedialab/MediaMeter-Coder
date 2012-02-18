@@ -1,5 +1,5 @@
 <div class="row"> 
-  <div class="well"<%if !@article.nil? %>id="<%=@article.id=%>"<%end%>>
+  <div class="well"<%if !@article.nil? %> id="<%=@article.id=%>"<%end%>>
 
 <% if @article.nil? %>
   
@@ -12,8 +12,6 @@
     <em><%= @article.source =%></em>
     <hr/>
     <p><%= @article.abstract =%></p>
-    <hr/>
-
 <% end %>
 
   </div>
