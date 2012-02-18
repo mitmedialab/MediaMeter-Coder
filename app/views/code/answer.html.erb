@@ -7,10 +7,12 @@
     
 <% else %>
 
+    <div style="padding:5px; border:1px solid #ccc; display:inline-block; float:right;"><%= @user.answers.count %></div>
     <h2><%= @article.headline =%></h2>
     <em><%= @article.source =%></em>
     <hr/>
     <p><%= @article.abstract =%></p>
+    <hr/>
 
 <% end %>
 
