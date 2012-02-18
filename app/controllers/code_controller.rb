@@ -1,5 +1,6 @@
 class CodeController < ApplicationController
   layout nil
+  layout "application", :except=>[:answer]
   before_filter :require_username
  
   def international

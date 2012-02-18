@@ -1,7 +1,6 @@
-<html>
+<!--<html>
   <head>
     <link rel="stylesheet" href="/stylesheets/bootstrap.css"/>
-    <script type="text/javascript" language="Javascript" src="/scripts/prototype.js"></script>
     <title>Coding interface demo</title>
     <style type="text/css">
       body {
@@ -10,60 +9,12 @@
         line-height: 1.5385em;
       }
     </style>
-
-     <script language="Javascript" type="text/javascript">
-      function alertmsg(e){
-        var evtobj=window.event? event : e //distinguish between IE's explicit event object (window.event) and Firefox's implicit.
-        var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
-        var actualkey=String.fromCharCode(unicode)
-        var current = $('articles').firstDescendant().firstDescendant();
-        var article_id = current.getAttribute("id");
-
-        /*
-        while(current!=null && (current.hasClassName('yes') || current.hasClassName('no'))){
-          current = current.up().next().firstDescendant();
-        }
-        if(current == null){
-          return null;
-        }
-        */
-        if(actualkey=="y"){
-          current.addClassName('yes');
-          codeArticle(article_id, "yes");
-        }else if(actualkey=="n"){
-           current.addClassName('no');
-           codeArticle(article_id, "no");
-        }
-
-      }
-
-      //TODO: INCOMPLETE
-      function codeArticle(article_id, answer){
-        new Ajax.Request("/code/answer", {
-          method: 'post',
-          parameters: {id: article_id, answer_type: "international", answer: answer,
-                       authenticity_token: '<%= form_authenticity_token %>'},
-          onSuccess: function(transport) {
-            var notice = $('notice');
-            $('articles').insert({top:transport.responseText});
-          }
-        });
-        
-      }
-      
-      function loadFirstArticle(){
-        new Ajax.Request("/code/answer", {
-          method: 'post',
-          parameters: { answer_type: "international", authenticity_token: '<%= form_authenticity_token %>'},
-          onSuccess: function(transport) {
-            var notice = $('notice');
-            $('articles').insert({top:transport.responseText});
-          }
-        });
-      }
-     </script>
-  </head>
+    <script type="text/javascript" language="Javascript" src="/scripts/prototype.js"></script>
+    <script type="text/javascript" language="Javascript" src="/scripts/code_articles.js"></script>
+  </head>-->
   <body onload="document.onkeypress=alertmsg; loadFirstArticle();">
+
+  <input id="authenticity_token" name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>"/>
 
   <div class="topbar">
     <div class="topbar-inner">
@@ -100,4 +51,4 @@
 
   </body>
 
-</html>
+<!--</html>-->
