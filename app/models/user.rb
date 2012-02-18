@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   has_many :answers
  
-  def get_next_unanswered_article
+  def get_next_unanswered_article(answer_type)
     next_unanswered_article = nil
     query_string = ""
     query_string << <<-SQL
@@ -9,7 +9,9 @@ SELECT articles.*,
        selected_answers.user_id 
   FROM articles 
   LEFT OUTER JOIN (
-    SELECT * from answers WHERE answers.user_id = #{id}) 
+    SELECT * from answers 
+     WHERE answers.user_id = #{id}
+       AND type = "#{Answer.classname_for_type(answer_type)}")
     AS selected_answers 
     ON articles.id = selected_answers.article_id 
   WHERE selected_answers.user_id IS NULL 

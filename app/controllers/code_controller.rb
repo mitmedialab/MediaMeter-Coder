@@ -17,7 +17,7 @@ class CodeController < ApplicationController
   def answer 
     return if params[:answer_type].nil?
     if(params[:answer].nil? or params[:id].nil?)
-      @article = @user.get_next_unanswered_article
+      @article = @user.get_next_unanswered_article(params[:answer_type])
       return
     end
     return if !(["yes", "no"].include? params[:answer])
@@ -29,6 +29,6 @@ class CodeController < ApplicationController
     article = Article.find_by_id(params[:id]) 
     @answer = Answer.new_by_type(params[:answer_type], {:user=>@user, :article=>article, :source=>"MediaMeter Coder", :answer=>answer})
     @answer.save
-    @article = @user.get_next_unanswered_article
+    @article = @user.get_next_unanswered_article(params[:answer_type])
   end
 end
