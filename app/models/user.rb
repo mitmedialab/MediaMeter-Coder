@@ -27,4 +27,8 @@ SQL
 #    end
     next_unanswered_article
   end
+
+  def find_answers_by_type(answer_type)
+    answers.find_all_by_type(Answer.classname_for_type(answer_type))
+  end
 end

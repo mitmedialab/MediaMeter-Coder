@@ -17,10 +17,12 @@ class CodeController < ApplicationController
  
   def answer 
     return if params[:answer_type].nil?
+    @answer_type = params[:answer_type]
     if(params[:answer].nil? or params[:id].nil?)
       @article = @user.get_next_unanswered_article(params[:answer_type])
       return
     end
+
     return if !(["yes", "no"].include? params[:answer])
 
     answer = nil
@@ -28,7 +30,7 @@ class CodeController < ApplicationController
     answer = 0 if params[:answer] == "no"
 
     article = Article.find_by_id(params[:id]) 
-    @answer = Answer.new_by_type(params[:answer_type], {:user=>@user, :article=>article, :source=>"MediaMeter Coder", :answer=>answer})
+    @answer = Answer.new_by_type(@answer_type, {:user=>@user, :article=>article, :source=>"MediaMeter Coder", :answer=>answer})
     @answer.save
     @article = @user.get_next_unanswered_article(params[:answer_type])
   end

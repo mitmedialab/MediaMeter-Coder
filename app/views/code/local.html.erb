@@ -15,7 +15,7 @@
   <body onload="document.onkeypress=alertmsg; loadFirstArticle();">
 
   <input id="authenticity_token" name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>"/>
-  <input id="answer_type" name="answer_type" type="hidden" value="international"/>
+  <input id="answer_type" name="answer_type" type="hidden" value="local"/>
 
 
   <div class="topbar">
@@ -23,10 +23,10 @@
       <div class="container">
         <a class="brand" href="/">MediaMeter Coder</a>
         <ul class="nav">
-          <li class="active"><a href="/code/international">International</a></li>
+          <li><a href="/code/international">International</a></li>
           <li><a href="/code/foreign">Foreign</a></li>
           <li><a href="/code/national">National</a></li>
-          <li><a href="/code/local">Local</a></li>
+          <li class="active" ><a href="/code/local">Local</a></li>
           <li><a href="/code/sport">Sport</a></li>
           <li><a href="/code/arts">The Arts</a></li>
         </ul>
@@ -43,7 +43,7 @@
   <div class="container">
     <div class="row">
       <div class="hero-unit">
-        <h1>Is this an International Story?</h1>
+        <h1>Is this a Local Story?</h1>
         <div class="container" id="articles">
         </div>
       </div>

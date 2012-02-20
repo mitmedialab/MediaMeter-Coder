@@ -17,9 +17,10 @@
 
       function codeArticle(article_id, answer){
         authenticity_token =$('authenticity_token').value
+        answer_type = $('answer_type').value
         new Ajax.Request("/code/answer", {
           method: 'post',
-          parameters: {id: article_id, answer_type: "international", answer: answer,
+          parameters: {id: article_id, answer_type: answer_type, answer: answer,
                        authenticity_token: authenticity_token},
           onSuccess: function(transport) {
             var notice = $('notice');
@@ -31,9 +32,10 @@
       
       function loadFirstArticle(){
         authenticity_token =$('authenticity_token').value
+        answer_type = $('answer_type').value
         new Ajax.Request("/code/answer", {
           method: 'post',
-          parameters: { answer_type: "international", authenticity_token: authenticity_token},
+          parameters: { answer_type: answer_type, authenticity_token: authenticity_token},
           onSuccess: function(transport) {
             var notice = $('notice');
             $('articles').insert({top:transport.responseText});
