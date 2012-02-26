@@ -7,6 +7,11 @@ UsWorldCoverage::Application.routes.draw do
   root :to => 'scraper#status'
 
   match 'code/international' => 'code#international'
+  match 'code/foreign' => 'code#foreign'
+  match 'code/arts' => 'code#arts'
+  match 'code/local' => 'code#local'
+  match 'code/national' => 'code#national'
+  match 'code/sport' => 'code#sport'
   match 'code/answer' => 'code#answer'
   match 'session/new' => 'session#new'
   match 'session/create' => 'session#create'
