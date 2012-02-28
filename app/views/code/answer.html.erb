@@ -11,7 +11,14 @@
     <h2><%= @article.headline =%></h2>
     <em><%= @article.source =%></em>
     <hr/>
-    <p><%= @article.abstract =%></p>
+    <p>
+    <% if !@article.abstract.nil? %>
+      <%= @article.abstract =%>
+    <% end %>
+    <% if !@article.scan_local_filename.nil? %>
+      <%= link_to "Read PDF for detail", "/article_scans/" + @article.scan_local_filename %>
+    <% end %>
+    </p>
 <% end %>
 
   </div>

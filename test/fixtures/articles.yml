@@ -8,6 +8,7 @@ one:
   page: MyString
   src_url: MyString
   abstract: "Anonymous sources report strange happenings in Satis House involving zombie alien overlords, tea, and 19th century authors Thursday night."
+  scan_local_filename: 12345.pdf
 
 two:
   source: New York Times
