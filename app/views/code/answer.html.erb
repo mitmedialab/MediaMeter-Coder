@@ -9,7 +9,7 @@
 
     <div style="padding:5px; border:1px solid #ccc; display:inline-block; float:right;"><%= @user.find_answers_by_type(@answer_type).size%></div>
     <h2><%= @article.headline =%></h2>
-    <em><%= @article.source =%></em>
+    <em><%= @article.source =%> - <%= @article.pub_date.year.to_s =%></em>
     <hr/>
     <p>
     <% if !@article.abstract.nil? %>
