@@ -16,7 +16,7 @@
       <%= @article.abstract =%>
     <% end %>
     <% if !@article.scan_local_filename.nil? %>
-      <%= link_to "Read PDF for detail", "/article_scans/" + @article.scan_local_filename %>
+      <%= link_to "Read PDF for detail", "/article_scans/" + @article.source.downcase.gsub(" ","_") + "/" + @article.pub_date.year.to_s + "/" + @article.pub_date.month.to_s + "/" + @article.pub_date.day.to_s + "/" + @article.scan_local_filename %>
     <% end %>
     </p>
 <% end %>
