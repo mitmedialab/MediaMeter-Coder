@@ -22,4 +22,8 @@ class Answer < ActiveRecord::Base
     classname.constantize.new(args)
   end
 
+  def is_type(type)
+    return Answer::classname_for_type(type)==self.class.name
+  end
+
 end

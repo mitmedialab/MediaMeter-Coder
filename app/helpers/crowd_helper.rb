@@ -1,0 +1,3 @@
+module CrowdHelper
+
+end

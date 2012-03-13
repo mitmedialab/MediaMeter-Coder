@@ -31,6 +31,7 @@ class Article < ActiveRecord::Base
 
   self.per_page = 100
 
+  has_many      :answers
   has_many      :arts_answers
   has_many      :foreign_answers
   has_many      :international_answers
@@ -102,6 +103,12 @@ class Article < ActiveRecord::Base
   def get_blacklist_tags()
     return [] if self.blacklist_tag.nil?
     self.blacklist_tag.split(",")
+  end
+
+  def answers_by_type(type)
+    answers.select do |answer|
+      answer.is_type type
+    end
   end
 
   private 
