@@ -29,6 +29,8 @@ end
 
 class Article < ActiveRecord::Base
 
+  self.per_page = 100
+
   has_many      :arts_answers
   has_many      :foreign_answers
   has_many      :international_answers
@@ -39,6 +41,7 @@ class Article < ActiveRecord::Base
   before_save   ArticlePrepper.new
   
   scope :completed, where(:queue_status=>:complete)
+  scope :first_sample, where(:sampletag=>'true')
   
   def url_to_scan_local_file
     return "http://"+File.join(NewsScrapers::public_base_url, scan_dir, scan_local_filename) if has_scan_local_filename?

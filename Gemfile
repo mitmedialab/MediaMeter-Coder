@@ -13,6 +13,7 @@ group :assets do
   gem 'sass-rails',   '~> 3.1.5'
   gem 'coffee-rails', '~> 3.1.1'
   gem 'uglifier', '>= 1.0.3'
+  gem 'less'
 end
 
 gem 'jquery-rails'
@@ -34,4 +35,5 @@ gem 'mysql2'  # on os x lion you may need to run: sudo ln -s /usr/local/mysql/li
 gem 'nokogiri', "~> 1.5.0"
 gem 'mechanize'
 gem "nytimes-articles", "~> 0.4.1"
-
+gem "twitter-bootstrap-rails"
+gem "will_paginate", '~> 3.0'

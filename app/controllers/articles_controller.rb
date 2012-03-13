@@ -1,10 +1,10 @@
 class ArticlesController < ApplicationController
-  layout nil
+  layout "browse"
 
   # GET /articles
   # GET /articles.json
   def index
-    @articles = Article.all
+    @articles = Article.page(params[:page]).order(:pub_date,:source,:headline)
 
     respond_to do |format|
       format.html # index.html.erb

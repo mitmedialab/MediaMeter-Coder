@@ -1,98 +1,97 @@
-<div class="row">
-  <div class="well">
-    <h2><%= @article.headline =%></h2>
-    <em><%= @article.source =%></em>
-    <hr/>
-    <p><%= @article.abstract =%></p>
-  </div>
-</div>
-<!--<p id="notice"><%= notice %></p>
+<h1>Article</h1>
 
 <p>
-  <b>Source:</b>
+  <b>Source</b><br>
   <%= @article.source %>
 </p>
 
 <p>
-  <b>Pub date:</b>
+  <b>Pub date</b><br>
   <%= @article.pub_date %>
 </p>
 
 <p>
-  <b>Byline:</b>
+  <b>Byline</b><br>
   <%= @article.byline %>
 </p>
 
 <p>
-  <b>Headline:</b>
+  <b>Headline</b><br>
   <%= @article.headline %>
 </p>
 
 <p>
-  <b>Page:</b>
+  <b>Page</b><br>
   <%= @article.page %>
 </p>
 
 <p>
-  <b>Src url:</b>
+  <b>Src url</b><br>
   <%= @article.src_url %>
 </p>
 
 <p>
-  <b>Abstract:</b>
+  <b>Abstract</b><br>
   <%= @article.abstract %>
 </p>
 
 <p>
-  <b>Created at:</b>
-  <%= @article.created_at %>
-</p>
-
-<p>
-  <b>Updated at:</b>
-  <%= @article.updated_at %>
-</p>
-
-<p>
-  <b>Total pages:</b>
+  <b>Total pages</b><br>
   <%= @article.total_pages %>
 </p>
 
 <p>
-  <b>Word count:</b>
+  <b>Word count</b><br>
   <%= @article.word_count %>
 </p>
 
 <p>
-  <b>Src url md5:</b>
+  <b>Src url md5</b><br>
   <%= @article.src_url_md5 %>
 </p>
 
 <p>
-  <b>Section:</b>
+  <b>Section</b><br>
   <%= @article.section %>
 </p>
 
 <p>
-  <b>Queue status:</b>
+  <b>Queue status</b><br>
   <%= @article.queue_status %>
 </p>
 
 <p>
-  <b>Scan src url:</b>
+  <b>Scan src url</b><br>
   <%= @article.scan_src_url %>
 </p>
 
 <p>
-  <b>Scan local filename:</b>
+  <b>Scan local filename</b><br>
   <%= @article.scan_local_filename %>
 </p>
 
 <p>
-  <b>Scan file url:</b>
+  <b>Scan file url</b><br>
   <%= @article.scan_file_url %>
 </p>
 
+<p>
+  <b>Blacklist tag</b><br>
+  <%= @article.blacklist_tag %>
+</p>
 
-<%= link_to 'Edit', edit_article_path(@article) %> |
-<%= link_to 'Back', articles_path %>-->
+<p>
+  <b>Golden</b><br>
+  <%= @article.golden %>
+</p>
+
+<p>
+  <b>Sampletag</b><br>
+  <%= @article.sampletag %>
+</p>
+
+<div class="form-actions">
+  <%= link_to 'Back', articles_path, :class => 'btn'  %>
+  <%= link_to 'Edit', edit_article_path(@article), :class => 'btn' %>
+  <%= link_to 'Delete', article_path(@article), :method => 'delete', :confirm => 'Are you sure?', :class => 'btn btn-danger' %>
+</div>

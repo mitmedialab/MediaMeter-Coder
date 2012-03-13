@@ -1,85 +1,136 @@
-<%= form_for(@article) do |f| %>
-  <% if @article.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(@article.errors.count, "error") %> prohibited this article from being saved:</h2>
+<%= form_for @article, :html => { :class => 'form-horizontal' } do |f| %>
+  <fieldset>
+    <legend><%= controller.action_name.capitalize %> Article</legend>
 
-      <ul>
-      <% @article.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
-      </ul>
+    <div class="control-group">
+      <%= f.label :source, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :source, :class => 'text_field' %>
+      </div>
     </div>
-  <% end %>
 
-  <div class="field">
-    <%= f.label :source %><br />
-    <%= f.text_field :source %>
-  </div>
-  <div class="field">
-    <%= f.label :pub_date %><br />
-    <%= f.date_select :pub_date %>
-  </div>
-  <div class="field">
-    <%= f.label :byline %><br />
-    <%= f.text_field :byline %>
-  </div>
-  <div class="field">
-    <%= f.label :headline %><br />
-    <%= f.text_field :headline %>
-  </div>
-  <div class="field">
-    <%= f.label :page %><br />
-    <%= f.text_field :page %>
-  </div>
-  <div class="field">
-    <%= f.label :src_url %><br />
-    <%= f.text_field :src_url %>
-  </div>
-  <div class="field">
-    <%= f.label :abstract %><br />
-    <%= f.text_field :abstract %>
-  </div>
-  <div class="field">
-    <%= f.label :created_at %><br />
-    <%= f.datetime_select :created_at %>
-  </div>
-  <div class="field">
-    <%= f.label :updated_at %><br />
-    <%= f.datetime_select :updated_at %>
-  </div>
-  <div class="field">
-    <%= f.label :total_pages %><br />
-    <%= f.number_field :total_pages %>
-  </div>
-  <div class="field">
-    <%= f.label :word_count %><br />
-    <%= f.number_field :word_count %>
-  </div>
-  <div class="field">
-    <%= f.label :src_url_md5 %><br />
-    <%= f.text_field :src_url_md5 %>
-  </div>
-  <div class="field">
-    <%= f.label :section %><br />
-    <%= f.text_field :section %>
-  </div>
-  <div class="field">
-    <%= f.label :queue_status %><br />
-    <%= f.text_field :queue_status %>
-  </div>
-  <div class="field">
-    <%= f.label :scan_src_url %><br />
-    <%= f.text_field :scan_src_url %>
-  </div>
-  <div class="field">
-    <%= f.label :scan_local_filename %><br />
-    <%= f.text_field :scan_local_filename %>
-  </div>
-  <div class="field">
-    <%= f.label :scan_file_url %><br />
-    <%= f.text_field :scan_file_url %>
-  </div>
-  <div class="actions">
-    <%= f.submit %>
-  </div>
+    <div class="control-group">
+      <%= f.label :pub_date, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.date_select :pub_date, :class => 'date_select' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :byline, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :byline, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :headline, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :headline, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :page, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :page, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :src_url, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :src_url, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :abstract, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :abstract, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :total_pages, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.number_field :total_pages, :class => 'number_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :word_count, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.number_field :word_count, :class => 'number_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :src_url_md5, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :src_url_md5, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :section, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :section, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :queue_status, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :queue_status, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :scan_src_url, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :scan_src_url, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :scan_local_filename, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :scan_local_filename, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :scan_file_url, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :scan_file_url, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :blacklist_tag, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :blacklist_tag, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :golden, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.check_box :golden, :class => 'check_box' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :sampletag, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :sampletag, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to 'Cancel', articles_path, :class => 'btn' %>
+    </div>
+  </fieldset>
 <% end %>

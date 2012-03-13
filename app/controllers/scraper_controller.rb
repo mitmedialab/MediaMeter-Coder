@@ -1,4 +1,5 @@
 class ScraperController < ApplicationController
+  layout 'browse'
 
   def status
     @count = Article.count
