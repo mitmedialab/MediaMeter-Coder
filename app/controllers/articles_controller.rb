@@ -25,14 +25,14 @@ class ArticlesController < ApplicationController
 
   # GET /articles/new
   # GET /articles/new.json
-  def new
-    @article = Article.new
+  #def new
+  #  @article = Article.new
 
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @article }
-    end
-  end
+  #  respond_to do |format|
+  #    format.html # new.html.erb
+  #    format.json { render json: @article }
+  #  end
+  #end
 
   # GET /articles/1/edit
   def edit
@@ -41,19 +41,19 @@ class ArticlesController < ApplicationController
 
   # POST /articles
   # POST /articles.json
-  def create
-    @article = Article.new(params[:article])
+  #def create
+  #  @article = Article.new(params[:article])
 
-    respond_to do |format|
-      if @article.save
-        format.html { redirect_to @article, notice: 'Article was successfully created.' }
-        format.json { render json: @article, status: :created, location: @article }
-      else
-        format.html { render action: "new" }
-        format.json { render json: @article.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  #  respond_to do |format|
+  #    if @article.save
+  #      format.html { redirect_to @article, notice: 'Article was successfully created.' }
+  #      format.json { render json: @article, status: :created, location: @article }
+  #    else
+  #      format.html { render action: "new" }
+  #      format.json { render json: @article.errors, status: :unprocessable_entity }
+  #    end
+  #  end
+  #end
 
   # PUT /articles/1
   # PUT /articles/1.json
@@ -82,4 +82,5 @@ class ArticlesController < ApplicationController
       format.json { head :ok }
     end
   end
+
 end
