@@ -1,0 +1,13 @@
+
+<!-- this has to be a get so that the pagination of results works -->
+<%= form_tag("/answers/for_users", :method => "get") do %>
+
+<% @users.each do |user| %>
+	<%= check_box_tag(user.id) %>
+	<%= label_tag(user.id, user.username + " (" + @user_answer_counts[user.id].to_s + ")" ) %>
+	<small></small>
+<% end %>
+
+  <%= submit_tag("See Answers") %>
+  
+<% end %>

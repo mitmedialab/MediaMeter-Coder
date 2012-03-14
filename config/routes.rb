@@ -17,6 +17,7 @@ UsWorldCoverage::Application.routes.draw do
   match 'session/create' => 'session#create'
 
   match 'crowd/:action' => 'crowd'
+  match 'answers/:action' => 'answers'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,0 +1,45 @@
+
+<%
+extra_css = ""
+threshold = 0.70
+if (agreement_info[:yes] > threshold) || (agreement_info[:no] > threshold)
+	extra_css = "uwc-agreement-made"
+else 
+	extra_css = "uwc-agreement-missing"	
+end  
+%>
+
+<div class="uwc-agreement <%=extra_css%>">
+<%
+
+if agreement_info[:is_of_type]==true
+%>	<em>Yes</em> <small><%=agreement_info[:yes]%>%</small>
+<%
+elsif agreement_info[:is_of_type]==false
+%>
+	<em>No</em> <small><%=agreement_info[:no]%>%</small>
+<%
+else 
+%>
+	<em>???</em> <small><%=agreement_info[:yes]%> / <%=agreement_info[:no]%>%</small>
+<%
+end
+%>
+
+<div>
+<%
+answers.each do |answer| 
+  if answer.answer then
+%>
+    <%=image_tag "green-dot.png", :alt=>answer.user_id.to_s %>
+<% 
+  else
+%>
+    <%=image_tag "red-dot.png", :alt=>answer.user_id.to_s %>
+<%
+  end
+end
+%>
+</div>
+
+</div>

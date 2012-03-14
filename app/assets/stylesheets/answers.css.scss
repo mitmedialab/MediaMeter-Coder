@@ -1,0 +1,30 @@
+// Place all the styles related to the answers controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+$red: #550000;
+
+.uwc-agreement {
+  text-align: center;
+  display: block;
+  width: 100px;
+  height: 60px;
+  padding: 5px;
+}
+
+.uwc-agreement em {
+  font-size: 1.5em;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.uwc-agreement small {
+  font-weight: bold;
+  color: rgb(102,102,102);
+}
+
+.uwc-agreement-missing {
+  background: $red;
+  color: rgb(204,204,204);
+}
