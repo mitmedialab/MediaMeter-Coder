@@ -1,2 +1,2 @@
-class NationalGold < Answer
+class NationalGold < Gold
 end

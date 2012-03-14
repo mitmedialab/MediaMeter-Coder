@@ -1,2 +1,2 @@
-class SportsGold < Answer
+class SportsGold < Gold
 end

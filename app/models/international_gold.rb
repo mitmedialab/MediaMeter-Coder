@@ -1,2 +1,2 @@
-class InternationalGold < Answer
+class InternationalGold < Gold
 end

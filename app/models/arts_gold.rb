@@ -1,2 +1,2 @@
-class ArtsGold < Answer
+class ArtsGold < Gold
 end

@@ -1,2 +1,2 @@
-class ForeignGold < Answer
+class ForeignGold < Gold
 end

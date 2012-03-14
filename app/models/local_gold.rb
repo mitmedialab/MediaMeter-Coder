@@ -1,2 +1,2 @@
-class LocalGold < Answer
+class LocalGold < Gold
 end
