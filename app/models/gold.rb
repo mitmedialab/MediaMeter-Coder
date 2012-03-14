@@ -35,5 +35,9 @@ class Gold < ActiveRecord::Base
     return answer==nil
   end
   
+  def answered?
+    return answer!=nil
+  end
+
 end
 

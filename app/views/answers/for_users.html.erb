@@ -1,6 +1,6 @@
 <h1>Coding Results</h1>
 <p>
-Showing answers for <%= (@selected_users.collect {|u| u.username} ).join(", ") %>.
+Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
 <b>Disagreement on <%=@disagreement_count%> article (<%=(@disagreement_count.to_f/@articles.count.to_f).round(2) %>%). 
 </p>
 <table class="table table-striped">
@@ -22,10 +22,12 @@ Showing answers for <%= (@selected_users.collect {|u| u.username} ).join(", ") %
         	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
         </td>
 <% @types.each do |type| %>
-        <td><%= render :partial => 'answer_icons', :locals=> {
+        <td id="wrapped-article-<%=article.id%>-<%=type%>"><%= render :partial => 'answer_icons', :locals=> {
         			:agreement_info=>@agreement_by_article[article.id][type],
         			:answers=>article.answers_by_type(type),
-        			:gold=>article.gold_by_type(type)} %>
+        			:gold=>article.gold_by_type(type),
+        			:username_map=>@user_id_to_name
+        			} %>
         </td>
 <% end %>
       </tr>
@@ -33,5 +35,48 @@ Showing answers for <%= (@selected_users.collect {|u| u.username} ).join(", ") %
   </tbody>
 </table>
 
-<%= will_paginate @articles %>
 
+<script type="text/javascript">
+//<![CDATA[
+
+function initTooltips(){
+	$("[rel='tooltip']").tooltip();
+}
+function initCheckboxes(){
+	$("input[type='checkbox']").click(updateGold)
+}
+function updateGold(evt){
+	checked = $(evt.target).is(':checked')
+	parts = $(evt.target).closest('form')[0].id.split('_');
+	td_id = $(evt.target).closest('td')[0].id;
+	article_parts = td_id.split('-');
+	article_id = article_parts[2];
+	type = parts[1];
+	gold_id = parts[parts.length-1];
+	$.ajax({
+		url:'/golds/'+gold_id+'.json',
+		dataType: 'text',
+		data: {'id': gold_id, 'gold[answer]': checked ? '1' : '0'},
+		type: 'PUT',
+		error: function (jqXHR, textStatus, errorThrown){
+			console.log('error '+errorThrown);
+		},
+		statusCode: {
+			200: function() {
+				$('#'+td_id).load('/answers/for_article/'+article_id+'/'+type,
+					function(){
+						initTooltips();
+						initCheckboxes();
+					}
+				);
+
+			}
+		}
+	});
+}
+
+$(initTooltips);
+$(initCheckboxes);
+
+//]]>
+</script>

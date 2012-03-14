@@ -26,6 +26,7 @@ UsWorldCoverage::Application.routes.draw do
 
   match 'crowd/:action' => 'crowd'
   match 'answers/:action' => 'answers'
+  match 'answers/for_article/:id/:type' => 'answers#for_article'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

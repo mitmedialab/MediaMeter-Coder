@@ -1,6 +1,6 @@
 
 <!-- this has to be a get so that the pagination of results works -->
-<%= form_tag("/answers/for_users", :method => "get") do %>
+<%= form_tag("/answers/for_users", :method => "post") do %>
 
 <% @users.each do |user| %>
 	<%= check_box_tag(user.id) %>

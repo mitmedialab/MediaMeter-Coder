@@ -1,11 +1,17 @@
 
 <%
 extra_css = ""
-if gold.answer==nil
-	extra_css = "uwc-agreement-missing"	
+# mark any items that don't have gold set yet
+if gold.unanswered?
+	extra_css << "uwc-agreement-missing "	
 else 
-	extra_css = "uwc-agreement-made"
+	extra_css << "uwc-agreement-made "
 end  
+# mark suspicious ones that you have gold for
+if gold.answered? && !(agreement_info[:yes] > 0.7 || agreement_info[:no] > 0.7)
+	extra_css << "uwc-agreement-forced " 
+end 
+
 %>
 
 <div class="uwc-agreement <%=extra_css%>">
@@ -26,21 +32,21 @@ end
 
 <div>
 <%
-answers.each do |answer| 
-  if answer.answer then
-%>
-    <%=image_tag "green-dot.png", :alt=>answer.user_id.to_s %>
-<% 
+answers.each do |answer|
+  username = username_map[answer.user_id] 
+  if answer.answer
+  	image = "green-dot.png"
   else
-%>
-    <%=image_tag "red-dot.png", :alt=>answer.user_id.to_s %>
-<%
+  	image = "red-dot.png"
   end
+%>
+    <a href="#" rel="tooltip" title="<%=username%>"><%=image_tag image, :alt=>answer.user_id.to_s %></a>
+<%
 end
 %>
 </div>
 
-<%= form_for gold, :remote=>true, :format=>:js do |f| %>
+<%= form_for gold, :remote=>true do |f| %>
   <%= f.check_box :answer %>
 <% end %>
 
