@@ -32,13 +32,8 @@ class Article < ActiveRecord::Base
   self.per_page = 100
 
   has_many      :answers
-  has_many      :arts_answers
-  has_many      :foreign_answers
-  has_many      :international_answers
-  has_many      :local_answers
-  has_many      :national_answers
-  has_many      :sports_answers 
-
+  has_many      :golds
+  
   before_save   ArticlePrepper.new
   
   scope :completed, where(:queue_status=>:complete)
@@ -105,10 +100,27 @@ class Article < ActiveRecord::Base
     self.blacklist_tag.split(",")
   end
 
+  # assumes you've loaded the article with the linked has_many :articles
   def answers_by_type(type)
     answers.select do |answer|
       answer.is_type type
     end
+  end
+
+  # assumes you've loaded the article with the linked has_many :golds
+  def gold_by_type(type)
+    gold = nil
+    golds.select do |answer|
+      golds.is_type type
+    end
+    if golds.count > 0
+      gold = golds.first    # there should be only one!
+    else
+      # make a new one if none exists
+      gold = Gold.new_by_type(type)
+      gold.article_id = self.id
+    end
+    gold
   end
 
   private 

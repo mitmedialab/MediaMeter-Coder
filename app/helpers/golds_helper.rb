@@ -1,0 +1,2 @@
+module GoldsHelper
+end

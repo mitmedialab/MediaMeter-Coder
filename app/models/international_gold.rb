@@ -1,0 +1,2 @@
+class InternationalGold < Answer
+end

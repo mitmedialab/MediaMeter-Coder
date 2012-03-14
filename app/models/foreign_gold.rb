@@ -1,0 +1,2 @@
+class ForeignGold < Answer
+end

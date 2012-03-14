@@ -1,10 +1,11 @@
 UsWorldCoverage::Application.routes.draw do
-  resources :articles
-
-  get '/scraper' => 'scraper#status'
-  get '/scraper/:action' => 'scraper' 
 
   root :to => 'scraper#status'
+  
+  resources :articles
+  resources :golds
+
+  match '/scraper/:action' => 'scraper' 
 
   match 'code/international' => 'code#international'
   match 'code/foreign' => 'code#foreign'

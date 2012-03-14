@@ -1,0 +1,22 @@
+<h1>Gold</h1>
+
+<p>
+  <b>Article</b><br>
+  <%= @gold.article_id %>
+</p>
+
+<p>
+  <b>Type</b><br>
+  <%= @gold.type %>
+</p>
+
+<p>
+  <b>Answer</b><br>
+  <%= @gold.answer %>
+</p>
+
+<div class="form-actions">
+  <%= link_to 'Back', golds_path, :class => 'btn'  %>
+  <%= link_to 'Edit', edit_gold_path(@gold), :class => 'btn' %>
+  <%= link_to 'Delete', gold_path(@gold), :method => 'delete', :confirm => 'Are you sure?', :class => 'btn btn-danger' %>
+</div>

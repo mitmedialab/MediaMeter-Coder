@@ -1,0 +1,2 @@
+class ArtsGold < Answer
+end

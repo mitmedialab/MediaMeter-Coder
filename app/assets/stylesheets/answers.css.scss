@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-$red: #550000;
+$red: #990000;
 
 .uwc-agreement {
   text-align: center;
@@ -21,10 +21,11 @@ $red: #550000;
 
 .uwc-agreement small {
   font-weight: bold;
-  color: rgb(102,102,102);
+  color: rgb(153,153,153);
 }
 
 .uwc-agreement-missing {
   background: $red;
-  color: rgb(204,204,204);
+  color: #ffffff;
+  border-radius: 4px;
 }

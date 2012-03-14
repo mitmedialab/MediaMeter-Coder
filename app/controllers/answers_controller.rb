@@ -19,16 +19,16 @@ class AnswersController < ApplicationController
     end
     # load all the articles
     @articles = Article.first_sample.
-      includes(:answers).
+      includes(:answers,:golds).
       where('answers.user_id'=>user_ids)#.page(params[:page])
     # compute agreement
     @disagreement_count = 0
-    @answer_types = Answer.types
+    @types = Answer.types
     @agreement_by_article = Hash.new
     @articles.each do |article|
       @agreement_by_article[article.id] = {}
-      @answer_types.each do |answer_type|
-        answers_of_type = article.answers_by_type(answer_type)
+      @types.each do |type|
+        answers_of_type = article.answers_by_type(type)
         info = {
           :yes => (answers_of_type.count {|a| (a.answer==true)}).to_f / answers_of_type.count.to_f,
           :no => (answers_of_type.count {|a| (a.answer==false)}).to_f / answers_of_type.count.to_f,
@@ -41,7 +41,7 @@ class AnswersController < ApplicationController
           info[:is_of_type] = nil
           @disagreement_count = @disagreement_count + 1
         end
-        @agreement_by_article[article.id][answer_type] = info
+        @agreement_by_article[article.id][type] = info
       end
     end
   end
