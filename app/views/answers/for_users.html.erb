@@ -56,7 +56,7 @@ function updateGold(evt){
 	$.ajax({
 		url:'/golds/'+gold_id+'.json',
 		dataType: 'text',
-		data: {'id': gold_id, 'gold[answer]': checked ? '1' : '0'},
+		data: {'id': gold_id,'gold[answer]': checked ? '1' : '0'},
 		type: 'PUT',
 		error: function (jqXHR, textStatus, errorThrown){
 			console.log('error '+errorThrown);
@@ -64,7 +64,9 @@ function updateGold(evt){
 		statusCode: {
 			200: function() {
 				$('#'+td_id).load('/answers/for_article/'+article_id+'/'+type,
+					{'uids':[<%=@user_id_to_name.keys.join(",")%>]},
 					function(){
+						// over-aggresize, but I need to refire these for the new html elements 
 						initTooltips();
 						initCheckboxes();
 					}

@@ -26,15 +26,16 @@ class AnswersController < ApplicationController
     # load all the articles
     @articles = Article.first_sample.
       includes([:answers,:golds]).
-      where('answers.user_id'=>user_ids).limit(10)
+      where('answers.user_id'=>user_ids)
 
     # compute agreement
     @disagreement_count = 0
     @types = Answer.types
     @agreement_by_article = Hash.new
     @articles.each do |article|
-      @agreement_by_article[article.id] = agreement_info(article)
+      @agreement_by_article[article.id] = Hash.new
       @types.each do |type|
+        @agreement_by_article[article.id][type] = agreement_info_for_type(article, type)
         if @agreement_by_article[article.id][type][:is_of_type]==nil
           @disagreement_count = @disagreement_count + 1
         end
@@ -65,13 +66,15 @@ class AnswersController < ApplicationController
     
   end
 
+  # handle ajax requests when people change things 
   def for_article
     
     article_id = params[:id]
     type = params[:type]
-    @article = Article.includes([:answers,:golds]).find(article_id)
+    uids = params[:uids]
+    @article = Article.includes([:answers,:golds]).where('answers.user_id'=>uids).find(article_id)
 
-    @agreement_info = agreement_info(@article)[type] 
+    @agreement_info = agreement_info_for_type(@article,type) 
     @answers = @article.answers_by_type(type)
     @gold = @article.gold_by_type(type)
     @username_map = Hash.new
@@ -90,25 +93,20 @@ class AnswersController < ApplicationController
 
   private 
   
-    def agreement_info(article)
-      types = Answer.types
-      info_by_type = {}
-      types.each do |type|
-        answers_of_type = article.answers_by_type(type)
-        info = {
-          :yes => (answers_of_type.count {|a| (a.answer==true)}).to_f / answers_of_type.count.to_f,
-          :no => (answers_of_type.count {|a| (a.answer==false)}).to_f / answers_of_type.count.to_f,
-        }
-        if info[:yes] > info[:no]
-          info[:is_of_type] = true 
-        elsif info[:no] > info[:yes]
-          info[:is_of_type] = false
-        else 
-          info[:is_of_type] = nil
-        end
-        info_by_type[type] = info
-      end      
-      info_by_type
+    def agreement_info_for_type(article, type)
+      answers_of_type = article.answers_by_type(type)
+      info = {
+        :yes => (answers_of_type.count {|a| (a.answer==true)}).to_f / answers_of_type.count.to_f,
+        :no => (answers_of_type.count {|a| (a.answer==false)}).to_f / answers_of_type.count.to_f,
+      }
+      if info[:yes] > info[:no]
+        info[:is_of_type] = true 
+      elsif info[:no] > info[:yes]
+        info[:is_of_type] = false
+      else 
+        info[:is_of_type] = nil
+      end
+      info
     end   
 
 end
