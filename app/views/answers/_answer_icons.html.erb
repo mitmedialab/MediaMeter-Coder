@@ -1,27 +1,25 @@
 
 <%
 extra_css = ""
-threshold = 0.70
-if (agreement_info[:yes] > threshold) || (agreement_info[:no] > threshold)
-	extra_css = "uwc-agreement-made"
-else 
+if gold.answer==nil
 	extra_css = "uwc-agreement-missing"	
+else 
+	extra_css = "uwc-agreement-made"
 end  
 %>
 
 <div class="uwc-agreement <%=extra_css%>">
 <%
-
-if agreement_info[:is_of_type]==true
-%>	<em>Yes</em> <small><%=agreement_info[:yes]%>%</small>
+if gold.answer==true
+%>	<em>Yes</em> <small><%=agreement_info[:yes]*100%>%</small>
 <%
-elsif agreement_info[:is_of_type]==false
+elsif gold.answer==false
 %>
-	<em>No</em> <small><%=agreement_info[:no]%>%</small>
+	<em>No</em> <small><%=agreement_info[:no]*100%>%</small>
 <%
 else 
 %>
-	<em>???</em> <small><%=agreement_info[:yes]%> / <%=agreement_info[:no]%>%</small>
+	<em>???</em> <small><%=agreement_info[:yes]*100%> / <%=agreement_info[:no]*100%>%</small>
 <%
 end
 %>
@@ -41,5 +39,9 @@ answers.each do |answer|
 end
 %>
 </div>
+
+<%= form_for gold, :remote=>true, :format=>:js do |f| %>
+  <%= f.check_box :answer %>
+<% end %>
 
 </div>

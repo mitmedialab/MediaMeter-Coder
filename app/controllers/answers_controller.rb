@@ -10,6 +10,7 @@ class AnswersController < ApplicationController
   end  
   
   def for_users
+    
     # parse out users we care about
     @selected_users = User.all.select do |user|
       params.keys.include? user.id.to_s
@@ -17,10 +18,13 @@ class AnswersController < ApplicationController
     user_ids = @selected_users.collect do |user|
       user.id
     end
+    
     # load all the articles
     @articles = Article.first_sample.
-      includes(:answers,:golds).
-      where('answers.user_id'=>user_ids)#.page(params[:page])
+      includes([:answers,:golds]).
+      where('answers.user_id'=>user_ids).
+      page(params[:page])
+    
     # compute agreement
     @disagreement_count = 0
     @types = Answer.types
@@ -44,6 +48,27 @@ class AnswersController < ApplicationController
         @agreement_by_article[article.id][type] = info
       end
     end
+    
+    # init golds as needed
+    @articles.each do |article|
+      @types.each do |type|
+        if article.missing_gold_by_type(type)
+          agreement_info = @agreement_by_article[article.id][type]
+          threshold = 0.70 #should be a magic constant somewhere
+          if (agreement_info[:yes] > threshold) || (agreement_info[:no] > threshold)
+            computed_answer = (agreement_info[:yes] > threshold)
+          else 
+            computed_answer = nil
+          end  
+          new_gold = Gold.new_by_type(type)
+          new_gold.article_id = article.id
+          new_gold.answer = computed_answer
+          new_gold.save
+        end
+      end
+      article.golds = Gold.where(:article_id=>article.id)
+    end
+    
   end
 
 end

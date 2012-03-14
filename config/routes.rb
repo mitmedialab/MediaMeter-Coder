@@ -3,7 +3,14 @@ UsWorldCoverage::Application.routes.draw do
   root :to => 'scraper#status'
   
   resources :articles
+  
   resources :golds
+  resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :foreign_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :international_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :local_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :national_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :sports_golds, :controller=>"golds", :type=>"ArtsGold"
 
   match '/scraper/:action' => 'scraper' 
 

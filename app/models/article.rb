@@ -107,18 +107,18 @@ class Article < ActiveRecord::Base
     end
   end
 
+  def missing_gold_by_type(type)
+    return gold_by_type(type) == nil
+  end
+
   # assumes you've loaded the article with the linked has_many :golds
   def gold_by_type(type)
     gold = nil
-    golds.select do |answer|
-      golds.is_type type
+    found_golds = golds.select do |gold|
+      gold.is_type type
     end
-    if golds.count > 0
-      gold = golds.first    # there should be only one!
-    else
-      # make a new one if none exists
-      gold = Gold.new_by_type(type)
-      gold.article_id = self.id
+    if found_golds.count > 0
+      gold = found_golds.first    # there should be only one!
     end
     gold
   end

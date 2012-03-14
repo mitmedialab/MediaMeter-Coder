@@ -1,5 +1,7 @@
 class Gold < ActiveRecord::Base
 
+  self.per_page = 100
+
   belongs_to      :article
 
   GOLD_TYPES = {
@@ -12,7 +14,7 @@ class Gold < ActiveRecord::Base
   }
 
   def self.classname_for_type(gold_type)
-    raise ArgumentError.new("#{gold_type} is not a valid answer type status") if !(GOLD_TYPES.keys.include? gold_type)
+    raise ArgumentError.new("#{gold_type} is not a valid gold type status") if !(GOLD_TYPES.keys.include? gold_type)
     GOLD_TYPES[gold_type]
   end
 
@@ -27,6 +29,10 @@ class Gold < ActiveRecord::Base
 
   def is_type(type)
     return Gold::classname_for_type(type)==self.class.name
+  end
+  
+  def unanswered?
+    return answer==nil
   end
   
 end

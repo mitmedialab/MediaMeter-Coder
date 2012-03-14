@@ -8,8 +8,8 @@ Showing answers for <%= (@selected_users.collect {|u| u.username} ).join(", ") %
     <tr>
       <th>ID</th>
       <th>Info</th>
-<% @answer_types.each do |answer_type| %>
-      <th style="text-align:center;"><%=answer_type.capitalize%>?</th>      
+<% @types.each do |type| %>
+      <th style="text-align:center;"><%=type.capitalize%>?</th>      
 <% end %>
     </tr>
   </thead>
@@ -21,13 +21,17 @@ Showing answers for <%= (@selected_users.collect {|u| u.username} ).join(", ") %
         	<b></b><%= link_to article.headline, article_path(article) %></b><br />
         	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
         </td>
-<% @answer_types.each do |answer_type| %>
+<% @types.each do |type| %>
         <td><%= render :partial => 'answer_icons', :locals=> {
-        			:agreement_info=>@agreement_by_article[article.id][answer_type],
-        			:answers=>article.answers_by_type(answer_type)} %>
+        			:agreement_info=>@agreement_by_article[article.id][type],
+        			:answers=>article.answers_by_type(type),
+        			:gold=>article.gold_by_type(type)} %>
         </td>
 <% end %>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<%= will_paginate @articles %>
+

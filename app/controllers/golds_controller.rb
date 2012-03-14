@@ -1,10 +1,12 @@
+
+# STI fixes copied from http://stackoverflow.com/questions/5246767/sti-one-controller/5252136#5252136
 class GoldsController < ApplicationController
   layout 'browse'
 
   # GET /golds
   # GET /golds.json
   def index
-    @golds = Gold.all
+    @golds = gold_type.includes(:article).page(params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -26,7 +28,7 @@ class GoldsController < ApplicationController
   # GET /golds/new
   # GET /golds/new.json
   def new
-    @gold = Gold.new
+    @gold = gold_type.new
 
     respond_to do |format|
       format.html # new.html.erb
@@ -42,7 +44,7 @@ class GoldsController < ApplicationController
   # POST /golds
   # POST /golds.json
   def create
-    @gold = Gold.new(params[:gold])
+    @gold = gold_type.new(params[:gold])
 
     respond_to do |format|
       if @gold.save
@@ -82,4 +84,11 @@ class GoldsController < ApplicationController
       format.json { head :ok }
     end
   end
+
+  private
+    def gold_type
+      params[:type].constantize if params.has_key? :type
+      Gold
+    end
+
 end
