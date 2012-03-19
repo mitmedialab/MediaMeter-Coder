@@ -37,11 +37,11 @@ class Article < ActiveRecord::Base
   before_save   ArticlePrepper.new
   
   scope :completed, where(:queue_status=>:complete)
-  scope :first_sample, where(:sampletag=>'true')
   
   def url_to_scan_local_file
-    return "http://"+File.join(NewsScrapers::public_base_url, scan_dir, scan_local_filename) if has_scan_local_filename?
-    return ""  
+    url = ""
+    url = "http://"+File.join(NewsScrapers::public_base_url, scan_subdir, scan_local_filename) if has_scan_local_filename?
+    url
   end
   
   # HACK for NYT edge case where some articles from the API don't have URLs :-(
@@ -108,7 +108,11 @@ class Article < ActiveRecord::Base
   end
 
   def missing_gold_by_type(type)
-    return gold_by_type(type) == nil
+    gold_by_type(type) == nil
+  end
+  
+  def has_gold_by_type(type)
+    !missing_gold_by_type(type)
   end
 
   # assumes you've loaded the article with the linked has_many :golds
@@ -126,8 +130,11 @@ class Article < ActiveRecord::Base
   private 
 
     def scan_dir
-      File.join("article_scans" , source.gsub(" ","_").downcase , 
-                       pub_date.year.to_s , pub_date.month.to_s , pub_date.day.to_s)
+      File.join("article_scans" , scan_subdir)
+    end
+    
+    def scan_subdir
+      File.join(source.gsub(" ","_").downcase , pub_date.year.to_s , pub_date.month.to_s , pub_date.day.to_s)
     end
 
 end

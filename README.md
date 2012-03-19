@@ -52,18 +52,3 @@ The arguments are:
 * path to csv file
 * column in the csv that has the aggregated answer
 * column in the csv that has CrowdFlower's confidence in that answer
-
-
-Exporting
----------
-
-You can export aggregated answers to CrowdFlower by running a rake task like so
-
-```
-rake crowd:export[sports,tmp] --trace
-```
-
-The arguments are:
-
-* answer type - one of arts, foreign, international, local, national, or sports
-* folder to write the csv file that is generated

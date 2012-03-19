@@ -4,6 +4,8 @@ UsWorldCoverage::Application.routes.draw do
   
   resources :articles
   
+  match 'golds/for_sampletag' => 'golds#for_sampletag'
+
   resources :golds
   resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :foreign_golds, :controller=>"golds", :type=>"ArtsGold"
@@ -12,7 +14,7 @@ UsWorldCoverage::Application.routes.draw do
   resources :national_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :sports_golds, :controller=>"golds", :type=>"ArtsGold"
 
-  match '/scraper/:action' => 'scraper' 
+  match 'scraper/:action' => 'scraper' 
 
   match 'code/international' => 'code#international'
   match 'code/foreign' => 'code#foreign'

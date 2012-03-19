@@ -15,15 +15,4 @@ namespace :crowd do
     CrowdFlower::import(args.answer_type, args.file, args.answer_col, args.confidence_col)
   end
 
-  # run this like so:
-  # rake crowd:export[sports,tmp] --trace 
-  task :export, [:answer_type,:dir] => [:environment] do |t,args|
-    Rails.logger.info "Starting to export --------------------------------"
-    now = Time.now
-    filename = args.answer_type + "_" + "articles" + "_" + now.year.to_s + now.month.to_s + now.day.to_s + "_" + now.hour.to_s + now.min.to_s + now.sec.to_s + ".csv"
-    filepath = File.join(args.dir, filename )
-    Rails.logger.info " to #{filepath}"
-    CrowdFlower::export(args.answer_type, filepath)
-  end
-
 end

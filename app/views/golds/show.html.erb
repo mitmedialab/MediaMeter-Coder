@@ -15,6 +15,11 @@
   <%= @gold.answer %>
 </p>
 
+<p>
+  <b>Reason</b><br>
+  <%= @gold.reason %>
+</p>
+
 <div class="form-actions">
   <%= link_to 'Back', golds_path, :class => 'btn'  %>
   <%= link_to 'Edit', edit_gold_path(@gold), :class => 'btn' %>

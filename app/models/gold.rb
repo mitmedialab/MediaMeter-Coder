@@ -28,15 +28,23 @@ class Gold < ActiveRecord::Base
   end
 
   def is_type(type)
-    return Gold::classname_for_type(type)==self.class.name
+    Gold::classname_for_type(type)==self.class.name
   end
   
   def unanswered?
-    return answer==nil
+    answer==nil
   end
   
   def answered?
-    return answer!=nil
+    answer!=nil
+  end
+
+  def yes?
+    answer==true
+  end
+
+  def no?
+    answer==false
   end
 
 end

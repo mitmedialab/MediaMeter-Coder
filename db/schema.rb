@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120315143214) do
+ActiveRecord::Schema.define(:version => 20120319191842) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(:version => 20120315143214) do
     t.boolean  "answer"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "reason",     :limit => 1000
   end
 
   create_table "users", :force => true do |t|

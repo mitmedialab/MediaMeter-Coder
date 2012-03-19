@@ -5,3 +5,13 @@
  *= require_self
  *= require_tree . 
 */
+
+textarea {
+	width: 530px !important;	/* overriding a stupid bootstrap default value */
+}
+
+th small {
+	font-size: 10px;
+	line-height: 12px;
+	font-weight: normal;
+}

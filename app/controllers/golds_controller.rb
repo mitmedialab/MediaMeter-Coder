@@ -3,6 +3,25 @@
 class GoldsController < ApplicationController
   layout 'browse'
 
+  # see a list of articles with the gold answers
+  def for_sampletag
+    
+    @sampletag = params[:sampletag]
+    @answer_type = params[:answer_type]
+
+    @articles = Article.where(:sampletag=>@sampletag).includes(:golds)
+    
+    respond_to do |format|
+      format.html
+      format.csv {
+        timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
+        @filename = @answer_type + "_" + "articles" + "_" + timestamp + ".csv"
+        @output_encoding = 'UTF-8'
+      }
+    end
+    
+  end
+
   # GET /golds
   # GET /golds.json
   def index
@@ -63,7 +82,7 @@ class GoldsController < ApplicationController
     @gold = Gold.find(params[:id])
 
     respond_to do |format|
-      if @gold.update_attributes(params[:gold])
+      if @gold.update_attributes(params[ params[:type].underscore ])
         format.html { redirect_to @gold, notice: 'Gold was successfully updated.' }
         format.json { head :ok }
       else

@@ -11,6 +11,8 @@ class AnswersController < ApplicationController
   
   def for_users
     
+     @sampletag = "true"
+    
     # parse out users we care about
     @selected_users = User.all.select do |user|
       params.keys.include? user.id.to_s
@@ -24,8 +26,7 @@ class AnswersController < ApplicationController
     end
     
     # load all the articles
-    @articles = Article.first_sample.
-      includes([:answers,:golds]).
+    @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
       where('answers.user_id'=>user_ids)
 
     # compute agreement
@@ -66,7 +67,7 @@ class AnswersController < ApplicationController
     
   end
 
-  # handle ajax requests when people change things 
+  # handle ajax requests when people change things in the UI
   def for_article
     
     article_id = params[:id]
