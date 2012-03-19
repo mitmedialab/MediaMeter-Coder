@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120314154127) do
+ActiveRecord::Schema.define(:version => 20120315143214) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -24,6 +24,10 @@ ActiveRecord::Schema.define(:version => 20120314154127) do
     t.string   "source",     :default => "CrowdFlower"
     t.integer  "user_id",                               :null => false
   end
+
+  add_index "answers", ["article_id"], :name => "index_answers_on_article_id"
+  add_index "answers", ["type"], :name => "index_answers_on_type"
+  add_index "answers", ["user_id"], :name => "index_answers_on_user_id"
 
   create_table "articles", :force => true do |t|
     t.string   "source"
@@ -49,6 +53,7 @@ ActiveRecord::Schema.define(:version => 20120314154127) do
   end
 
   add_index "articles", ["queue_status"], :name => "index_articles_on_queue_status"
+  add_index "articles", ["sampletag"], :name => "index_articles_on_sampletag"
   add_index "articles", ["source"], :name => "source_index"
   add_index "articles", ["src_url_md5"], :name => "src_url_md5_index", :unique => true
 
