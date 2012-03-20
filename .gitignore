@@ -20,3 +20,5 @@ public/article_scans
 public/assets
 .sass-cache
 .bundle
+
+vendor/bundle

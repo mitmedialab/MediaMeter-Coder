@@ -11,6 +11,12 @@ Make sure you have Ruby 1.9.2 (we use rvm to get it).
 Run `bundle` to get all the dependencies.
 To create the db, run `rake db:migrate`.
 
+On a production Ubuntu machine do:
+```
+sudo apt-get install libmysqlclient-dev
+bundle install --deployment
+```
+
 Scraping
 --------
 
