@@ -17,11 +17,11 @@ end
 <div class="uwc-agreement <%=extra_css%>">
 <%
 if gold.answer==true
-%>	<em>Yes</em> <small><%=agreement_info[:yes]*100%>%</small>
+%>	<em>Yes</em> <small><%=(agreement_info[:yes]*100).round(2)%>%</small>
 <%
 elsif gold.answer==false
 %>
-	<em>No</em> <small><%=agreement_info[:no]*100%>%</small>
+	<em>No</em> <small><%=(agreement_info[:no]*100).round(2)%>%</small>
 <%
 else 
 %>
