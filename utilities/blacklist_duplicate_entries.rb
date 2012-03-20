@@ -15,7 +15,6 @@ Article.all(:conditions=>['(blacklist_tag IS NULL or blacklist_tag="" or blackli
 #    end
     print "x"
     @duplicate_count += 1
-  else if 
   end
   @previous_duplicate_string = duplicate_string
   @previous_abstract = article.abstract
