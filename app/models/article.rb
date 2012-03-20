@@ -127,6 +127,23 @@ class Article < ActiveRecord::Base
     gold
   end
 
+  # return a summary hash about agreement between the answers already loaded
+  def agreement_info_for_type(type)
+    answers_of_type = answers_by_type(type)
+    info = {
+      :yes => (answers_of_type.count {|a| (a.answer==true)}).to_f / answers_of_type.count.to_f,
+      :no => (answers_of_type.count {|a| (a.answer==false)}).to_f / answers_of_type.count.to_f,
+    }
+    if info[:yes] > info[:no]
+      info[:is_of_type] = true 
+    elsif info[:no] > info[:yes]
+      info[:is_of_type] = false
+    else 
+      info[:is_of_type] = nil
+    end
+    info
+  end   
+
   private 
 
     def scan_dir

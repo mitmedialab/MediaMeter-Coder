@@ -36,7 +36,7 @@ class AnswersController < ApplicationController
     @articles.each do |article|
       @agreement_by_article[article.id] = Hash.new
       @types.each do |type|
-        @agreement_by_article[article.id][type] = agreement_info_for_type(article, type)
+        @agreement_by_article[article.id][type] = article.agreement_info_for_type(type)
         if @agreement_by_article[article.id][type][:is_of_type]==nil
           @disagreement_count = @disagreement_count + 1
         end
@@ -54,7 +54,7 @@ class AnswersController < ApplicationController
             computed_answer = (agreement_info[:yes] > threshold)
           else 
             computed_answer = nil
-          end  
+          end
           new_gold = Gold.new_by_type(type)
           new_gold.article_id = article.id
           new_gold.answer = computed_answer
@@ -75,7 +75,7 @@ class AnswersController < ApplicationController
     uids = params[:uids]
     @article = Article.includes([:answers,:golds]).where('answers.user_id'=>uids).find(article_id)
 
-    @agreement_info = agreement_info_for_type(@article,type) 
+    @agreement_info = @article.agreement_info_for_type(type) 
     @answers = @article.answers_by_type(type)
     @gold = @article.gold_by_type(type)
     @username_map = Hash.new
@@ -91,23 +91,5 @@ class AnswersController < ApplicationController
     }
   
   end
-
-  private 
-  
-    def agreement_info_for_type(article, type)
-      answers_of_type = article.answers_by_type(type)
-      info = {
-        :yes => (answers_of_type.count {|a| (a.answer==true)}).to_f / answers_of_type.count.to_f,
-        :no => (answers_of_type.count {|a| (a.answer==false)}).to_f / answers_of_type.count.to_f,
-      }
-      if info[:yes] > info[:no]
-        info[:is_of_type] = true 
-      elsif info[:no] > info[:yes]
-        info[:is_of_type] = false
-      else 
-        info[:is_of_type] = nil
-      end
-      info
-    end   
 
 end
