@@ -24,7 +24,7 @@ random = Random.new()
 papers.each do  | paper |
   years.each do | year |
     puts "  Sampling #{paper}: #{year}"
-    articles = Article.where(:source=>paper, :blacklist_tag=>nil).where("YEAR(pub_date) = '#{year}'").
+    articles = Article.completed.where(:source=>paper, :blacklist_tag=>nil).where("YEAR(pub_date) = '#{year}'").
       order("pub_date asc, source, headline, abstract")
     next if !(articles.size > 0)
 
