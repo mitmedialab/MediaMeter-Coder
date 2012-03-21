@@ -1,25 +1,28 @@
 
 <%
-extra_css = ""
+extra_css_classes = []
 # mark any items that don't have gold set yet
 if gold.unanswered?
-	extra_css << "uwc-agreement-missing "	
+	extra_css_classes << "uwc-agreement-missing "	
 else 
-	extra_css << "uwc-agreement-made "
+	extra_css_classes << "uwc-agreement-made "
 end  
 # mark suspicious ones that you have gold for
 if gold.answered? && !(agreement_info[:yes] > 0.7 || agreement_info[:no] > 0.7)
-	extra_css << "uwc-agreement-forced " 
+	extra_css_classes << "uwc-agreement-forced " 
 end 
+if gold.answered? && (gold.yes?!=agreement_info[:is_of_type])
+	extra_css_classes << "uwc-agreement-forced "
+end
 
 %>
 
-<div class="uwc-agreement <%=extra_css%>">
+<div class="uwc-agreement <%=extra_css_classes.join(" ")%>">
 <%
-if gold.answer==true
+if gold.yes?
 %>	<em>Yes</em> <small><%=(agreement_info[:yes]*100).round()%>%</small>
 <%
-elsif gold.answer==false
+elsif gold.no?
 %>
 	<em>No</em> <small><%=(agreement_info[:no]*100).round()%>%</small>
 <%
