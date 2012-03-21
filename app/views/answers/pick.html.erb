@@ -1,13 +1,28 @@
 
 <!-- this has to be a get so that the pagination of results works -->
-<%= form_tag("/answers/for_users", :method => "post") do %>
+<%= form_tag("/answers/for_users", :method => "post", :class=>'form-horizontal') do %>
 
-<% @users.each do |user| %>
-	<%= check_box_tag(user.id) %>
-	<%= label_tag(user.id, user.username + " (" + @user_answer_counts[user.id].to_s + ")" ) %>
-	<small></small>
-<% end %>
+<fieldset>
+		<legend>Pick Users</legend>
+	<% @users.each do |user| %>
+		<div class="control-group">
+			<%= label_tag(user.id, check_box_tag(user.id) + user.username + " (" + @user_answer_counts[user.id].to_s + ")", 
+						  :class=>"checkbox") %>
+		</div>
+	<% end %>
+</fieldset>
 
-  <%= submit_tag("See Answers") %>
+<fieldset>
+		<legend>Pick a Sample Set of Articles</legend>
+	<% @sampletags.each do |tag| %>
+		<div class="control-group">
+			<%= label('tag','name', radio_button('tag','name',tag)+tag , :class=>"radio")%>
+		</div>
+	<% end %>
+</fieldset>
+
+<div class="form-actions">
+  <%= submit_tag("See Answers",:class=>"btn btn-primary") %>
+</div>
   
 <% end %>

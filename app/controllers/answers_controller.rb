@@ -1,17 +1,20 @@
 class AnswersController < ApplicationController
   layout 'browse'
 
+  # pick users and a sample tag to see the aggregated answers for
   def pick
     @users = User.all
     @user_answer_counts = Hash.new
     @users.each do |user|
       @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
     end
+    @sampletags = Article.where("sampletag is not null").pluck(:sampletag).uniq
   end  
   
+  # show the aggregated answers, and gold, for a set of users against a sampleset of articles
   def for_users
     
-     @sampletag = "true"
+     @sampletag = params[:tag][:name]
     
     # parse out users we care about
     @selected_users = User.all.select do |user|
