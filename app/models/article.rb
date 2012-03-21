@@ -143,6 +143,19 @@ class Article < ActiveRecord::Base
     end
     info
   end   
+  
+  def self.average_stories_per_day_by_source_and_year
+    sources = Article.pluck(:source).uniq
+    results = Hash.new
+    sources.each do |source|
+      results[source] = Hash.new
+      totals = Article.where(:source=>source).group("YEAR(pub_date)").count
+      totals.each do |year,total_articles|
+        results[source][year] = (total_articles / 5).round
+      end 
+    end
+    results
+  end
 
   private 
 

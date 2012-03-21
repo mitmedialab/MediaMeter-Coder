@@ -1,6 +1,12 @@
 class ArticlesController < ApplicationController
   layout "browse"
 
+  def summary
+    @sources = Article.pluck(:source).uniq.sort
+    @years = Article.pluck("YEAR(pub_date)").uniq.sort
+    @avg_stories_per_day_by_source_and_year = Article.average_stories_per_day_by_source_and_year
+  end
+
   def export_by_sampletags
 
     @all_sampletags = Article.where("sampletag is not null").pluck(:sampletag).uniq

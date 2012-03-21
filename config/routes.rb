@@ -1,8 +1,9 @@
 UsWorldCoverage::Application.routes.draw do
 
-  root :to => 'scraper#status'
+  root :to => 'articles#summary'
   
   match 'articles/export_by_sampletags' => 'articles#export_by_sampletags'
+  match 'articles/summary' => 'articles#summary'
   resources :articles
   
   match 'golds/edit_reasons' => 'golds#edit_reasons'
