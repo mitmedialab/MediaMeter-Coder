@@ -3,22 +3,35 @@
 class GoldsController < ApplicationController
   layout 'browse'
 
-  # see a list of articles with the gold answers
-  def for_sampletag
-    
-    @sampletag = params[:sampletag]
-    @answer_type = params[:answer_type]
+  def export_by_sampletags
 
-    @articles = Article.where(:sampletag=>@sampletag).includes(:golds)
+    @all_sampletags = Article.where("sampletag is not null").pluck(:sampletag).uniq
+    @all_answer_types = Gold.types 
     
     respond_to do |format|
       format.html
       format.csv {
+        # collect the passed params from the user 
+        @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
+        @answer_type = params[:answer]['type']
+        # pull out the articles we care about
+        @articles = Article.where(:sampletag=>@sampletags).includes(:golds)
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
+        # do some csv config
         @filename = @answer_type + "_" + "articles" + "_" + timestamp + ".csv"
         @output_encoding = 'UTF-8'
       }
     end
+        
+  end
+
+  # see a list of articles with the gold answers
+  def edit_reasons
+    
+    @sampletag = params[:sampletag]
+    @answer_type = params[:answer_type]
+
+    @articles = Article.where(:sampletag=>[@sampletag]).includes(:golds)
     
   end
 

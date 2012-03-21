@@ -14,7 +14,7 @@ function loadingFadeIn(){
 	$("#uwc-loading").toggle(true);
 }
 function loadingHide(){
-	$("#uwc-loading").fadeOut(400);	
+	$("#uwc-loading").fadeOut(100);	
 }
 function loadingFadeOut(){
 	setTimeout(loadingHide,1000);

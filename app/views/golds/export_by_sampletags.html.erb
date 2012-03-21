@@ -1,0 +1,31 @@
+
+<h1>Export Articles</h1>
+
+<br />
+
+<!-- this has to be a get so that the pagination of results works -->
+<%= form_tag("/golds/export_by_sampletags.csv", :method => "post", :class=>'form-vertical') do %>
+
+<fieldset>
+		<legend>Pick Sample Sets of Articles</legend>
+	<% @all_sampletags.each do |tag| %>
+		<div class="control-group">
+			<%= label_tag('sampletag['+tag+']', check_box_tag('sampletag['+tag+']') + tag , :class=>"checkbox") %>
+		</div>
+	<% end %>
+</fieldset>
+
+<fieldset>
+		<legend>Pick a Question Type</legend>
+	<% @all_answer_types.each do |type| %>
+		<div class="control-group">
+			<%= label('answer','type', radio_button('answer','type',type)+type , :class=>"radio")%>
+		</div>
+	<% end %>
+</fieldset>
+
+<div class="form-actions">
+  <%= submit_tag("Download CSV of Articles & Golds",:class=>"btn btn-primary") %>
+</div>
+  
+<% end %>

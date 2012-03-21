@@ -13,9 +13,7 @@ Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
       	<%=type.capitalize%>?
       	<br />
       	<small>
-      	<%=link_to "golds", "/golds/for_sampletag?sampletag="+@sampletag+"&answer_type="+type %>	
-      	<br />
-      	<%=link_to "golds csv", "/golds/for_sampletag.csv?sampletag="+@sampletag+"&answer_type="+type %>
+      	<%=link_to "golds", "/golds/edit_reasons?sampletag="+@sampletag+"&answer_type="+type %>	
       	</small>
       </th>      
 <% end %>
@@ -63,6 +61,7 @@ function updateGold(evt){
 	gold_id = parts[parts.length-1];
 	answer_data = {'id': gold_id, 'type':type+"_gold"};
 	answer_data[type+'_gold[answer]'] = checked ? '1' : '0'
+	loadingFadeIn();
 	$.ajax({
 		url:'/golds/'+gold_id+'.json',
 		dataType: 'text',
@@ -73,6 +72,7 @@ function updateGold(evt){
 		},
 		statusCode: {
 			200: function() {
+				loadingFadeOut();
 				$('#'+td_id).load('/answers/for_article/'+article_id+'/'+type,
 					{'uids':[<%=@user_id_to_name.keys.join(",")%>]},
 					function(){

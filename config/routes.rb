@@ -4,7 +4,8 @@ UsWorldCoverage::Application.routes.draw do
   
   resources :articles
   
-  match 'golds/for_sampletag' => 'golds#for_sampletag'
+  match 'golds/edit_reasons' => 'golds#edit_reasons'
+  match 'golds/export_by_sampletags' => 'golds#export_by_sampletags'
 
   resources :golds
   resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"

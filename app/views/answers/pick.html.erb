@@ -1,6 +1,18 @@
 
+<h1>Generate Golds</h1>
+<br />
+
 <!-- this has to be a get so that the pagination of results works -->
-<%= form_tag("/answers/for_users", :method => "post", :class=>'form-horizontal') do %>
+<%= form_tag("/answers/for_users", :method => "post", :class=>'form-vertical') do %>
+
+<fieldset>
+		<legend>Pick a Sample Set of Articles</legend>
+	<% @sampletags.each do |tag| %>
+		<div class="control-group">
+			<%= label('tag','name', radio_button('tag','name',tag)+tag , :class=>"radio")%>
+		</div>
+	<% end %>
+</fieldset>
 
 <fieldset>
 		<legend>Pick Users</legend>
@@ -12,17 +24,8 @@
 	<% end %>
 </fieldset>
 
-<fieldset>
-		<legend>Pick a Sample Set of Articles</legend>
-	<% @sampletags.each do |tag| %>
-		<div class="control-group">
-			<%= label('tag','name', radio_button('tag','name',tag)+tag , :class=>"radio")%>
-		</div>
-	<% end %>
-</fieldset>
-
 <div class="form-actions">
-  <%= submit_tag("See Answers",:class=>"btn btn-primary") %>
+  <%= submit_tag("Generate/View Golds",:class=>"btn btn-primary") %>
 </div>
   
 <% end %>
