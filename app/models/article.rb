@@ -156,6 +156,10 @@ class Article < ActiveRecord::Base
     end
     results
   end
+  
+  def self.sampletag_counts
+    Article.where("sampletag is not null").group(:sampletag).count
+  end
 
   private 
 

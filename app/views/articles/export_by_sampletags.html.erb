@@ -8,9 +8,9 @@
 
 <fieldset>
 		<legend>Pick Sample Sets of Articles</legend>
-	<% @all_sampletags.each do |tag| %>
+	<% @all_sampletags.each do |tag,article_count| %>
 		<div class="control-group">
-			<%= label_tag('sampletag['+tag+']', check_box_tag('sampletag['+tag+']') + tag , :class=>"checkbox") %>
+			<%= label_tag('sampletag['+tag+']', check_box_tag('sampletag['+tag+']') + tag + " (" + article_count.to_s + " articles)" , :class=>"checkbox") %>
 		</div>
 	<% end %>
 </fieldset>

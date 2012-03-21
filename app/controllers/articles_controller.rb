@@ -9,7 +9,7 @@ class ArticlesController < ApplicationController
 
   def export_by_sampletags
 
-    @all_sampletags = Article.where("sampletag is not null").pluck(:sampletag).uniq
+    @all_sampletags = Article.sampletag_counts
     @all_answer_types = Gold.types 
     
     respond_to do |format|

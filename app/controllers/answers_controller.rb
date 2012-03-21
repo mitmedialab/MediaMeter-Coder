@@ -8,7 +8,7 @@ class AnswersController < ApplicationController
     @users.each do |user|
       @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
     end
-    @sampletags = Article.where("sampletag is not null").pluck(:sampletag).uniq
+    @all_sampletags = Article.sampletag_counts
   end  
   
   # show the aggregated answers, and gold, for a set of users against a sampleset of articles

@@ -1,5 +1,5 @@
 
-<h1>Review Golds</h1>
+<h1>Review Answers</h1>
 <br />
 
 <!-- this has to be a get so that the pagination of results works -->
@@ -7,9 +7,9 @@
 
 <fieldset>
 		<legend>Pick a Sample Set of Articles</legend>
-	<% @sampletags.each do |tag| %>
+	<% @all_sampletags.each do |tag,article_count| %>
 		<div class="control-group">
-			<%= label('tag','name', radio_button('tag','name',tag)+tag , :class=>"radio")%>
+			<%= label('tag','name', radio_button('tag','name',tag)+tag+" ("+article_count.to_s+" articles)" , :class=>"radio")%>
 		</div>
 	<% end %>
 </fieldset>
@@ -18,8 +18,8 @@
 		<legend>Pick Users</legend>
 	<% @users.each do |user| %>
 		<div class="control-group">
-			<%= label_tag(user.id, check_box_tag(user.id) + user.username + " (" + @user_answer_counts[user.id].to_s + ")", 
-						  :class=>"checkbox") %>
+			<%= label_tag(user.id, check_box_tag(user.id) + user.username + " (" + @user_answer_counts[user.id].to_s + " answers)", 
+						  :class=>"checkbox", :html=>true) %>
 		</div>
 	<% end %>
 </fieldset>
@@ -32,7 +32,7 @@
 </fieldset>
 
 <div class="form-actions">
-  <%= submit_tag("Generate/View Golds",:class=>"btn btn-primary") %>
+  <%= submit_tag("Review Answers",:class=>"btn btn-primary") %>
 </div>
   
 <% end %>
