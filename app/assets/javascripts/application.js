@@ -8,3 +8,22 @@
 //= require jquery_ujs
 //= require twitter/bootstrap
 //= require_tree .
+
+// functions for automatically showing a status indicator while remote forms are loading
+function loadingFadeIn(){
+	$("#uwc-loading").toggle(true);
+}
+function loadingHide(){
+	$("#uwc-loading").fadeOut(400);	
+}
+function loadingFadeOut(){
+	setTimeout(loadingHide,1000);
+}
+
+function loadingInit(){
+  $("form[data-remote='true']")
+  	.bind("ajax:beforeSend", loadingFadeIn)
+  	.bind("ajax:success", loadingHide);
+}
+
+$(loadingInit);
