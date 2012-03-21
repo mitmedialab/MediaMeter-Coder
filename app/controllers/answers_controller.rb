@@ -31,7 +31,7 @@ class AnswersController < ApplicationController
     
     # load all the articles
     @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
-      where('answers.user_id'=>user_ids)
+      where('answers.user_id'=>user_ids).limit(10)
 
     # compute agreement
     @disagreement_count = 0

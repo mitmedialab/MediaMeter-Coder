@@ -3,7 +3,7 @@
 Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
 <b>Disagreement on <%=@disagreement_count%> article (<%=(@disagreement_count.to_f/@articles.count.to_f).round(2) %>%). 
 </p>
-<table class="table table-striped">
+<table class="table table-striped" id="uwc-answers-list">
   <thead>
     <tr>
       <th>ID</th>
@@ -89,6 +89,8 @@ function updateGold(evt){
 
 $(initTooltips);
 $(initCheckboxes);
+
+$(function(){$("table").stickyTableHeaders();});
 
 //]]>
 </script>
