@@ -2,11 +2,11 @@ UsWorldCoverage::Application.routes.draw do
 
   root :to => 'scraper#status'
   
+  match 'articles/export_by_sampletags' => 'articles#export_by_sampletags'
   resources :articles
   
   match 'golds/edit_reasons' => 'golds#edit_reasons'
-  match 'golds/export_by_sampletags' => 'golds#export_by_sampletags'
-
+  
   resources :golds
   resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :foreign_golds, :controller=>"golds", :type=>"ArtsGold"

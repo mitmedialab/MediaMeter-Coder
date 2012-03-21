@@ -1,6 +1,28 @@
 class ArticlesController < ApplicationController
   layout "browse"
 
+  def export_by_sampletags
+
+    @all_sampletags = Article.where("sampletag is not null").pluck(:sampletag).uniq
+    @all_answer_types = Gold.types 
+    
+    respond_to do |format|
+      format.html
+      format.csv {
+        # collect the passed params from the user 
+        @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
+        @answer_type = params[:answer]['type']
+        # pull out the articles we care about
+        @articles = Article.where(:sampletag=>@sampletags).includes(:golds)
+        timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
+        # do some csv config
+        @filename = @answer_type + "_" + "articles" + "_" + timestamp + ".csv"
+        @output_encoding = 'UTF-8'
+      }
+    end
+        
+  end
+
   # GET /articles
   # GET /articles.json
   def index

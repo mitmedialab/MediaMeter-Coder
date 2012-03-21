@@ -14,7 +14,8 @@ class AnswersController < ApplicationController
   # show the aggregated answers, and gold, for a set of users against a sampleset of articles
   def for_users
     
-     @sampletag = params[:tag][:name]
+    @sampletag = params[:tag][:name]
+    @generate_golds = params[:generate_golds].to_i==1
     
     # parse out users we care about
     @selected_users = User.all.select do |user|
@@ -50,7 +51,7 @@ class AnswersController < ApplicationController
     @articles.each do |article|
       reload_golds = false
       @types.each do |type|
-        if article.missing_gold_by_type(type)
+      if @generate_golds && article.missing_gold_by_type(type)
           agreement_info = @agreement_by_article[article.id][type]
           threshold = 0.70 #should be a magic constant somewhere
           if (agreement_info[:yes] > threshold) || (agreement_info[:no] > threshold)
