@@ -10,6 +10,10 @@ new_sampletag = ARGV[1]
 
 puts "Starting script to sample #{total_articles_to_sample} articles with the sampletag '#{new_sampletag}'"
 
+existing_count = Article.where(:sampletag=>new_sampletag).count
+total_articles_to_sample = [total_articles_to_sample - existing_count,0].max
+puts "  Found #{existing_count} with that tag already, will only tag #{total_articles_to_sample}" 
+
 papers = Article.pluck(:source).uniq.sort
 years = Article.pluck("YEAR(pub_date)").uniq.sort
 
@@ -24,19 +28,18 @@ random = Random.new()
 papers.each do  | paper |
   years.each do | year |
     puts "  Sampling #{paper}: #{year}"
-    articles = Article.completed.where(:source=>paper, :blacklist_tag=>nil).where("YEAR(pub_date) = '#{year}'").
+    articles = Article.completed.where(:source=>paper, :blacklist_tag=>nil, :sampletag=>nil).
+      where("YEAR(pub_date) = '#{year}'").
       order("pub_date asc, source, headline, abstract")
     next if !(articles.size > 0)
 
     sample_count = 0
     while sample_count < articles_per_paper_year
       article = articles[random.rand(0..articles.size-1)]
-      if(article.sampletag!=new_sampletag)
-        article.sampletag=new_sampletag
-        article.save
-        puts "    "+article.headline
-        sample_count += 1
-      end
+      article.sampletag=new_sampletag
+      article.save
+      puts "    "+article.headline
+      sample_count += 1
     end
   end
 end
