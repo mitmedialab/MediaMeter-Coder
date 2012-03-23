@@ -9,7 +9,7 @@ one:
   src_url: MyString
   abstract: "Anonymous sources report strange happenings in Satis House involving zombie alien overlords, tea, and 19th century authors Thursday night."
   scan_local_filename: 12345.pdf
-  sampletag: "true"
+  sampletag: "hand-coded"
 
 two:
   source: New York Times
@@ -19,7 +19,7 @@ two:
   page: MyString
   src_url: MyString
   abstract: "Fire marshalls from the local chapter of the Seventh Street Hibernian Volunteer Brigade were unable to halt a conflagration in Bleecker Street created by a feral musician on a rampage of sound last Friday."
-  sampletag: "true"
+  sampletag: "hand-coded"
 
 three:
   source: Chicago Tribune
