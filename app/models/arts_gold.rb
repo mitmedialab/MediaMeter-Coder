@@ -1,0 +1,2 @@
+class ArtsGold < Gold
+end

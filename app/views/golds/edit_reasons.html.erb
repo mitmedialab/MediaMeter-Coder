@@ -1,0 +1,37 @@
+
+<h1><%=@answer_type.capitalize%> Golds: <%=@sampletag%></h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Article Info</th>
+      <th>Gold Answer</th>
+      <th>Gold Reason</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @articles.each do |article| 
+    	gold_answer = ""
+    	if article.has_gold_by_type(@answer_type)
+			gold_answer = article.gold_by_type(@answer_type).yes?.to_s
+		end
+    %>
+      <tr>
+        <td>
+        	<b><%= link_to article.headline, article_path(article) %></b><br />
+        	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
+		</td>
+        <td><%= gold_answer %></td>
+        <td>
+        	<% if article.has_gold_by_type(@answer_type) 
+        		g = article.gold_by_type(@answer_type) 
+        	%>
+        		<%= form_for(g,:remote=>true) do |f| %>
+					<%= f.text_area :reason, :class => '', :cols=>'50', :rows=>'5' %>
+				    <%= f.submit nil, :value=>'Update Gold Reason',:class => 'btn btn-primary' %>
+        		<% end %>
+        	<% end %>
+		</td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

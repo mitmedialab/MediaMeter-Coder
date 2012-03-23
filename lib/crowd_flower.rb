@@ -48,29 +48,7 @@ module CrowdFlower
     end
     CrowdFlower.logger.info("Imported #{row_count} rows")
   end
-  
-  # export a file with all the article info for crowdflower
-  def self.export(answer_type, file_path)
-    row_count = 0
-    CSV.open(file_path, "wb") do |csv|
-      csv << ["id", "newspaper", "page", "headline","date","content","byline","content_url"]
-      Article.all.each do |a|
-        # TODO: need to include the gold answer here 
-        csv << [  a.id, 
-                  a.source, 
-                  a.page, 
-                  a.headline, 
-                  (a.pub_date.year.to_s+"/"+a.pub_date.month.to_s+"/"+a.pub_date.day.to_s),
-                  a.abstract,
-                  a.byline,
-                  a.url_to_scan_local_file
-                ]
-        row_count = row_count + 1
-      end
-    end
-    CrowdFlower.logger.info("Exported #{row_count} rows to #{file_path}")
-  end
-  
+
   # Be smart about logging while running inside or outside of Rails
   def self.logger
     return Rails.logger if defined? Rails

@@ -1,0 +1,44 @@
+// Place all the styles related to the answers controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.uwc-agreement {
+  text-align: center;
+  display: block;
+  width: 100px;
+  height: 100px;
+  padding: 5px;
+}
+
+.uwc-agreement em {
+  font-size: 1.5em;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.uwc-agreement small {
+  font-weight: bold;
+  color: rgb(153,153,153);
+}
+
+.uwc-agreement small a {
+  font-weight: normal;
+  color: rgb(153,153,153);
+  font-size: 10px;
+}
+
+.uwc-agreement-missing {
+  background: #9d261d;
+  color: #ffffff;
+  border-radius: 4px;
+}
+
+.uwc-agreement-forced {
+  background-color: #ffc40d;
+  border-radius: 4px;
+}
+
+.uwc-agreement form {
+  margin-bottom: 0px;
+}

@@ -1,10 +1,22 @@
 UsWorldCoverage::Application.routes.draw do
+
+  root :to => 'articles#summary'
+  
+  match 'articles/export_by_sampletags' => 'articles#export_by_sampletags'
+  match 'articles/summary' => 'articles#summary'
   resources :articles
+  
+  match 'golds/edit_reasons' => 'golds#edit_reasons'
+  
+  resources :golds
+  resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :foreign_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :international_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :local_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :national_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :sports_golds, :controller=>"golds", :type=>"ArtsGold"
 
-  get '/scraper' => 'scraper#status'
-  get '/scraper/:action' => 'scraper' 
-
-  root :to => 'scraper#status'
+  match 'scraper/:action' => 'scraper' 
 
   match 'code/international' => 'code#international'
   match 'code/foreign' => 'code#foreign'
@@ -15,6 +27,10 @@ UsWorldCoverage::Application.routes.draw do
   match 'code/answer' => 'code#answer'
   match 'session/new' => 'session#new'
   match 'session/create' => 'session#create'
+
+  match 'crowd/:action' => 'crowd'
+  match 'answers/:action' => 'answers'
+  match 'answers/for_article/:id/:type' => 'answers#for_article'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

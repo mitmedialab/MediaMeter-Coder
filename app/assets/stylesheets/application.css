@@ -5,3 +5,33 @@
  *= require_self
  *= require_tree . 
 */
+
+textarea {
+	width: 530px !important;	/* overriding a stupid bootstrap default value */
+}
+
+th small {
+	font-size: 10px;
+	line-height: 12px;
+	font-weight: normal;
+}
+
+#uwc-loading {
+	position:fixed;
+	display: block;
+	padding: 10px;
+	padding-bottom: 0px;
+	font-weight: bold;
+	border-radius: 10px;
+	border: 1px solid black;  
+	width: 100px;
+	top:50px;
+	right:50px;	
+	background: rgba(255,255,255,0.6);
+}
+
+.tableFloatingHeader {
+	margin-top: 40px !important;
+	background: #ffffff;
+	border-bottom: 1px solid #999999;
+}

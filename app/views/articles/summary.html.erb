@@ -1,0 +1,30 @@
+<h1>Article Summary</h1>
+
+<br />
+
+<%
+chart = GChart.line do |g|
+	g.title = "Average Stories per Day by Year"
+	g.data = []
+	@avg_stories_per_day_by_source_and_year.each do |source,count_by_year|
+		g.data << count_by_year.values
+	end
+	
+    g.colors = ['1B9E77','D95F02','7570B3','E7298A']
+    g.legend = @avg_stories_per_day_by_source_and_year.keys
+
+    g.width  = 600
+    g.height = 300
+
+    g.axis(:left) { |a| a.range = 0..400 }
+
+    g.axis(:bottom) do |a|
+      a.labels     = @years
+      a.text_color = :black
+    end
+
+  end
+ 
+%>
+
+<img src="<%=chart.to_url%>" />

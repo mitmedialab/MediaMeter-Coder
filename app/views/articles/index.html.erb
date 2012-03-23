@@ -1,55 +1,34 @@
-<h1>Listing articles</h1>
-
-<table>
-  <tr>
-    <th>Source</th>
-    <th>Pub date</th>
-    <th>Byline</th>
-    <th>Headline</th>
-    <th>Page</th>
-    <th>Src url</th>
-    <th>Abstract</th>
-    <th>Created at</th>
-    <th>Updated at</th>
-    <th>Total pages</th>
-    <th>Word count</th>
-    <th>Src url md5</th>
-    <th>Section</th>
-    <th>Queue status</th>
-    <th>Scan src url</th>
-    <th>Scan local filename</th>
-    <th>Scan file url</th>
-    <th></th>
-    <th></th>
-    <th></th>
-  </tr>
-
-<% @articles.each do |article| %>
-  <tr>
-    <td><%= article.source %></td>
-    <td><%= article.pub_date %></td>
-    <td><%= article.byline %></td>
-    <td><%= article.headline %></td>
-    <td><%= article.page %></td>
-    <td><%= article.src_url %></td>
-    <td><%= article.abstract %></td>
-    <td><%= article.created_at %></td>
-    <td><%= article.updated_at %></td>
-    <td><%= article.total_pages %></td>
-    <td><%= article.word_count %></td>
-    <td><%= article.src_url_md5 %></td>
-    <td><%= article.section %></td>
-    <td><%= article.queue_status %></td>
-    <td><%= article.scan_src_url %></td>
-    <td><%= article.scan_local_filename %></td>
-    <td><%= article.scan_file_url %></td>
-    <td><%= link_to 'Show', article %></td>
-    <td><%= link_to 'Edit', edit_article_path(article) %></td>
-    <td><%= link_to 'Destroy', article, confirm: 'Are you sure?', method: :delete %></td>
-  </tr>
-<% end %>
+<h1>Articles</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Date</th>
+      <th>Source</th>
+      <th>Headline</th>
+      <th>Byline</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @articles.each do |article| %>
+      <tr>
+        <td><%= article.id %></td>
+        <td><%= article.pub_date %></td>
+        <td><%= article.source %></td>
+        <td><%= link_to article.headline, article_path(article) %></td>
+        <td><%= article.byline %></td>
+        <td>
+          <%= link_to 'Edit', edit_article_path(article), :class => 'btn btn-mini' %>
+          <%= link_to 'Destroy', article_path(article), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
 </table>
 
-<br />
+<%= will_paginate @articles %>
 
-<%= link_to 'New Article', new_article_path %>
+<!--
+<%= link_to 'New', new_article_path, :class => 'btn btn-primary' %>
+-->

@@ -1,28 +1,45 @@
 require '../config/environment.rb'
 
-papers = ["Chicago Tribune", "LA Times", 
-          "New York Times", "Washington Post"]
+if ARGV.count != 2
+  puts "You need to supply two arguments - the number of articles to tag, and the tag to use"
+  exit
+end
 
-years = ["1979", "1989", "1999", "2009"]
+total_articles_to_sample = ARGV[0].to_i
+new_sampletag = ARGV[1]
 
-total_articles_to_sample = 208
+puts "Starting script to sample #{total_articles_to_sample} articles with the sampletag '#{new_sampletag}'"
 
-articles_per_paper_year = 208 / papers.size / years.size
+existing_count = Article.where(:sampletag=>new_sampletag).count
+total_articles_to_sample = [total_articles_to_sample - existing_count,0].max
+puts "  Found #{existing_count} with that tag already, will only tag #{total_articles_to_sample}" 
+
+papers = Article.pluck(:source).uniq.sort
+years = Article.pluck("YEAR(pub_date)").uniq.sort
+
+puts "  Found #{papers.count} sources and #{years.count} years"
+
+articles_per_paper_year = total_articles_to_sample / papers.size / years.size
+
+puts "  Will sample #{articles_per_paper_year} articles for each year of each paper"
+
+random = Random.new()
 
 papers.each do  | paper |
   years.each do | year |
-    articles = Article.all(:conditions=>["source ='#{paper}' AND YEAR(pub_date) = '#{year}' AND blacklist_tag is null"], :order=>"pub_date asc, source, headline, abstract")
+    puts "  Sampling #{paper}: #{year}"
+    articles = Article.completed.where(:source=>paper, :blacklist_tag=>nil, :sampletag=>nil).
+      where("YEAR(pub_date) = '#{year}'").
+      order("pub_date asc, source, headline, abstract")
     next if !(articles.size > 0)
 
     sample_count = 0
     while sample_count < articles_per_paper_year
-      article = articles[rand(0.. articles.size-1)]
-      if(article.sampletag!="true")
-        article.sampletag="true"
-        article.save
-        puts article.headline
-        sample_count += 1
-      end
+      article = articles[random.rand(0..articles.size-1)]
+      article.sampletag=new_sampletag
+      article.save
+      puts "    "+article.headline
+      sample_count += 1
     end
   end
 end

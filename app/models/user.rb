@@ -15,7 +15,7 @@ SELECT articles.*,
     AS selected_answers 
     ON articles.id = selected_answers.article_id 
   WHERE selected_answers.user_id IS NULL 
-    AND sampletag = "true"
+    AND sampletag = "hand-coded"
   LIMIT 1;
 SQL
     result = Article.find_by_sql(query_string)

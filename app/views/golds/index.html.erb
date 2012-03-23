@@ -1,0 +1,28 @@
+<h1>Golds</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Article</th>
+      <th>Created at</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @golds.each do |gold| %>
+      <tr>
+        <td><%= gold.id %></td>
+        <td><%= link_to gold.article_id, gold_path(gold) %></td>
+        <td><%= gold.created_at %></td>
+        <td>
+          <%= link_to 'Edit', edit_gold_path(gold), :class => 'btn btn-mini' %>
+          <%= link_to 'Destroy', gold_path(gold), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= will_paginate @golds %>
+
+<%= link_to 'New', new_gold_path, :class => 'btn btn-primary' %>

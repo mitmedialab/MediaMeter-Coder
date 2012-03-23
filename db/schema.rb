@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120124153935) do
+ActiveRecord::Schema.define(:version => 20120319191842) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -22,7 +22,12 @@ ActiveRecord::Schema.define(:version => 20120124153935) do
     t.integer  "judgements"
     t.integer  "article_id"
     t.string   "source",     :default => "CrowdFlower"
+    t.integer  "user_id",                               :null => false
   end
+
+  add_index "answers", ["article_id"], :name => "index_answers_on_article_id"
+  add_index "answers", ["type"], :name => "index_answers_on_type"
+  add_index "answers", ["user_id"], :name => "index_answers_on_user_id"
 
   create_table "articles", :force => true do |t|
     t.string   "source"
@@ -44,16 +49,25 @@ ActiveRecord::Schema.define(:version => 20120124153935) do
     t.string   "scan_file_url",       :limit => 1000
     t.string   "blacklist_tag"
     t.boolean  "golden",                              :default => false
+    t.string   "sampletag"
   end
 
   add_index "articles", ["queue_status"], :name => "index_articles_on_queue_status"
+  add_index "articles", ["sampletag"], :name => "index_articles_on_sampletag"
   add_index "articles", ["source"], :name => "source_index"
   add_index "articles", ["src_url_md5"], :name => "src_url_md5_index", :unique => true
 
   create_table "golds", :force => true do |t|
     t.integer  "article_id"
-    t.string   "question"
+    t.string   "type"
     t.boolean  "answer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "reason",     :limit => 1000
+  end
+
+  create_table "users", :force => true do |t|
+    t.string   "username"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

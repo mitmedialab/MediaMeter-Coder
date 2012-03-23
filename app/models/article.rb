@@ -29,20 +29,19 @@ end
 
 class Article < ActiveRecord::Base
 
-  has_many      :arts_answers
-  has_many      :foreign_answers
-  has_many      :international_answers
-  has_many      :local_answers
-  has_many      :national_answers
-  has_many      :sports_answers 
+  self.per_page = 100
 
+  has_many      :answers
+  has_many      :golds
+  
   before_save   ArticlePrepper.new
   
   scope :completed, where(:queue_status=>:complete)
   
   def url_to_scan_local_file
-    return "http://"+File.join(NewsScrapers::public_base_url, scan_dir, scan_local_filename) if has_scan_local_filename?
-    return ""  
+    url = ""
+    url = "http://"+File.join(NewsScrapers::public_base_url, scan_subdir, scan_local_filename) if has_scan_local_filename?
+    url
   end
   
   # HACK for NYT edge case where some articles from the API don't have URLs :-(
@@ -101,11 +100,75 @@ class Article < ActiveRecord::Base
     self.blacklist_tag.split(",")
   end
 
+  # assumes you've loaded the article with the linked has_many :articles
+  def answers_by_type(type)
+    answers.select do |answer|
+      answer.is_type type
+    end
+  end
+
+  def missing_gold_by_type(type)
+    gold_by_type(type) == nil
+  end
+  
+  def has_gold_by_type(type)
+    !missing_gold_by_type(type)
+  end
+
+  # assumes you've loaded the article with the linked has_many :golds
+  def gold_by_type(type)
+    gold = nil
+    found_golds = golds.select do |gold|
+      gold.is_type type
+    end
+    if found_golds.count > 0
+      gold = found_golds.first    # there should be only one!
+    end
+    gold
+  end
+
+  # return a summary hash about agreement between the answers already loaded
+  def agreement_info_for_type(type)
+    answers_of_type = answers_by_type(type)
+    info = {
+      :yes => (answers_of_type.count {|a| (a.answer==true)}).to_f / answers_of_type.count.to_f,
+      :no => (answers_of_type.count {|a| (a.answer==false)}).to_f / answers_of_type.count.to_f,
+    }
+    if info[:yes] > info[:no]
+      info[:is_of_type] = true 
+    elsif info[:no] > info[:yes]
+      info[:is_of_type] = false
+    else 
+      info[:is_of_type] = nil
+    end
+    info
+  end   
+  
+  def self.average_stories_per_day_by_source_and_year
+    sources = Article.pluck(:source).uniq
+    results = Hash.new
+    sources.each do |source|
+      results[source] = Hash.new
+      totals = Article.where(:source=>source).group("YEAR(pub_date)").count
+      totals.each do |year,total_articles|
+        results[source][year] = (total_articles / 5).round
+      end 
+    end
+    results
+  end
+  
+  def self.sampletag_counts
+    Article.where("sampletag is not null").group(:sampletag).count
+  end
+
   private 
 
     def scan_dir
-      File.join("article_scans" , source.gsub(" ","_").downcase , 
-                       pub_date.year.to_s , pub_date.month.to_s , pub_date.day.to_s)
+      File.join("article_scans" , scan_subdir)
+    end
+    
+    def scan_subdir
+      File.join(source.gsub(" ","_").downcase , pub_date.year.to_s , pub_date.month.to_s , pub_date.day.to_s)
     end
 
 end

@@ -1,0 +1,96 @@
+<h1>Coding Results: Sample <%=@sampletag%></h1>
+<p>
+Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
+<b>Disagreement on <%=@disagreement_count%> article (<%=(@disagreement_count.to_f/@articles.count.to_f).round(2) %>%). 
+</p>
+<table class="table table-striped" id="uwc-answers-list">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Info</th>
+<% @types.each do |type| %>
+      <th style="text-align:center;">
+      	<%=type.capitalize%>?
+      	<br />
+      	<small>
+      	<%=link_to "golds", "/golds/edit_reasons?sampletag="+@sampletag+"&answer_type="+type %>	
+      	</small>
+      </th>      
+<% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @articles.each do |article| %>
+      <tr>
+        <td><%= article.id %></td>
+        <td>
+        	<b><%= link_to article.headline, article_path(article) %></b><br />
+        	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
+        </td>
+<% @types.each do |type| %>
+        <td id="wrapped-article-<%=article.id%>-<%=type%>"><%= render :partial => 'answer_icons', :locals=> {
+        			:agreement_info=>@agreement_by_article[article.id][type],
+        			:answers=>article.answers_by_type(type),
+        			:gold=>article.gold_by_type(type),
+        			:username_map=>@user_id_to_name
+        			} %>
+        </td>
+<% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<script type="text/javascript">
+//<![CDATA[
+
+function initTooltips(){
+	$("[rel='tooltip']").tooltip();
+}
+function initCheckboxes(){
+	$("input[type='checkbox']").click(updateGold)
+}
+function updateGold(evt){
+	checked = $(evt.target).is(':checked')
+	parts = $(evt.target).closest('form')[0].id.split('_');
+	td_id = $(evt.target).closest('td')[0].id;
+	article_parts = td_id.split('-');
+	article_id = article_parts[2];
+	type = parts[1];
+	gold_id = parts[parts.length-1];
+	answer_data = {'id': gold_id, 'type':type+"_gold"};
+	answer_data[type+'_gold[answer]'] = checked ? '1' : '0'
+	loadingFadeIn();
+	$.ajax({
+		url:'/golds/'+gold_id+'.json',
+		dataType: 'text',
+		data: answer_data,
+		type: 'PUT',
+		error: function (jqXHR, textStatus, errorThrown){
+			console.log('error '+errorThrown);
+		},
+		statusCode: {
+			200: function() {
+				loadingFadeOut();
+				$('#'+td_id).load('/answers/for_article/'+article_id+'/'+type,
+					{'uids':[<%=@user_id_to_name.keys.join(",")%>]},
+					function(){
+						// over-aggresize, but I need to refire these for the new html elements 
+						initTooltips();
+						initCheckboxes();
+					}
+				);
+
+			}
+		}
+	});
+}
+
+$(initTooltips);
+$(initCheckboxes);
+
+$(function(){$("table").stickyTableHeaders();});
+
+//]]>
+</script>

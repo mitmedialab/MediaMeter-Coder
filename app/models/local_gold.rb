@@ -1,0 +1,2 @@
+class LocalGold < Gold
+end

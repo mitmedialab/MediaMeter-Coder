@@ -1,0 +1,2 @@
+class SportsGold < Gold
+end

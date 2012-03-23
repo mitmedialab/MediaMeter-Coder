@@ -1,0 +1,2 @@
+class ForeignGold < Gold
+end

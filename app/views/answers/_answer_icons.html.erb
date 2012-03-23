@@ -1,0 +1,73 @@
+
+<%
+extra_css_classes = []
+
+if gold!=nil
+	# mark any items that don't have gold set yet
+	if gold.unanswered?
+		extra_css_classes << "uwc-agreement-missing "	
+	else 
+		extra_css_classes << "uwc-agreement-made "
+	end  
+	# mark suspicious ones that you have gold for
+	if gold.answered? && !(agreement_info[:yes] > 0.7 || agreement_info[:no] > 0.7)
+		extra_css_classes << "uwc-agreement-forced " 
+	end 
+	if gold.answered? && (gold.yes?!=agreement_info[:is_of_type])
+		extra_css_classes << "uwc-agreement-forced "
+	end
+end	
+%>
+
+<div class="uwc-agreement <%=extra_css_classes.join(" ")%>">
+
+<%
+if gold!=nil
+	
+	if gold.yes?
+	%>	<em>Yes</em> <small><%=(agreement_info[:yes]*100).round()%>%</small>
+	<%
+	elsif gold.no?
+	%>
+		<em>No</em> <small><%=(agreement_info[:no]*100).round()%>%</small>
+	<%
+	else 
+	%>
+		<em>???</em> <small><%=(agreement_info[:yes]*100).round()%>% / <%=(agreement_info[:no]*100).round()%>%</small>
+	<%
+	end
+	%>
+
+<%
+end
+%>
+
+<div>
+<%
+answers.each do |answer|
+  username = username_map[answer.user_id] 
+  if answer.answer
+  	image = "green-dot.png"
+  else
+  	image = "red-dot.png"
+  end
+%>
+    <a href="#" rel="tooltip" title="<%=username%>"><%=image_tag image, :alt=>answer.user_id.to_s %></a>
+<%
+end
+%>
+</div>
+
+<% if gold!=nil %>
+
+	<%= form_for gold, :remote=>true do |f| %>
+	  <%= f.check_box :answer %>
+	<% end %>
+	
+	<small><%=link_to "Edit Gold", edit_gold_path(gold)%></small>
+
+<%
+end
+%>
+
+</div>
