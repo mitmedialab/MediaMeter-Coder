@@ -2,7 +2,7 @@
         var evtobj=window.event? event : e //distinguish between IE's explicit event object (window.event) and Firefox's implicit.
         var unicode=evtobj.charCode? evtobj.charCode : evtobj.keyCode
         var actualkey=String.fromCharCode(unicode)
-        var current = $('articles').firstDescendant().firstDescendant();
+        var current = $('articles').down('div').firstDescendant();
         var article_id = current.getAttribute("id");
 
         if(actualkey=="y"){
