@@ -1,0 +1,16 @@
+
+<input id="authenticity_token" name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>"/>
+<input id="answer_type" name="answer_type" type="hidden" value="<%=@answer_type%>"/>
+
+<div class="hero-unit">
+	<h1>Is this an <%=@answer_type.capitalize%> Story?</h1>
+	<br />
+	<div id="articles">
+	</div>
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+$(code_init);
+//]]>
+</script>
