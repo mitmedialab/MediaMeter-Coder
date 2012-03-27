@@ -45,11 +45,11 @@ Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
 <script type="text/javascript">
 //<![CDATA[
 
-function initTooltips(){
-	$("[rel='tooltip']").tooltip();
+function initTooltips(parentSelector){
+	$(parentSelector+" [rel='tooltip']").tooltip();
 }
-function initCheckboxes(){
-	$("input[type='checkbox']").click(updateGold)
+function initCheckboxes(parentSelector){
+	$(parentSelector+" input[type='checkbox']").click(updateGold)
 }
 function updateGold(evt){
 	checked = $(evt.target).is(':checked')
@@ -73,12 +73,13 @@ function updateGold(evt){
 		statusCode: {
 			200: function() {
 				loadingFadeOut();
-				$('#'+td_id).load('/answers/for_article/'+article_id+'/'+type,
+				var tdSelector = '#'+td_id; 
+				$(tdSelector).load('/answers/for_article/'+article_id+'/'+type,
 					{'uids':[<%=@user_id_to_name.keys.join(",")%>]},
 					function(){
-						// over-aggresize, but I need to refire these for the new html elements 
-						initTooltips();
-						initCheckboxes();
+						// attach listeners to new element  
+						initTooltips(tdSelector);
+						initCheckboxes(tdSelector);
 					}
 				);
 
@@ -87,8 +88,8 @@ function updateGold(evt){
 	});
 }
 
-$(initTooltips);
-$(initCheckboxes);
+$(initTooltips(""));
+$(initCheckboxes(""));
 
 $(function(){$("table").stickyTableHeaders();});
 
