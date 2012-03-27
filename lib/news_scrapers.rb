@@ -70,7 +70,9 @@ module NewsScrapers
         #including ones which will be later blaclisted
         NewsScrapers.logger.info"  Scraping #{d} from the #{scraper.get_source_name}"
         scraper.scrape(d)
+        NewsScrapers.logger.flush
         scraper.blacklist_scrape(d)
+        NewsScrapers.logger.flush
       end
     end
   end

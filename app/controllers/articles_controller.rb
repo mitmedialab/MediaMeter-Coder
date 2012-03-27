@@ -1,5 +1,4 @@
 class ArticlesController < ApplicationController
-  layout "browse"
 
   def summary
     @sources = Article.pluck(:source).uniq.sort
@@ -9,6 +8,7 @@ class ArticlesController < ApplicationController
 
   def export_by_sampletags
 
+    @users = User.all
     @all_sampletags = Article.sampletag_counts
     @all_answer_types = Gold.types 
     

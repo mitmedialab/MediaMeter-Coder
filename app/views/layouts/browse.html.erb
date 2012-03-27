@@ -60,6 +60,7 @@
 				</li>
                 <li><%= link_to "Review Answers", "/answers/pick"  %></li>
                 <li><%= link_to "Export Articles", "/articles/export_by_sampletags"  %></li>
+                <li><%= link_to "Import Answers", "/articles/import"  %></li>
                 <li><%= link_to "Articles Index", "/articles"  %></li>
                 <li><%= link_to "Scraper Status", "/scraper/status"  %></li>
             </ul>
@@ -72,6 +73,14 @@
       <div class="content">
         <div class="row">
           <div class="span12">
+            <div class="flash">
+    			<% if flash[:error] %>
+				<div id="error" class="alert alert-error"><b>Error!</b>: <%= flash[:error] %></div>
+				<% end %>
+		        <% if flash[:notice] %>
+				<div id="notice" class="alert alert-success"><%= flash[:notice] %></div>
+				<% end %>
+			</div>
             <%= yield %>
           </div>
         </div><!--/row-->

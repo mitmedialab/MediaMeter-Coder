@@ -274,8 +274,10 @@ module NewsScrapers
         #exit
       end
       NewsScrapers.logger.info "    #{page_count} pages of results to blacklist"
-
-   #for each page of results
+      
+      NewsScrapers.logger.flush
+      
+      #for each page of results
       article_count = 0
       (0..page_count-1).each do |current_page|
         NewsScrapers.logger.info "    Page #{current_page} of #{page_count}"
@@ -301,6 +303,7 @@ module NewsScrapers
             NewsScrapers.logger.info "        created and blacklisted article with #{extractor.name}"
             sleep(1) if !in_cache?(search_url, search_params)  # don't swamp their servers
           end
+          NewsScrapers.logger.flush
         end
       end
       article_count
@@ -322,6 +325,7 @@ module NewsScrapers
         exit
       end
       NewsScrapers.logger.info "    #{page_count} pages of results"
+      NewsScrapers.logger.flush
 
       #for each page of results
       article_count = 0      
@@ -344,6 +348,7 @@ module NewsScrapers
             NewsScrapers.logger.info "        created article with #{extractor.name}"
             sleep(1) if !in_cache?(search_url, search_params)  # don't swamp their servers
           end
+          NewsScrapers.logger.flush
         end
       end
       NewsScrapers.logger.info "    Dones scraping indexes for #{d}"
@@ -389,6 +394,7 @@ module NewsScrapers
       article.set_queue_status(:complete)
       article.save 
       NewsScrapers.logger.info "        scraped with #{extractor.name}"
+      NewsScrapers.logger.flush
       article
     end
   

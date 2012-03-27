@@ -1,5 +1,5 @@
 class CodeController < ApplicationController
-  layout "browse", :except=>[:answer]
+
   before_filter :require_username
  
   def arts

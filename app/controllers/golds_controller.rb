@@ -1,7 +1,5 @@
-
 # STI fixes copied from http://stackoverflow.com/questions/5246767/sti-one-controller/5252136#5252136
 class GoldsController < ApplicationController
-  layout 'browse'
 
   # see a list of articles with the gold answers
   def edit_reasons

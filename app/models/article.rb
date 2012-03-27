@@ -39,7 +39,7 @@ class Article < ActiveRecord::Base
   scope :completed, where(:queue_status=>:complete)
   
   # we need these held here so we can export the CSV for CrowdFlower correcltly
-  # @see https://crowdflower.com/solutions/self-service/#spreadsheet_gold 
+  # @see https://crowdflower.com/solutions/self-service/#learning_resources 
   QUESTIONS = {
     "arts"=>"Is this newspaper clip about the arts or entertainment",
     "foreign"=>"Does this newspaper clip contain International News that does not involve the United States", 
