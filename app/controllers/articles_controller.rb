@@ -22,6 +22,7 @@ class ArticlesController < ApplicationController
         @articles = Article.where(:sampletag=>@sampletags).includes(:golds)
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
         # do some csv config
+        @question_text = Article.question_text(@answer_type).downcase.gsub(/ /,"_")
         @filename = @answer_type + "_" + "articles" + "_" + timestamp + ".csv"
         @output_encoding = 'UTF-8'
       }

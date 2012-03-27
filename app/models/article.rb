@@ -38,6 +38,22 @@ class Article < ActiveRecord::Base
   
   scope :completed, where(:queue_status=>:complete)
   
+  # we need these held here so we can export the CSV for CrowdFlower correcltly
+  # @see https://crowdflower.com/solutions/self-service/#spreadsheet_gold 
+  QUESTIONS = {
+    "arts"=>"Is this newspaper clip about the arts or entertainment",
+    "foreign"=>"Does this newspaper clip contain International News that does not involve the United States", 
+    "international"=>"Is this newspaper clip about International News that involves the United States or NATO", 
+    "local"=>"Does this newspaper clip contain local news", 
+    "national"=>"Does this newspaper clip contain United States National news", 
+    "sports"=>"Does this newspaper clip contain sports news"
+  }
+  
+  def self.question_text type
+    QUESTIONS[type]
+  end
+  
+  # get the url to the local copy of the PDF file
   def url_to_scan_local_file
     url = ""
     url = "http://"+File.join(NewsScrapers::public_base_url, scan_subdir, scan_local_filename) if has_scan_local_filename?
