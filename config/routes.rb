@@ -9,6 +9,8 @@ UsWorldCoverage::Application.routes.draw do
   match 'golds/pick_reasons' => 'golds#pick_reasons'
   match 'golds/edit_reasons' => 'golds#edit_reasons', :via=>:put
   
+  resources :users
+
   resources :golds
   resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :foreign_golds, :controller=>"golds", :type=>"ArtsGold"

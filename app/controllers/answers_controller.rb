@@ -3,7 +3,8 @@ class AnswersController < ApplicationController
   def import
     @users = User.all
     @all_answer_types = Gold.types 
-    if request.method=="POST"
+    if request.post?
+      # TODO: verify params exist
       user = User.find(params[:username])
       question_type = params[:answer][:type]
       upload = params[:my_file]
@@ -22,6 +23,7 @@ class AnswersController < ApplicationController
         "date"=>nil,
         "content"=>nil,
         "byline"=>nil,
+        "answer_type"=>nil,
         answer_col=>nil,
         confidence_col=>nil,
       }
@@ -43,22 +45,29 @@ class AnswersController < ApplicationController
               parse_worked = false
             end
           else
-            # create and save an answer
-            answer = Answer.new_by_type(answer_type)
-            answer.user_id = user.id
-            answer.article_id = row[ col_indices["id"] ].to_i
-            answer.confidence = row[ col_indices[confidence_col] ].to_f
-            answer.answer = (row[ col_indices[answer_col] ] == "Yes")
-            answer.judgements = row[ col_indices["_trusted_judgments"] ].to_i        
-            #answer.save
-            answer_count = answer_count + 1
-          end
-        end
-      end
-    end
+            # verify answer info, just to be safe
+            answer_type = row[ col_indices["answer_type"] ]
+            if answer_type!=question_type
+              flash.now[:error] = "Row #{answer_count} has the wrong type!  Expecting #{question_type} but found #{answer_type}"  
+              parse_worked = false       
+            else
+              # everything checks out, go ahead and create and save the answer
+              answer = Answer.new_by_type(answer_type)
+              answer.user_id = user.id
+              answer.article_id = row[ col_indices["id"] ].to_i
+              answer.confidence = row[ col_indices[confidence_col] ].to_f
+              answer.answer = (row[ col_indices[answer_col] ] == "Yes")
+              answer.judgements = row[ col_indices["_trusted_judgments"] ].to_i
+              answer.save
+            end
+          end # answer count
+        end # parse worked
+        answer_count = answer_count + 1
+      end # csv for each
+    end # is post
     # generate some feedback
     if parse_worked
-      flash.now[:notice] = "Imported ${answer_count} ${question_type} answers for ${user.username} (from ${upload.original_filename})"
+      flash.now[:notice] = "Imported #{answer_count} #{question_type} answers for #{user.username} (from #{upload.original_filename})"
     end
   end
 

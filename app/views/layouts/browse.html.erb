@@ -20,11 +20,12 @@
     </style>
     <%= stylesheet_link_tag "application", :media => "all" %>
 
-    <!-- Le fav and touch icons -->
+    <!-- Le fav and touch icons
     <link href="images/favicon.ico" rel="shortcut icon">
     <link href="images/apple-touch-icon.png" rel="apple-touch-icon">
     <link href="images/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72">
     <link href="images/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114">
+     -->
   </head>
   <body>
 
@@ -58,12 +59,23 @@
 						<li><%= link_to "Sport", "/code/sport"%></li>
 					</ul>
 				</li>
-                <li><%= link_to "Review Answers", "/answers/pick"  %></li>
-                <li><%= link_to "Export Articles", "/articles/export_by_sampletags"  %></li>
-<!--                 <li><%= link_to "Import Answers", "/answers/import"  %></li> -->
-                <li><%= link_to "Edit Gold Reasons", "/golds/pick_reasons"  %></li>
-                <li><%= link_to "Articles Index", "/articles"  %></li>
-                <li><%= link_to "Scraper Status", "/scraper/status"  %></li>
+            	<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Articles<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+		                <li><%= link_to "Export Articles (including gold answers)", "/articles/export_by_sampletags"  %></li>
+		                <li><%= link_to "Articles Index", "/articles"  %></li>
+		                <li><%= link_to "Scraper Status", "/scraper/status"  %></li>
+					</ul>
+				</li>
+            	<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Answers<b class="caret"></b></a>
+					<ul class="dropdown-menu">
+		                <li><%= link_to "Review Answers / Generate Golds", "/answers/pick"  %></li>
+		                <li><%= link_to "Edit Gold Reasons", "/golds/pick_reasons"  %></li>
+		                <li><%= link_to "Import Gold Answers", "/answers/import"  %></li>
+					</ul>
+				</li>
+                <li><%= link_to "Users", "/users"  %></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
