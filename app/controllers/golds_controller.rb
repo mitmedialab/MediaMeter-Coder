@@ -2,12 +2,18 @@
 class GoldsController < ApplicationController
 
   # see a list of articles with the gold answers
+  def pick_reasons
+    @all_sampletags = Article.sampletag_counts
+    @all_answer_types = Gold.types     
+  end
+
+  # see a list of articles with the gold answers
   def edit_reasons
     
-    @sampletag = params[:sampletag]
-    @answer_type = params[:answer_type]
+    @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
+    @answer_type = params[:answer]['type']
 
-    @articles = Article.where(:sampletag=>[@sampletag]).includes(:golds)
+    @articles = Article.where(:sampletag=>@sampletags).includes(:golds)
     
   end
 

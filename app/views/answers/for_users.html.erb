@@ -11,10 +11,6 @@ Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
 <% @types.each do |type| %>
       <th style="text-align:center;">
       	<%=type.capitalize%>?
-      	<br />
-      	<small>
-      	<%=link_to "golds", "/golds/edit_reasons?sampletag="+@sampletag+"&answer_type="+type %>	
-      	</small>
       </th>      
 <% end %>
     </tr>
