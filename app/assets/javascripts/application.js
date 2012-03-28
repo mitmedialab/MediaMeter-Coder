@@ -23,6 +23,7 @@ function loadingFadeOut(){
 function loadingInit(){
   $("form[data-remote='true']")
   	.bind("ajax:beforeSend", loadingFadeIn)
+  	.bind("ajax:complete", loadingHide)
   	.bind("ajax:success", loadingHide);
 }
 

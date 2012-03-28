@@ -11,8 +11,10 @@
   <tbody>
     <% @articles.each do |article| 
     	gold_answer = ""
+    	answer_css = ""
     	if article.has_gold_by_type(@answer_type)
 			gold_answer = article.gold_by_type(@answer_type).yes?.to_s
+			answer_css = "uwc-gold-answer-"+gold_answer
 		end
     %>
       <tr>
@@ -20,18 +22,23 @@
         	<b><%= link_to article.headline, article_path(article) %></b><br />
         	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
 		</td>
-        <td><%= gold_answer %></td>
+        <td><div class="uwc-gold-answer <%=answer_css%>"><%= gold_answer %></div></td>
         <td>
         	<% if article.has_gold_by_type(@answer_type) 
         		g = article.gold_by_type(@answer_type) 
         	%>
-        		<%= form_for(g,:remote=>true) do |f| %>
-					<%= f.text_area :reason, :class => '', :cols=>'50', :rows=>'5' %>
-				    <%= f.submit nil, :value=>'Update Gold Reason',:class => 'btn btn-primary' %>
-        		<% end %>
+        		<%= render :partial => 'gold_reason', :locals=> { :gold=>g } %>
         	<% end %>
 		</td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<script type="text/javascript">
+//<![CDATA[
+
+// TODO: write script that updates reason TD area with response of ajax post
+
+//]]>
+</script>

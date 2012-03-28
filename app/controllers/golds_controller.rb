@@ -71,9 +71,9 @@ class GoldsController < ApplicationController
     @gold = Gold.find(params[:id])
 
     respond_to do |format|
-      if @gold.update_attributes(params[ params[:type].underscore ])
+      if @gold.update_attributes(params[ @gold.class.name.underscore ])
         format.html { redirect_to @gold, notice: 'Gold was successfully updated.' }
-        format.json { head :ok }
+        format.json { render :partial => "gold_reason.html.erb", :locals => { :gold=>@gold } }
       else
         format.html { render action: "edit" }
         format.json { render json: @gold.errors, status: :unprocessable_entity }
