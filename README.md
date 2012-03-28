@@ -42,19 +42,3 @@ Watch the log for lots of informative messages:
 ```
 tail -f log/development.log 
 ```
-
-Importing
----------
-
-You can import aggregated answers from CrowdFlower by running a rake task like so
-
-```
-rake crowd:import[sports,../crowdflower-round-2/a77851.csv,is_this_article_about_sports,is_this_article_about_sports:confidence]
-```
-
-The arguments are:
-
-* answer type - one of arts, foreign, international, local, national, or sports
-* path to csv file
-* column in the csv that has the aggregated answer
-* column in the csv that has CrowdFlower's confidence in that answer
