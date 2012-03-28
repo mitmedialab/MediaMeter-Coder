@@ -271,7 +271,7 @@ module NewsScrapers
       if page_count == nil
         NewsScrapers.logger.error("Didn't find page count with #{extractor.name}")
         page_count = 0
-        #exit
+        return nil
       end
       NewsScrapers.logger.info "    #{page_count} pages of results to blacklist"
 
@@ -299,7 +299,7 @@ module NewsScrapers
             article.save
             article_count += 1
             NewsScrapers.logger.info "        created and blacklisted article with #{extractor.name}"
-            sleep(1) if !in_cache?(search_url, search_params)  # don't swamp their servers
+            sleep(0.2) if !in_cache?(search_url, search_params)  # don't swamp their servers
           end
         end
       end
@@ -319,7 +319,7 @@ module NewsScrapers
       page_count = extractor.extract_page_count(doc)
       if page_count == nil
         NewsScrapers.logger.error("Didn't find page count with #{extractor.name}")
-        exit
+        return nil
       end
       NewsScrapers.logger.info "    #{page_count} pages of results"
 
@@ -342,7 +342,7 @@ module NewsScrapers
             article.save
             article_count += 1
             NewsScrapers.logger.info "        created article with #{extractor.name}"
-            sleep(1) if !in_cache?(search_url, search_params)  # don't swamp their servers
+            sleep(0.2) if !in_cache?(search_url, search_params)  # don't swamp their servers
           end
         end
       end
@@ -366,26 +366,26 @@ module NewsScrapers
           article.save
           return
         end
-        sleep(0.2) if !in_cache?(article.src_url)  # don't swamp their servers
+        sleep(0.5) if !in_cache?(article.src_url)  # don't swamp their servers
       end
-      if article.has_scan_src_url?
-        article_scan_doc = fetch_url(article.scan_src_url)
-        extractor.extract_scanned_file_url(article,article_scan_doc)
-        if article.has_scan_file_url?
-          scan_dir = article.path_to_scan_dir
-          extension = article.scan_file_url.split('.').pop()
-          article.scan_local_filename = article.id.to_s + "." + extension
-          begin
-            @requester.get(article.scan_file_url).save( File.join(scan_dir, article.scan_local_filename) )
-          rescue Exception => e
-            NewsScrapers.logger.error "scraping article scan file url failed! #{article.scan_file_url}"
-            article.set_queue_status(:in_progress_error)
-            article.save
-            return          
-          end
-          sleep(0.2) if !in_cache?(article.scan_src_url)  # don't swamp their servers
-        end
-      end
+#      if article.has_scan_src_url?
+#        article_scan_doc = fetch_url(article.scan_src_url)
+#        extractor.extract_scanned_file_url(article,article_scan_doc)
+#        if article.has_scan_file_url?
+#          scan_dir = article.path_to_scan_dir
+#          extension = article.scan_file_url.split('.').pop()
+#          article.scan_local_filename = article.id.to_s + "." + extension
+#          begin
+#            @requester.get(article.scan_file_url).save( File.join(scan_dir, article.scan_local_filename) )
+#          rescue Exception => e
+#            NewsScrapers.logger.error "scraping article scan file url failed! #{article.scan_file_url}"
+#            article.set_queue_status(:in_progress_error)
+#            article.save
+#            return          
+#          end
+#          sleep(0.2) if !in_cache?(article.scan_src_url)  # don't swamp their servers
+#        end
+#      end
       article.set_queue_status(:complete)
       article.save 
       NewsScrapers.logger.info "        scraped with #{extractor.name}"
@@ -393,11 +393,13 @@ module NewsScrapers
     end
   
     # get all the articles on a particlar day and insert them into the db
-    def scrape(d)
-      scrape_index(d)
+    def scrape(d, interval =10)
+      search_url, search_params = get_search_url_and_params(d)
       NewsScrapers.logger.info "    Scraping article contents"
+      doc = fetch_url( search_url, search_params, true)
+
       while(Article.where({:queue_status=>:queued, :source=>get_source_name}).count > 0)
-        Article.where({:queue_status=>:queued, :source=>get_source_name}).find(:all, :limit=>10) do |article|
+        Article.where({:queue_status=>:queued, :source=>get_source_name}).find(:all, :limit=>interval) do |article|
           scrape_article(article) 
         end
       end

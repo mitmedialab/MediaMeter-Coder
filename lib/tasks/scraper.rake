@@ -4,8 +4,12 @@ namespace :scraper do
 	
 	desc "Control the newspaper article scraper"
 
-  task :all =>:environment do
-    NewsScrapers::scrape_all
+  task :all_indexes =>:environment do
+    NewsScrapers::scrape_all_indexes
+  end
+
+  task :article_worker =>:environment do
+    NewsScrapers::scrape_all_articles
   end
 
   task :washpo =>:environment do

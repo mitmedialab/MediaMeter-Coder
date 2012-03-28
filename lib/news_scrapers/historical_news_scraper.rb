@@ -40,7 +40,7 @@ module NewsScrapers
         contents = NewsScrapers.cache.get(full_url)
       else
         NewsScrapers.logger.debug("      from interwebs")
-        sleep(0.1)
+        sleep(0.5)
         if fetch_with_mechanize
           page = @requester.get(full_url)
           contents = page.body          
