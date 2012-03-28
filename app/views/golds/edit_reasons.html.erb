@@ -10,11 +10,13 @@
   </thead>
   <tbody>
     <% @articles.each do |article| 
-    	gold_answer = ""
+    	gold_answer_text = ""
     	answer_css = ""
-    	if article.has_gold_by_type(@answer_type)
-			gold_answer = article.gold_by_type(@answer_type).yes?.to_s
-			answer_css = "uwc-gold-answer-"+gold_answer
+    	gold = nil
+    	gold = article.gold_by_type(@answer_type) if article.has_gold_by_type(@answer_type) 
+    	if gold
+			gold_answer_text = gold.yes?.to_s
+			answer_css = "uwc-gold-answer-"+gold_answer_text
 		end
     %>
       <tr>
@@ -22,12 +24,14 @@
         	<b><%= link_to article.headline, article_path(article) %></b><br />
         	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
 		</td>
-        <td><div class="uwc-gold-answer <%=answer_css%>"><%= gold_answer %></div></td>
+        <td><div class="uwc-gold-answer <%=answer_css%>">
+        	<% if gold %>
+	        	<%= link_to gold_answer_text, edit_gold_path(gold) %>
+        	<% end %>
+       	</div></td>
         <td>
-        	<% if article.has_gold_by_type(@answer_type) 
-        		g = article.gold_by_type(@answer_type) 
-        	%>
-        		<%= render :partial => 'gold_reason', :locals=> { :gold=>g } %>
+        	<% if gold %>
+        		<%= render :partial => 'gold_reason', :locals=> { :gold=>gold } %>
         	<% end %>
 		</td>
       </tr>
