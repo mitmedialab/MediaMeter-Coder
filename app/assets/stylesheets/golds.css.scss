@@ -19,3 +19,12 @@
 .uwc-gold-reason input[type='text']{
   width: 500px !important;
 }
+
+.uwc-gold-reason {
+  padding: 5px;
+}
+.uwc-gold-reason-missing {
+  background: #ffc40d;
+  border-radius: 4px;  
+}
+
