@@ -20,7 +20,7 @@ csv << ["id", "newspaper", "page", "headline","date","content","byline","content
               a.byline,
               a.url_to_scan_local_file,
               @answer_type,
-              is_gold ? "True" : "False",
+              is_gold ? "TRUE" : "",
               gold_answer,
               gold_reason
             ]
