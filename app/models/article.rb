@@ -46,7 +46,7 @@ class Article < ActiveRecord::Base
     "international"=>"Is this newspaper clip about International News that involves the United States or NATO", 
     "local"=>"Does this newspaper clip contain local news", 
     "national"=>"Does this newspaper clip contain United States National news", 
-    "sports"=>"Does this newspaper clip contain sports news"
+    "sports"=>"Is this article about sports"
   }
   
   def self.question_text type
@@ -149,7 +149,10 @@ class Article < ActiveRecord::Base
     info = {
       :yes => (answers_of_type.count {|a| (a.answer==true)}).to_f / answers_of_type.count.to_f,
       :no => (answers_of_type.count {|a| (a.answer==false)}).to_f / answers_of_type.count.to_f,
+      :count => answers_of_type.count
     }
+    info[:yes] = 0 if info[:yes].nan?
+    info[:no] = 0 if info[:no].nan?
     if info[:yes] > info[:no]
       info[:is_of_type] = true 
     elsif info[:no] > info[:yes]

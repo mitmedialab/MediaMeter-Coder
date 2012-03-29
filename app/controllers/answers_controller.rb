@@ -75,6 +75,7 @@ class AnswersController < ApplicationController
   def pick
     @users = User.all
     @user_answer_counts = Hash.new
+    @all_answer_types = Gold.types 
     @users.each do |user|
       @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
     end
@@ -99,13 +100,18 @@ class AnswersController < ApplicationController
       @user_id_to_name[user.id] = user.username
     end
     
+    # parse out the questions we care about
+    @selected_types = Gold.types.select do |type|
+      params[:answer_type].keys.include? type
+    end
+    
     # load all the articles
     @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
       where('answers.user_id'=>user_ids)
 
     # compute agreement
     @disagreement_count = 0
-    @types = Answer.types
+    @types = @selected_types
     @agreement_by_article = Hash.new
     @articles.each do |article|
       @agreement_by_article[article.id] = Hash.new

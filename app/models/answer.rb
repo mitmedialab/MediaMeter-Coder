@@ -30,4 +30,13 @@ class Answer < ActiveRecord::Base
     return Answer::classname_for_type(type)==self.class.name
   end
 
+  def has_confidence?
+    return !confidence.nil?
+  end
+  
+  def not_confident?
+    return true if has_confidence? && (confidence < 0.75)
+    return false
+  end
+
 end
