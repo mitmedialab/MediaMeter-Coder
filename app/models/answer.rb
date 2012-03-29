@@ -3,6 +3,8 @@ class Answer < ActiveRecord::Base
   belongs_to      :article
   belongs_to      :user
 
+  CONFIDENT_THRESHOLD = 0.75
+
   ANSWER_TYPES = {
     "arts"=>"ArtsAnswer",
     "foreign"=>"ForeignAnswer", 
@@ -35,7 +37,7 @@ class Answer < ActiveRecord::Base
   end
   
   def not_confident?
-    return true if has_confidence? && (confidence < 0.75)
+    return true if has_confidence? && (confidence < CONFIDENT_THRESHOLD)
     return false
   end
 

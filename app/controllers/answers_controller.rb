@@ -87,6 +87,7 @@ class AnswersController < ApplicationController
     
     @sampletag = params[:tag][:name]
     @generate_golds = params[:generate_golds].to_i==1
+    @only_not_confident = params[:not_confident].to_i==1
     
     # parse out users we care about
     @selected_users = User.all.select do |user|
@@ -106,8 +107,11 @@ class AnswersController < ApplicationController
     end
     
     # load all the articles
+    extra_where_clause = ""
+    extra_where_clause  = 'answers.confidence < '+Answer::CONFIDENT_THRESHOLD.to_s if @only_not_confident
     @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
-      where('answers.user_id'=>user_ids)
+      where('answers.user_id'=>user_ids).where(extra_where_clause)
+    
 
     # compute agreement
     @disagreement_count = 0

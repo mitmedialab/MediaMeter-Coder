@@ -57,6 +57,7 @@ end
 
 <div>
 <%
+not_confident = false
 answers.each do |answer|
   username = username_map[answer.user_id] 
   if answer.answer
@@ -66,28 +67,29 @@ answers.each do |answer|
   end
   tip = username
   tip = tip + " (" + answer.confidence.to_s + ")" if answer.has_confidence?
+  not_confident = true if answer.not_confident?
 %>    <a href="#" rel="tooltip" title="<%=tip%>"><%=image_tag image, :alt=>answer.user_id.to_s %></a> <%
-  if answer.not_confident?
-%>  <span class="label label-warning">Low Confidence</span>
-<% end
 end
 %>
 </div>
 
-<% if gold!=nil %>
-
-	<%= form_for gold, :remote=>true do |f| %>
-	  <%= f.check_box :answer %>
-	<% end %>
-	
-	<small><%=link_to "Edit Gold", edit_gold_path(gold)%></small>
-
-<%
-end
-%>
+<% if not_confident %> 
+   <span class="label label-warning">Low Confidence</span>
+<% end %>
 
 <% if gold_was_forced %>
 	<span class="label label-important">Forced Gold</span>
 <% end %>
+
+<% if gold!=nil %>
+
+	<%= form_for gold, :remote=>true do |f| %>
+	  <%= f.check_box :answer %> <small><%=link_to "Edit Gold", edit_gold_path(gold)%></small>
+	<% end %>
+	
+<%
+end
+%>
+
 
 </div>
