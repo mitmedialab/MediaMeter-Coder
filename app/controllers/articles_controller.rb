@@ -3,7 +3,19 @@ class ArticlesController < ApplicationController
   def summary
     @sources = Article.pluck(:source).uniq.sort
     @years = Article.pluck("YEAR(pub_date)").uniq.sort
+    # chart of stories per day / source / year
     @avg_stories_per_day_by_source_and_year = Article.average_stories_per_day_by_source_and_year
+    # answer confidence
+    @all_answer_types = Answer.types
+    @user_type_confidence = {}     
+    crowd_users = User.having_answers_with_confidence
+    crowd_users.each do |user|
+      @user_type_confidence[user] = {}
+      @all_answer_types.each do |type|
+        confidence_freq = Answer.confidence_frequency(user.id, type)
+        @user_type_confidence[user][type] = confidence_freq 
+      end
+    end
   end
 
   def export_by_sampletags
