@@ -46,6 +46,10 @@ class Gold < ActiveRecord::Base
   def no?
     answer==false
   end
+  
+  def has_reason?
+    (reason!=nil) && (reason.length > 0)
+  end
 
 end
 

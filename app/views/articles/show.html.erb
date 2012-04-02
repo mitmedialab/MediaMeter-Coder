@@ -1,97 +1,136 @@
-<h1>Article</h1>
+<div class="row">
 
-<p>
-  <b>Source</b><br>
-  <%= @article.source %>
-</p>
+	<div class="span8" style="overflow:hidden">
+		<h1>Article</h1>
+		
+		<p>
+		  <b>Source</b><br>
+		  <%= @article.source %>
+		</p>
+		
+		<p>
+		  <b>Pub date</b><br>
+		  <%= @article.pub_date %>
+		</p>
+		
+		<p>
+		  <b>Byline</b><br>
+		  <%= @article.byline %>
+		</p>
+		
+		<p>
+		  <b>Headline</b><br>
+		  <%= @article.headline %>
+		</p>
+		
+		<p>
+		  <b>Page</b><br>
+		  <%= @article.page %>
+		</p>
+		
+		<p>
+		  <b>Src url</b><br>
+		  <%= @article.src_url %>
+		</p>
+		
+		<p>
+		  <b>Abstract</b><br>
+		  <%= @article.abstract %>
+		</p>
+		
+		<p>
+		  <b>Total pages</b><br>
+		  <%= @article.total_pages %>
+		</p>
+		
+		<p>
+		  <b>Word count</b><br>
+		  <%= @article.word_count %>
+		</p>
+		
+		<p>
+		  <b>Src url md5</b><br>
+		  <%= @article.src_url_md5 %>
+		</p>
+		
+		<p>
+		  <b>Section</b><br>
+		  <%= @article.section %>
+		</p>
+		
+		<p>
+		  <b>Queue status</b><br>
+		  <%= @article.queue_status %>
+		</p>
+		
+		<p>
+		  <b>Scan src url</b><br>
+		  <%= @article.scan_src_url %>
+		</p>
+		
+		<p>
+		  <b>Scan local filename</b><br>
+		  <%= @article.scan_local_filename %>
+		</p>
+		
+		<p>
+		  <b>Scan file url</b><br>
+		  <%= @article.scan_file_url %>
+		</p>
+		
+		<p>
+		  <b>Blacklist tag</b><br>
+		  <%= @article.blacklist_tag %>
+		</p>
+		
+		<p>
+		  <b>Golden</b><br>
+		  <%= @article.golden %>
+		</p>
+		
+		<p>
+		  <b>Sampletag</b><br>
+		  <%= @article.sampletag %>
+		</p>
+		
+		<div class="form-actions">
+		  <%= link_to 'Back', articles_path, :class => 'btn'  %>
+		  <%= link_to 'Edit', edit_article_path(@article), :class => 'btn' %>
+		  <%= link_to 'Delete', article_path(@article), :method => 'delete', :confirm => 'Are you sure?', :class => 'btn btn-danger' %>
+		</div>
 
-<p>
-  <b>Pub date</b><br>
-  <%= @article.pub_date %>
-</p>
+	</div>
 
-<p>
-  <b>Byline</b><br>
-  <%= @article.byline %>
-</p>
+	<div class="span4">
+		
+		<div class="well">
+			<h2>Golds</h2>
+			<% @article.golds.each do |gold| %>
+				<p>
+				<b><%= gold.type.downcase.sub("gold","")%></b>: <%= gold.yes?%>
+				<small><%= link_to "edit", edit_gold_path(gold)%></small> 
+				<% if gold.has_reason? %>
+					<br />
+					<i><%=gold.reason%></i>
+				<% end %>
+				</p>
+			<% end %>
+		</div>
+		
+		<div class="well">
+			<h2>Answers</h2>
+			<% @article.answers.each do |answer| %>
+				<p>
+				<b><%= answer.type.downcase.sub("answer","")%></b>: <%= answer.yes?%>
+				<small><%= link_to answer.user.username, edit_user_path(answer.user)%></small> 
+				<% if answer.has_confidence? %>
+					<br />
+					<i>Confidence: <%=answer.confidence%></i>
+				<% end %>
+				</p>
+			<% end %>
+		</div>
 
-<p>
-  <b>Headline</b><br>
-  <%= @article.headline %>
-</p>
+	</div>
 
-<p>
-  <b>Page</b><br>
-  <%= @article.page %>
-</p>
-
-<p>
-  <b>Src url</b><br>
-  <%= @article.src_url %>
-</p>
-
-<p>
-  <b>Abstract</b><br>
-  <%= @article.abstract %>
-</p>
-
-<p>
-  <b>Total pages</b><br>
-  <%= @article.total_pages %>
-</p>
-
-<p>
-  <b>Word count</b><br>
-  <%= @article.word_count %>
-</p>
-
-<p>
-  <b>Src url md5</b><br>
-  <%= @article.src_url_md5 %>
-</p>
-
-<p>
-  <b>Section</b><br>
-  <%= @article.section %>
-</p>
-
-<p>
-  <b>Queue status</b><br>
-  <%= @article.queue_status %>
-</p>
-
-<p>
-  <b>Scan src url</b><br>
-  <%= @article.scan_src_url %>
-</p>
-
-<p>
-  <b>Scan local filename</b><br>
-  <%= @article.scan_local_filename %>
-</p>
-
-<p>
-  <b>Scan file url</b><br>
-  <%= @article.scan_file_url %>
-</p>
-
-<p>
-  <b>Blacklist tag</b><br>
-  <%= @article.blacklist_tag %>
-</p>
-
-<p>
-  <b>Golden</b><br>
-  <%= @article.golden %>
-</p>
-
-<p>
-  <b>Sampletag</b><br>
-  <%= @article.sampletag %>
-</p>
-
-<div class="form-actions">
-  <%= link_to 'Back', articles_path, :class => 'btn'  %>
-  <%= link_to 'Edit', edit_article_path(@article), :class => 'btn' %>
-  <%= link_to 'Delete', article_path(@article), :method => 'delete', :confirm => 'Are you sure?', :class => 'btn btn-danger' %>
 </div>

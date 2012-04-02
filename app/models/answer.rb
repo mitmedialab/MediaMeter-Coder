@@ -41,4 +41,20 @@ class Answer < ActiveRecord::Base
     return false
   end
 
+  def unanswered?
+    answer==nil
+  end
+  
+  def answered?
+    answer!=nil
+  end
+
+  def yes?
+    answer==true
+  end
+
+  def no?
+    answer==false
+  end
+
 end
