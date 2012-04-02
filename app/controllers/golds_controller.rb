@@ -1,5 +1,68 @@
 # STI fixes copied from http://stackoverflow.com/questions/5246767/sti-one-controller/5252136#5252136
 class GoldsController < ApplicationController
+  
+  def import_reasons
+    @all_answer_types = Gold.types 
+    if request.post?
+      # TODO: verify params exist
+      question_type = params[:answer][:type]
+      upload = params[:my_file]
+      # prep to import
+      gold_count = 0
+      col_headers = Array.new
+      question_text = Article.question_text(question_type).downcase.gsub(/ /,"_")
+      reason_col = question_text + "_gold_reason"
+      col_indices = {
+        "id"=>nil,
+        "answer_type"=>nil,
+        reason_col=>nil,
+      }
+      # import
+      parse_worked = true
+      error_msg = nil
+      CSV.foreach(File.open(upload.tempfile)) do |row|
+        if parse_worked
+          if gold_count==0
+            # check out col headers and validate we can find the 3 cols we need (id, _trusted_judgments, answer, confidence)
+            col_headers = row
+            found_all_cols = true
+            col_indices.each_key do |key|
+              col_indices[key] = col_headers.index(key)
+              found_all_cols = false if col_indices[key]==nil  
+            end
+            if !found_all_cols
+              flash.now[:error] = ("Didn't find some required coloumns! Couldn't find these columns: <ul><li>"+(col_indices.keys - col_headers).join("</li><li>")+"</li></ul>").html_safe
+              parse_worked = false
+            end
+          else
+            # verify answer info, just to be safe
+            answer_type = row[ col_indices["answer_type"] ]
+            if answer_type!=question_type
+              flash.now[:error] = "Row #{gold_count} has the wrong type!  Expecting #{question_type} but found #{answer_type}"  
+              parse_worked = false       
+            else
+              article_id = row[ col_indices["id"] ]
+              # everything checks out, go ahead and create and save the answer
+              matching_golds = Gold.where(:article_id=>article_id, :type=>Gold.classname_for_type(answer_type))
+              if matching_golds.count==0
+                flash.now[:error] = "Can't find a gold matching row #{gold_count}.  Looked for article_id #{article_id}, type #{answer_type} ("+Gold.classname_for_type(answer_type)+")"
+                parse_worked = false
+              else 
+                gold = matching_golds.first
+                gold.reason = row[col_indices[reason_col]]
+                gold.save
+              end
+            end
+          end # gold count
+        end # parse worked
+        gold_count = gold_count + 1
+      end # csv for each
+    end # is post
+    # generate some feedback
+    if parse_worked
+      flash.now[:notice] = "Imported #{gold_count-1} #{question_type} reasons (from #{upload.original_filename})"
+    end
+  end
 
   # see a list of articles with the gold answers
   def pick_reasons
