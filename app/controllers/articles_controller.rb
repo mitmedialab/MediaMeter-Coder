@@ -16,6 +16,8 @@ class ArticlesController < ApplicationController
         @user_type_confidence[user][type] = confidence_freq 
       end
     end
+    # gold status
+    @gold_reason_pcts = Gold.reasoned_percent_by_type
   end
 
   def export_by_sampletags

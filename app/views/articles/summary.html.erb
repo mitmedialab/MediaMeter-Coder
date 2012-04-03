@@ -69,3 +69,15 @@ end
 	end
 %>	 </tbody>
 </table>
+
+<br /><br />
+
+<h2>Golds With Reasons</h2>
+<ul>
+<% 
+@gold_reason_pcts.each do |type, pct|
+%>	<li><b><%=type.capitalize%></b>: <%=pct.round(4)*100%>%</li>
+<%
+end
+%>
+</ul>
