@@ -9,6 +9,7 @@ class GoldsController < ApplicationController
       upload = params[:my_file]
       # prep to import
       gold_count = 0
+      row_count = 0
       col_headers = Array.new
       question_text = Article.question_text(question_type).downcase.gsub(/ /,"_")
       reason_col = question_text + "_gold_reason"
@@ -22,7 +23,7 @@ class GoldsController < ApplicationController
       error_msg = nil
       CSV.foreach(File.open(upload.tempfile)) do |row|
         if parse_worked
-          if gold_count==0
+          if row_count==0
             # check out col headers and validate we can find the 3 cols we need (id, _trusted_judgments, answer, confidence)
             col_headers = row
             found_all_cols = true
@@ -38,29 +39,33 @@ class GoldsController < ApplicationController
             # verify answer info, just to be safe
             answer_type = row[ col_indices["answer_type"] ]
             if answer_type!=question_type
-              flash.now[:error] = "Row #{gold_count} has the wrong type!  Expecting #{question_type} but found #{answer_type}"  
+              flash.now[:error] = "Row #{row_count} has the wrong type!  Expecting #{question_type} but found #{answer_type}"  
               parse_worked = false       
             else
               article_id = row[ col_indices["id"] ]
+              new_reason = row[ col_indices[reason_col] ]
               # everything checks out, go ahead and create and save the answer
               matching_golds = Gold.where(:article_id=>article_id, :type=>Gold.classname_for_type(answer_type))
               if matching_golds.count==0
-                flash.now[:error] = "Can't find a gold matching row #{gold_count}.  Looked for article_id #{article_id}, type #{answer_type} ("+Gold.classname_for_type(answer_type)+")"
-                parse_worked = false
+                if new_reason!=nil && new_reason.length > 0
+                  flash.now[:error] = "Can't find a gold matching row #{row_count} in #{upload.original_filename}.  Looked for article_id #{article_id}, type #{answer_type} ("+Gold.classname_for_type(answer_type)+")"
+                  parse_worked = false
+                end
               else 
                 gold = matching_golds.first
-                gold.reason = row[col_indices[reason_col]]
+                gold.reason = new_reason
                 gold.save
+                gold_count = gold_count + 1
               end
             end
           end # gold count
         end # parse worked
-        gold_count = gold_count + 1
+        row_count = row_count + 1
       end # csv for each
     end # is post
     # generate some feedback
     if parse_worked
-      flash.now[:notice] = "Imported #{gold_count-1} #{question_type} reasons (from #{upload.original_filename})"
+      flash.now[:notice] = "Imported #{gold_count} #{question_type} gold reasons (from #{upload.original_filename}, #{row_count} rows)"
     end
   end
 
