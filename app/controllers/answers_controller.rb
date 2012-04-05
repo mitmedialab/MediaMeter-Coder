@@ -117,10 +117,15 @@ class AnswersController < ApplicationController
     if @only_not_confident
       extra_where_clause  = 'answers.confidence < ' + Answer::CONFIDENT_THRESHOLD.to_s
     end 
-    @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
-      where('golds.type'=>@selected_type_gold_classnames).
-      where('answers.type'=>@selected_type_answer_classnames).
-      where('answers.user_id'=>user_ids).where(extra_where_clause)
+    if @generate_golds
+      @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
+        where('answers.user_id'=>user_ids).where(extra_where_clause)      
+    else
+      @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
+        where('golds.type'=>@selected_type_gold_classnames).
+        where('answers.type'=>@selected_type_answer_classnames).
+        where('answers.user_id'=>user_ids).where(extra_where_clause)      
+    end
     
 
     # compute agreement
