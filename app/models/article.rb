@@ -44,7 +44,7 @@ class Article < ActiveRecord::Base
     "arts"=>"Is this newspaper clip about the arts or entertainment",
     "foreign"=>"Does this article contain International News that does not involve the United States", 
     "international"=>"Is this newspaper clip about International News that involves the United States or NATO", 
-    "local"=>"Does this newspaper clip contain local news", 
+    "local"=>"Does this article contain local news about a town city state or region in the United States", 
     "national"=>"Does this newspaper clip contain United States National news", 
     "sports"=>"Is this article about sports"
   }
