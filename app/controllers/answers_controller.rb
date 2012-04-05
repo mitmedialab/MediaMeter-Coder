@@ -105,11 +105,21 @@ class AnswersController < ApplicationController
     @selected_types = Gold.types.select do |type|
       params[:answer_type].keys.include? type
     end
+    @selected_type_gold_classnames = @selected_types.collect do |type|
+      Gold.classname_for_type(type)
+    end 
+    @selected_type_answer_classnames = @selected_types.collect do |type|
+      Answer.classname_for_type(type)
+    end 
     
     # load all the articles
     extra_where_clause = ""
-    extra_where_clause  = 'answers.confidence < '+Answer::CONFIDENT_THRESHOLD.to_s if @only_not_confident
+    if @only_not_confident
+      extra_where_clause  = 'answers.confidence < ' + Answer::CONFIDENT_THRESHOLD.to_s
+    end 
     @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
+      where('golds.type'=>@selected_type_gold_classnames).
+      where('answers.type'=>@selected_type_answer_classnames).
       where('answers.user_id'=>user_ids).where(extra_where_clause)
     
 
