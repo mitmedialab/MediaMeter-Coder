@@ -1,8 +1,9 @@
 class ArticlesController < ApplicationController
 
   def summary
-    @sources = Article.pluck(:source).uniq.sort
-    @years = Article.pluck("YEAR(pub_date)").uniq.sort
+    @types = Gold.types
+    @sources = Article.all_sources
+    @years = Article.all_years
     # chart of stories per day / source / year
     @avg_stories_per_day_by_source_and_year = Article.average_stories_per_day_by_source_and_year
     # answer confidence
@@ -18,6 +19,8 @@ class ArticlesController < ApplicationController
     end
     # gold status
     @gold_reason_pcts = Gold.reasoned_percent_by_type
+    # article type counts
+    @gold_total_counts, @gold_yes_counts, @gold_yes_pcts = Gold.counts_by_type_source_year(@types,@sources,@years)
   end
 
   def export_by_sampletags

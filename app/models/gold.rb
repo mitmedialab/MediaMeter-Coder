@@ -74,6 +74,49 @@ class Gold < ActiveRecord::Base
     end
     pcts
   end
+  
+  def self.counts_by_type_source_year(types,sources,years)
+    # init the return storage
+    total_counts = {}
+    yes_counts = {} 
+    pcts = {}
+    types.each do |type|
+      total_counts[type] = {}
+      yes_counts[type] = {}
+      pcts[type] = {}
+      sources.each do |source| 
+        total_counts[type][source] = {}
+        yes_counts[type][source] = {}
+        pcts[type][source] = {}
+        years.each do |year|
+          total_counts[type][source][year] = 0
+          yes_counts[type][source][year] = 0
+          pcts[type][source][year] = 0
+        end
+      end
+    end
+    # fill in the counts
+    counts = Gold.includes(:article).where('YEAR(articles.pub_date) > 0').
+      group(:type,'articles.source','YEAR(articles.pub_date)',:answer).count
+    counts.each do |groups, value|
+      type = Gold::type_for_classname(groups[0])
+      source = groups[1]
+      year = groups[2]
+      answer = groups[3]
+      yes_counts[type][source][year] = value if answer==true
+      total_counts[type][source][year] = total_counts[type][source][year] + value
+    end
+    # create pcts
+    types.each do |type|
+      sources.each do |source| 
+        years.each do |year|
+          pcts[type][source][year] = yes_counts[type][source][year].to_f / total_counts[type][source][year].to_f 
+        end
+      end
+    end
+    # return
+    [total_counts,yes_counts,pcts]
+  end
 
 end
 

@@ -180,6 +180,14 @@ class Article < ActiveRecord::Base
     Article.where("sampletag is not null").group(:sampletag).count
   end
 
+  def self.all_sources
+    Article.group(:source).pluck(:source).sort
+  end
+  
+  def self.all_years
+    Article.pluck("YEAR(pub_date)").uniq.sort
+  end
+
   private 
 
     def scan_dir

@@ -72,6 +72,38 @@ end
 
 <br /><br />
 
+<h2>Stories by Type per Year</h2>
+
+<%
+@types.each do |type|
+	chart = GChart.line do |g|
+		g.title = "Pct of "+type.capitalize+" stories in year"
+		g.max = 1
+		g.data = []
+		@gold_yes_pcts[type].each do |source,count_by_year|
+			g.data << count_by_year.values
+		end
+		
+	    g.colors = ['1B9E77','D95F02','7570B3','E7298A']
+	    g.legend = @gold_yes_pcts[type].keys
+	
+	    g.width  = 550
+	    g.height = 300
+	
+	    g.axis(:left) { |a| a.range = 0..1 }
+
+	    g.axis(:bottom) do |a|
+			a.labels     = @years
+			a.text_color = :black
+	    end
+	end
+%>	<img src="<%=chart.to_url%>" />
+<%
+end 
+%>
+
+<br /><br />
+
 <h2>Golds With Reasons</h2>
 <ul>
 <% 
