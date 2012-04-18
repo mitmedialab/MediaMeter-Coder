@@ -11,8 +11,8 @@
 	  <% @all_answer_types.each do |type| %>
 	  <th><%= type.capitalize %></th>
 	  <% end %>
-	  <% @all_genders.each do |type| %>
-	  <th><%= Article.gender_name type %></th>
+	  <% @all_genders.each do |gender| %>
+	  <th><%= Article.gender_name gender %></th>
 	  <% end %>
     </tr>
   </thead>

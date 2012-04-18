@@ -1,7 +1,9 @@
 
 col_names = ["source", "year", "total_articles"]
 col_names.concat @all_answer_types
-col_names.concat @all_genders
+@all_genders.each do |gender|
+	col_names.push Article.gender_name(gender).parameterize.underscore
+end
 csv << col_names
 
 @all_sources.each do |source|
