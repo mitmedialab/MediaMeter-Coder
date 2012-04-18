@@ -1,5 +1,35 @@
 # STI fixes copied from http://stackoverflow.com/questions/5246767/sti-one-controller/5252136#5252136
 class GoldsController < ApplicationController
+
+  def export_totals
+    
+    @sampletag = ""
+    @all_sampletags = Article.sampletag_counts
+    @show_results = request.post?
+    if request.post?
+      # collect the passed params from the user 
+      @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
+      # load general data
+      @all_sources = Article.all_sources
+      @all_years = Article.all_years
+      @all_answer_types = Gold.types 
+      # total articles
+      @total_articles = Article.counts_by_source_year(@sampletags)
+      # article type counts
+      @yes_by_type_source_year = Gold.counts_by_type_source_year(@sampletags,@all_answer_types,@all_sources,@all_years)
+    end
+
+    respond_to do |format|
+      format.html
+      format.csv {
+        timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
+        # do some csv config
+        @filename = "article_info_by_source_year_" + timestamp + ".csv"
+        @output_encoding = 'UTF-8'
+      }
+    end
+
+  end
   
   def import_reasons
     @all_answer_types = Gold.types 

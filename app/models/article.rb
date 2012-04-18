@@ -187,6 +187,19 @@ class Article < ActiveRecord::Base
   def self.all_years
     Article.pluck("YEAR(pub_date)").uniq.sort
   end
+  
+  def self.counts_by_source_year sampletags
+    results = Hash.new
+    Article.completed.where(:sampletag=>sampletags).group(:source,"YEAR(pub_date)").
+      where('YEAR(articles.pub_date) > 0').count.each do |key, value|
+      source = key[0]
+      year = key[1]
+      article_count = value
+      results[source] = Hash.new unless results.has_key? source
+      results[source][year] = article_count
+    end
+    results
+  end
 
   private 
 

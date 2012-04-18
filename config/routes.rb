@@ -9,6 +9,7 @@ UsWorldCoverage::Application.routes.draw do
   match 'golds/pick_reasons' => 'golds#pick_reasons'
   match 'golds/edit_reasons' => 'golds#edit_reasons', :via=>:put
   match 'golds/import_reasons' => 'golds#import_reasons'
+  match 'golds/export_totals' => 'golds#export_totals'
   
   resources :users
 

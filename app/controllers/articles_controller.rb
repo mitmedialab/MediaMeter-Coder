@@ -19,8 +19,6 @@ class ArticlesController < ApplicationController
     end
     # gold status
     @gold_reason_pcts = Gold.reasoned_percent_by_type
-    # article type counts
-    @gold_total_counts, @gold_yes_counts, @gold_yes_pcts = Gold.counts_by_type_source_year(@types,@sources,@years)
   end
 
   def export_by_sampletags

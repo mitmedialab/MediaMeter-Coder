@@ -1,0 +1,14 @@
+
+col_names = ["source", "year", "total_articles"]
+col_names.concat @all_answer_types
+csv << col_names
+
+@all_sources.each do |source|
+	@all_years.each do |year|
+		row = [ source, year, @total_articles[source][year] ]
+		@all_answer_types.each do |type|
+			row.push @yes_by_type_source_year[type][source][year]
+		end
+		csv << row
+	end
+end
