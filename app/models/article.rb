@@ -38,6 +38,13 @@ class Article < ActiveRecord::Base
   
   scope :completed, where(:queue_status=>:complete)
   
+  GENDERS = {
+    'F'=>'Female Author',
+    'M'=>'Male Author',
+    'U'=>'Unknown Gender Author',
+    'X'=>'No Author'
+  }
+  
   # we need these held here so we can export the CSV for CrowdFlower correcltly
   # @see https://crowdflower.com/solutions/self-service/#learning_resources 
   QUESTIONS = {
@@ -48,6 +55,14 @@ class Article < ActiveRecord::Base
     "national"=>"Does this newspaper clip contain United States National news", 
     "sports"=>"Is this article about sports"
   }
+  
+  def self.all_genders
+    GENDERS.keys.sort
+  end
+  
+  def self.gender_name key
+    GENDERS[key]
+  end
   
   def self.question_text type
     QUESTIONS[type]
@@ -197,6 +212,21 @@ class Article < ActiveRecord::Base
       article_count = value
       results[source] = Hash.new unless results.has_key? source
       results[source][year] = article_count
+    end
+    results
+  end
+  
+  def self.gender_counts_by_source_year sampletags
+    results = Hash.new
+    Article.completed.where(:sampletag=>sampletags).group(:gender,:source,"YEAR(pub_date)").
+      where('YEAR(articles.pub_date) > 0').count.each do |key, value|
+      gender = key[0]
+      source = key[1]
+      year = key[2]
+      article_count = value
+      results[gender] = Hash.new unless results.has_key? gender
+      results[gender][source] = Hash.new unless results[gender].has_key? source
+      results[gender][source][year] = value
     end
     results
   end

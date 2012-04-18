@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120329200951) do
+ActiveRecord::Schema.define(:version => 20120416152753) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -50,6 +50,8 @@ ActiveRecord::Schema.define(:version => 20120329200951) do
     t.string   "blacklist_tag"
     t.boolean  "golden",                              :default => false
     t.string   "sampletag"
+    t.string   "gender",              :limit => 1
+    t.float    "gender_prob"
   end
 
   add_index "articles", ["queue_status"], :name => "index_articles_on_queue_status"

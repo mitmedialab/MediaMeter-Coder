@@ -12,11 +12,14 @@ class GoldsController < ApplicationController
       # load general data
       @all_sources = Article.all_sources
       @all_years = Article.all_years
-      @all_answer_types = Gold.types 
+      @all_answer_types = Gold.types
+      @all_genders = Article.all_genders 
       # total articles
       @total_articles = Article.counts_by_source_year(@sampletags)
       # article type counts
       @yes_by_type_source_year = Gold.counts_by_type_source_year(@sampletags,@all_answer_types,@all_sources,@all_years)
+      # gender counts
+      @gender_by_source_year = Article.gender_counts_by_source_year(@sampletags)
     end
 
     respond_to do |format|

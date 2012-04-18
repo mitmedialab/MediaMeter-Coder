@@ -11,6 +11,9 @@
 	  <% @all_answer_types.each do |type| %>
 	  <th><%= type.capitalize %></th>
 	  <% end %>
+	  <% @all_genders.each do |type| %>
+	  <th><%= Article.gender_name type %></th>
+	  <% end %>
     </tr>
   </thead>
   <tbody>
@@ -23,6 +26,9 @@
 	      <% @all_answer_types.each do |type| %>
 	      	<td><%= @yes_by_type_source_year[type][source][year] %></td>
 	      <% end %>
+		  <% @all_genders.each do |gender| %>
+		    <td><%= @gender_by_source_year[gender][source][year] %></td>
+		  <% end %>
 	      </tr>
       <% end %>
     <% end %>

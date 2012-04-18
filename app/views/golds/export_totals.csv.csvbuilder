@@ -1,6 +1,7 @@
 
 col_names = ["source", "year", "total_articles"]
 col_names.concat @all_answer_types
+col_names.concat @all_genders
 csv << col_names
 
 @all_sources.each do |source|
@@ -8,6 +9,11 @@ csv << col_names
 		row = [ source, year, @total_articles[source][year] ]
 		@all_answer_types.each do |type|
 			row.push @yes_by_type_source_year[type][source][year]
+		end
+		@all_genders.each do |gender|
+			total = @gender_by_source_year[gender][source][year]
+			total = 0 if total.nil?
+			row.push total
 		end
 		csv << row
 	end
