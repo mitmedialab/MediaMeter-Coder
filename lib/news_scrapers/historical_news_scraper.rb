@@ -59,6 +59,7 @@ module NewsScrapers
         end
       end
       NewsScrapers.logger.debug("      about to parse")
+      NewsScrapers.logger.flush
       Nokogiri::HTML(contents)
     end
     

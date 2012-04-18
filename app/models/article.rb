@@ -38,6 +38,22 @@ class Article < ActiveRecord::Base
   
   scope :completed, where(:queue_status=>:complete)
   
+  # we need these held here so we can export the CSV for CrowdFlower correcltly
+  # @see https://crowdflower.com/solutions/self-service/#learning_resources 
+  QUESTIONS = {
+    "arts"=>"Is this newspaper clip about the arts or entertainment",
+    "foreign"=>"Does this article contain International News that does not involve the United States", 
+    "international"=>"Is this newspaper clip about International News that involves the United States or NATO", 
+    "local"=>"Does this article contain local news about a town city state or region in the United States", 
+    "national"=>"Does this newspaper clip contain United States National news", 
+    "sports"=>"Is this article about sports"
+  }
+  
+  def self.question_text type
+    QUESTIONS[type]
+  end
+  
+  # get the url to the local copy of the PDF file
   def url_to_scan_local_file
     url = ""
     url = "http://"+File.join(NewsScrapers::public_base_url, scan_subdir, scan_local_filename) if has_scan_local_filename?
@@ -133,7 +149,10 @@ class Article < ActiveRecord::Base
     info = {
       :yes => (answers_of_type.count {|a| (a.answer==true)}).to_f / answers_of_type.count.to_f,
       :no => (answers_of_type.count {|a| (a.answer==false)}).to_f / answers_of_type.count.to_f,
+      :count => answers_of_type.count
     }
+    info[:yes] = 0 if info[:yes].nan?
+    info[:no] = 0 if info[:no].nan?
     if info[:yes] > info[:no]
       info[:is_of_type] = true 
     elsif info[:no] > info[:yes]
@@ -159,6 +178,14 @@ class Article < ActiveRecord::Base
   
   def self.sampletag_counts
     Article.where("sampletag is not null").group(:sampletag).count
+  end
+
+  def self.all_sources
+    Article.group(:source).pluck(:source).sort
+  end
+  
+  def self.all_years
+    Article.pluck("YEAR(pub_date)").uniq.sort
   end
 
   private 

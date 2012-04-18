@@ -1,4 +1,7 @@
 class ApplicationController < ActionController::Base
+
+  layout 'browse'
+
   protect_from_forgery
 
   def require_username

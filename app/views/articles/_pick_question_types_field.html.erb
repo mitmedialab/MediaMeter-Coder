@@ -1,0 +1,8 @@
+<fieldset>
+		<legend>Pick Some Question Types</legend>
+	<% @all_answer_types.each do |type| %>
+		<div class="control-group">
+			<%= label_tag('answer_type['+type+']',check_box_tag('answer_type['+type+']') + type , :class=>"checkbox")%>
+		</div>
+	<% end %>
+</fieldset>

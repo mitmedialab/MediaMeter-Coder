@@ -1,49 +1,63 @@
 
 <%
-extra_css_classes = []
+agreement_css_classes = ['uwc-agreement']
 
 if gold!=nil
 	# mark any items that don't have gold set yet
 	if gold.unanswered?
-		extra_css_classes << "uwc-agreement-missing "	
+		agreement_css_classes << "uwc-agreement-missing "	
 	else 
-		extra_css_classes << "uwc-agreement-made "
+		agreement_css_classes << "uwc-agreement-made "
 	end  
 	# mark suspicious ones that you have gold for
+	gold_was_forced = false
 	if gold.answered? && !(agreement_info[:yes] > 0.7 || agreement_info[:no] > 0.7)
-		extra_css_classes << "uwc-agreement-forced " 
+		gold_was_forced = true 
 	end 
 	if gold.answered? && (gold.yes?!=agreement_info[:is_of_type])
-		extra_css_classes << "uwc-agreement-forced "
+		gold_was_forced = true
 	end
+	agreement_css_classes << "uwc-agreement-forced " if gold_was_forced
 end	
 %>
 
-<div class="uwc-agreement <%=extra_css_classes.join(" ")%>">
+<div class="<%=agreement_css_classes.join(" ")%>">
 
 <%
 if gold!=nil
-	
 	if gold.yes?
-	%>	<em>Yes</em> <small><%=(agreement_info[:yes]*100).round()%>%</small>
+	%>	<em>Yes</em> <small><%=(agreement_info[:yes]*100).round.to_s + "%" if agreement_info[:count]>0%></small>
 	<%
 	elsif gold.no?
 	%>
-		<em>No</em> <small><%=(agreement_info[:no]*100).round()%>%</small>
+		<em>No</em> <small><%=(agreement_info[:no]*100).round.to_s + "%" if agreement_info[:count]>0%></small>
 	<%
 	else 
 	%>
-		<em>???</em> <small><%=(agreement_info[:yes]*100).round()%>% / <%=(agreement_info[:no]*100).round()%>%</small>
+		<em>???</em> <small><%=(agreement_info[:yes]*100).round.to_s + "%" if agreement_info[:count]>0%> / <%=(agreement_info[:no]*100).round.to_s + "%" if agreement_info[:count]>0%></small>
 	<%
 	end
+else
+	# if no gold, and just one answer, show it
+	if agreement_info[:yes] == 1
 	%>
-
-<%
+		<em>Yes?</em>
+	<%
+	elsif agreement_info[:no] == 1
+	%>
+		<em>No?</em>
+	<%
+	elsif agreement_info[:count] > 0
+	%>
+		<small>?</small>
+	<%
+	end
 end
 %>
 
 <div>
 <%
+not_confident = false
 answers.each do |answer|
   username = username_map[answer.user_id] 
   if answer.answer
@@ -51,23 +65,31 @@ answers.each do |answer|
   else
   	image = "red-dot.png"
   end
-%>
-    <a href="#" rel="tooltip" title="<%=username%>"><%=image_tag image, :alt=>answer.user_id.to_s %></a>
-<%
+  tip = username
+  tip = tip + " (" + answer.confidence.to_s + ")" if answer.has_confidence?
+  not_confident = true if answer.not_confident?
+%>    <a href="#" rel="tooltip" title="<%=tip%>"><%=image_tag image, :alt=>answer.user_id.to_s %></a> <%
 end
 %>
 </div>
 
+<% if not_confident %> 
+   <span class="label label-warning">Low Confidence</span>
+<% end %>
+
+<% if gold_was_forced %>
+	<span class="label label-important">Forced Gold</span>
+<% end %>
+
 <% if gold!=nil %>
 
 	<%= form_for gold, :remote=>true do |f| %>
-	  <%= f.check_box :answer %>
+	  <%= f.check_box :answer %> <small><%=link_to "Edit Gold", edit_gold_path(gold)%></small>
 	<% end %>
 	
-	<small><%=link_to "Edit Gold", edit_gold_path(gold)%></small>
-
 <%
 end
 %>
+
 
 </div>

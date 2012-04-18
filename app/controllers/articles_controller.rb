@@ -1,14 +1,31 @@
 class ArticlesController < ApplicationController
-  layout "browse"
 
   def summary
-    @sources = Article.pluck(:source).uniq.sort
-    @years = Article.pluck("YEAR(pub_date)").uniq.sort
+    @types = Gold.types
+    @sources = Article.all_sources
+    @years = Article.all_years
+    # chart of stories per day / source / year
     @avg_stories_per_day_by_source_and_year = Article.average_stories_per_day_by_source_and_year
+    # answer confidence
+    @all_answer_types = Answer.types
+    @user_type_confidence = {}     
+    crowd_users = User.having_answers_with_confidence
+    crowd_users.each do |user|
+      @user_type_confidence[user] = {}
+      @all_answer_types.each do |type|
+        confidence_freq = Answer.confidence_frequency(user.id, type)
+        @user_type_confidence[user][type] = confidence_freq 
+      end
+    end
+    # gold status
+    @gold_reason_pcts = Gold.reasoned_percent_by_type
+    # article type counts
+    @gold_total_counts, @gold_yes_counts, @gold_yes_pcts = Gold.counts_by_type_source_year(@types,@sources,@years)
   end
 
   def export_by_sampletags
 
+    @users = User.all
     @all_sampletags = Article.sampletag_counts
     @all_answer_types = Gold.types 
     
@@ -22,6 +39,7 @@ class ArticlesController < ApplicationController
         @articles = Article.where(:sampletag=>@sampletags).includes(:golds)
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
         # do some csv config
+        @question_text = Article.question_text(@answer_type).downcase.gsub(/ /,"_")
         @filename = @answer_type + "_" + "articles" + "_" + timestamp + ".csv"
         @output_encoding = 'UTF-8'
       }
@@ -43,7 +61,7 @@ class ArticlesController < ApplicationController
   # GET /articles/1
   # GET /articles/1.json
   def show
-    @article = Article.find(params[:id])
+    @article = Article.includes(:golds,:answers).find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb

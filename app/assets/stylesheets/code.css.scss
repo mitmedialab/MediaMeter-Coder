@@ -1,0 +1,19 @@
+// Place all the styles related to the Code controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.well blockquote {
+  border-color: #ddd;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+.well.yes{
+  border: 1px solid #cdc;
+  background-color:#e5ffe5;
+  font-color:#353;
+}
+
+.well.no{
+  border: 1px solid #fcc;
+  background-color:#ffe5e5;
+}

@@ -1,0 +1,17 @@
+
+<h1>Pick Gold Reasons to Edit</h1>
+
+<br />
+
+<!-- this has to be a get so that the pagination of results works -->
+<%= form_tag("/golds/edit_reasons", :method => "put", :class=>'form-vertical') do %>
+
+<%= render :partial=>'articles/pick_sampletags_field' %>
+
+<%= render :partial=>'articles/pick_question_type_field' %>
+
+<div class="form-actions">
+  <%= submit_tag("Edit Gold Reasons",:class=>"btn btn-primary") %>
+</div>
+  
+<% end %>

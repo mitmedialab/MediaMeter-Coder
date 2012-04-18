@@ -1,5 +1,5 @@
 
-<h1><%=@answer_type.capitalize%> Golds: <%=@sampletag%></h1>
+<h1><%=@answer_type.capitalize%> Golds: <%=@sampletags.join(", ")%></h1>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -10,9 +10,13 @@
   </thead>
   <tbody>
     <% @articles.each do |article| 
-    	gold_answer = ""
-    	if article.has_gold_by_type(@answer_type)
-			gold_answer = article.gold_by_type(@answer_type).yes?.to_s
+    	gold_answer_text = ""
+    	answer_css = ""
+    	gold = nil
+    	gold = article.gold_by_type(@answer_type) if article.has_gold_by_type(@answer_type) 
+    	if gold
+			gold_answer_text = gold.yes?.to_s
+			answer_css = "uwc-gold-answer-"+gold_answer_text
 		end
     %>
       <tr>
@@ -20,18 +24,25 @@
         	<b><%= link_to article.headline, article_path(article) %></b><br />
         	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
 		</td>
-        <td><%= gold_answer %></td>
+        <td><div class="uwc-gold-answer <%=answer_css%>">
+        	<% if gold %>
+	        	<%= link_to gold_answer_text, edit_gold_path(gold) %>
+        	<% end %>
+       	</div></td>
         <td>
-        	<% if article.has_gold_by_type(@answer_type) 
-        		g = article.gold_by_type(@answer_type) 
-        	%>
-        		<%= form_for(g,:remote=>true) do |f| %>
-					<%= f.text_area :reason, :class => '', :cols=>'50', :rows=>'5' %>
-				    <%= f.submit nil, :value=>'Update Gold Reason',:class => 'btn btn-primary' %>
-        		<% end %>
+        	<% if gold %>
+        		<%= render :partial => 'gold_reason', :locals=> { :gold=>gold } %>
         	<% end %>
 		</td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+<script type="text/javascript">
+//<![CDATA[
+
+// TODO: write script that updates reason TD area with response of ajax post
+
+//]]>
+</script>

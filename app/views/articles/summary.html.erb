@@ -1,6 +1,6 @@
-<h1>Article Summary</h1>
+<h1>Summary</h1>
 
-<br />
+<h2>Article Summary</h2>
 
 <%
 chart = GChart.line do |g|
@@ -19,12 +19,97 @@ chart = GChart.line do |g|
     g.axis(:left) { |a| a.range = 0..400 }
 
     g.axis(:bottom) do |a|
-      a.labels     = @years
-      a.text_color = :black
+		a.labels     = @years
+		a.text_color = :black
     end
 
-  end
+end
  
 %>
 
 <img src="<%=chart.to_url%>" />
+
+<br />
+<br />
+
+<h2>CrowdFlower Answer Confidence</h2>
+
+<table class="table table-condensed">
+	<thead>
+		<tr>
+			<th>User</th>
+			<% @all_answer_types.each do |type| %>
+				<th><%=type.capitalize%> Answers</th>
+			<% end %>
+		</tr>
+	 <thead>
+	 <tbody>
+<%
+	@user_type_confidence.each do |user, type_confidence_map|
+%>		<tr>
+			<td><%=user.name.capitalize%></td>
+<%
+		@all_answer_types.each do |type|
+			confidence_freq = type_confidence_map[type]
+			chart = GChart.bar do |g|
+				g.orientation = :vertical
+				g.thickness = 8
+				g.spacing = 1
+			    g.size = "100x30"
+				g.data = []
+				confidence_freq.each do |range, freq|
+					g.data << freq
+				end
+			end
+%>		<td><img src="<%=chart.to_url%>" /></td>
+<%
+		end
+%>		</tr>
+<%
+	end
+%>	 </tbody>
+</table>
+
+<br /><br />
+
+<h2>Stories by Type per Year</h2>
+
+<%
+@types.each do |type|
+	chart = GChart.line do |g|
+		g.title = "Pct of "+type.capitalize+" stories in year"
+		g.max = 1
+		g.data = []
+		@gold_yes_pcts[type].each do |source,count_by_year|
+			g.data << count_by_year.values
+		end
+		
+	    g.colors = ['1B9E77','D95F02','7570B3','E7298A']
+	    g.legend = @gold_yes_pcts[type].keys
+	
+	    g.width  = 550
+	    g.height = 300
+	
+	    g.axis(:left) { |a| a.range = 0..1 }
+
+	    g.axis(:bottom) do |a|
+			a.labels     = @years
+			a.text_color = :black
+	    end
+	end
+%>	<img src="<%=chart.to_url%>" />
+<%
+end 
+%>
+
+<br /><br />
+
+<h2>Golds With Reasons</h2>
+<ul>
+<% 
+@gold_reason_pcts.each do |type, info|
+%>	<li><b><%=type.capitalize%></b>: <%=info[:total]%> golds, <%=info[:pct].round(4)*100%>% with reasons (<%=info[:reasoned]%>)</li>
+<%
+end
+%>
+</ul>

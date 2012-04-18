@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
   has_many :answers
  
+  alias_attribute :name, :username
+ 
   def get_next_unanswered_article(answer_type)
     next_unanswered_article = nil
     query_string = ""
@@ -32,4 +34,11 @@ SQL
   def find_answers_by_type(answer_type)
     answers.find_all_by_type(Answer.classname_for_type(answer_type))
   end
+  
+  # return a list of user_ids that have any answers with confidence
+  # (ie. any users from CrowdFlower)
+  def self.having_answers_with_confidence
+    User.where(:id=>Answer.where("confidence is not null").group(:user_id).select(:user_id))
+  end
+  
 end

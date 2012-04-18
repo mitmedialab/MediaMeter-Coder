@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120319191842) do
+ActiveRecord::Schema.define(:version => 20120329200951) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -65,6 +65,9 @@ ActiveRecord::Schema.define(:version => 20120319191842) do
     t.datetime "updated_at"
     t.string   "reason",     :limit => 1000
   end
+
+  add_index "golds", ["article_id"], :name => "index_golds_on_article_id"
+  add_index "golds", ["type"], :name => "index_golds_on_type"
 
   create_table "users", :force => true do |t|
     t.string   "username"

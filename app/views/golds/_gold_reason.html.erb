@@ -1,0 +1,14 @@
+<%
+if gold 
+	extra_css = ""
+	extra_css = "uwc-gold-reason-missing" if gold.reason == nil or gold.reason == ""
+%>	
+<div class="uwc-gold-reason <%=extra_css%>">
+	<p><%=gold.reason%></p>
+	<%= form_for(gold,:remote=>true, :format=>'json') do |f| %>
+		<%= f.text_field :reason, :class => '', :cols=>'60'%>
+		<%= f.submit nil, :value=>'Update Gold Reason',:class => 'btn btn-primary' %>
+	<% end %>
+</div>
+
+<% end %>

@@ -1,0 +1,8 @@
+<fieldset>
+		<legend>Pick a Question Type</legend>
+	<% @all_answer_types.each do |type| %>
+		<div class="control-group">
+			<%= label('answer','type', radio_button('answer','type',type)+type , :class=>"radio")%>
+		</div>
+	<% end %>
+</fieldset>

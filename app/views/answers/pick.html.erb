@@ -1,5 +1,6 @@
 
-<h1>Review Answers</h1>
+<h1>Review Answers / Generate Golds</h1>
+
 <br />
 
 <!-- this has to be a get so that the pagination of results works -->
@@ -14,6 +15,8 @@
 	<% end %>
 </fieldset>
 
+<%= render :partial=>'articles/pick_question_types_field' %>
+
 <fieldset>
 		<legend>Pick Users</legend>
 	<% @users.each do |user| %>
@@ -25,10 +28,13 @@
 </fieldset>
 
 <fieldset>
-		<legend>Options</legend>
-		<div class="control-group">
-			<%= label_tag("generate_golds", check_box_tag('generate_golds') + "Generate Golds", :class=>"checkbox") %>
-		</div>
+	<legend>Options</legend>
+	<div class="control-group">
+		<%= label_tag("generate_golds", check_box_tag('generate_golds') + "Generate Golds", :class=>"checkbox") %>
+	</div>
+	<div class="control-group">
+		<%= label_tag("not_confident", check_box_tag('not_confident') + "Show only not-confident answers", :class=>"checkbox") %>
+	</div>
 </fieldset>
 
 <div class="form-actions">

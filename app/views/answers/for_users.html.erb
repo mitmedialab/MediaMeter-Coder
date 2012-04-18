@@ -1,6 +1,7 @@
+
 <h1>Coding Results: Sample <%=@sampletag%></h1>
 <p>
-Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
+Showing coding results (<%=@selected_types.join(", ")%>) from <%= @user_id_to_name.values.join(", ") %>.
 <b>Disagreement on <%=@disagreement_count%> article (<%=(@disagreement_count.to_f/@articles.count.to_f).round(2) %>%). 
 </p>
 <table class="table table-striped" id="uwc-answers-list">
@@ -8,13 +9,9 @@ Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
     <tr>
       <th>ID</th>
       <th>Info</th>
-<% @types.each do |type| %>
+<% @selected_types.each do |type| %>
       <th style="text-align:center;">
       	<%=type.capitalize%>?
-      	<br />
-      	<small>
-      	<%=link_to "golds", "/golds/edit_reasons?sampletag="+@sampletag+"&answer_type="+type %>	
-      	</small>
       </th>      
 <% end %>
     </tr>
@@ -27,7 +24,7 @@ Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
         	<b><%= link_to article.headline, article_path(article) %></b><br />
         	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
         </td>
-<% @types.each do |type| %>
+<% @selected_types.each do |type| %>
         <td id="wrapped-article-<%=article.id%>-<%=type%>"><%= render :partial => 'answer_icons', :locals=> {
         			:agreement_info=>@agreement_by_article[article.id][type],
         			:answers=>article.answers_by_type(type),
@@ -45,11 +42,11 @@ Showing coding results from <%= @user_id_to_name.values.join(", ") %>.
 <script type="text/javascript">
 //<![CDATA[
 
-function initTooltips(){
-	$("[rel='tooltip']").tooltip();
+function initTooltips(parentSelector){
+	$(parentSelector+" [rel='tooltip']").tooltip();
 }
-function initCheckboxes(){
-	$("input[type='checkbox']").click(updateGold)
+function initCheckboxes(parentSelector){
+	$(parentSelector+" input[type='checkbox']").click(updateGold)
 }
 function updateGold(evt){
 	checked = $(evt.target).is(':checked')
@@ -73,12 +70,13 @@ function updateGold(evt){
 		statusCode: {
 			200: function() {
 				loadingFadeOut();
-				$('#'+td_id).load('/answers/for_article/'+article_id+'/'+type,
+				var tdSelector = '#'+td_id; 
+				$(tdSelector).load('/answers/for_article/'+article_id+'/'+type,
 					{'uids':[<%=@user_id_to_name.keys.join(",")%>]},
 					function(){
-						// over-aggresize, but I need to refire these for the new html elements 
-						initTooltips();
-						initCheckboxes();
+						// attach listeners to new element  
+						initTooltips(tdSelector);
+						initCheckboxes(tdSelector);
 					}
 				);
 
@@ -87,8 +85,8 @@ function updateGold(evt){
 	});
 }
 
-$(initTooltips);
-$(initCheckboxes);
+$(initTooltips(""));
+$(initCheckboxes(""));
 
 $(function(){$("table").stickyTableHeaders();});
 

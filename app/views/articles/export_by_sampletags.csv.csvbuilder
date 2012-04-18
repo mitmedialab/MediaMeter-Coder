@@ -1,5 +1,5 @@
 
-csv << ["id", "newspaper", "page", "headline","date","content","byline","content_link", "golden", @answer_type+"_gold", @answer_type+"_gold_reason"]
+csv << ["id", "newspaper", "page", "headline","date","content","byline","content_link", "answer_type", "_golden", @question_text+"_gold", @question_text+"_gold_reason"]
 
 @articles.each do |a|
     # figure out gold answer
@@ -19,7 +19,8 @@ csv << ["id", "newspaper", "page", "headline","date","content","byline","content
               a.abstract,
               a.byline,
               a.url_to_scan_local_file,
-              is_gold ? "True" : "False",
+              @answer_type,
+              is_gold ? "TRUE" : "",
               gold_answer,
               gold_reason
             ]

@@ -6,8 +6,12 @@ UsWorldCoverage::Application.routes.draw do
   match 'articles/summary' => 'articles#summary'
   resources :articles
   
-  match 'golds/edit_reasons' => 'golds#edit_reasons'
+  match 'golds/pick_reasons' => 'golds#pick_reasons'
+  match 'golds/edit_reasons' => 'golds#edit_reasons', :via=>:put
+  match 'golds/import_reasons' => 'golds#import_reasons'
   
+  resources :users
+
   resources :golds
   resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :foreign_golds, :controller=>"golds", :type=>"ArtsGold"
