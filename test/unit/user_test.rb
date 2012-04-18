@@ -6,7 +6,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "get next unanswered article" do
-    article = @user.get_next_unanswered_article ("international")
+    article = @user.get_next_unanswered_article("international")
     assert_equal articles(:one), article
   end
 
