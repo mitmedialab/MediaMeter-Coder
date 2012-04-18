@@ -6,7 +6,7 @@ class GoldsController < ApplicationController
     @sampletag = ""
     @all_sampletags = Article.sampletag_counts
     @show_results = request.post?
-    if request.post?
+    if params.has_key? :sampletag
       # collect the passed params from the user 
       @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
       # load general data
@@ -24,6 +24,27 @@ class GoldsController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.json {
+        @data = Hash.new
+        @all_sources.each do |source|
+          cleaned_source = source.parameterize.underscore
+          @data[cleaned_source] = Hash.new 
+          @all_years.each do |year|
+            @data[cleaned_source][year] = Hash.new
+            @data[cleaned_source][year][:total_articles] = @total_articles[source][year]
+            @all_answer_types.each do |type|
+              @data[cleaned_source][year][type] = @yes_by_type_source_year[type][source][year]
+            end
+            @all_genders.each do |gender|
+              cleaned_gender = Article.gender_name(gender).parameterize.underscore
+              total = @gender_by_source_year[gender][source][year]
+              total = 0 if total.nil?                
+              @data[cleaned_source][year][cleaned_gender] = total 
+            end
+          end
+        end
+        render json: @data
+      }
       format.csv {
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
         # do some csv config
