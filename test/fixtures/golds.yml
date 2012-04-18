@@ -2,10 +2,10 @@
 
 one:
   article_id: 1
-  question: MyString
+  type: LocalGold
   answer: false
 
 two:
   article_id: 1
-  question: MyString
+  type: NationalGold
   answer: false
