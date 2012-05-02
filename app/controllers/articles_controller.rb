@@ -34,7 +34,7 @@ class ArticlesController < ApplicationController
         @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
         @answer_type = params[:answer]['type']
         # pull out the articles we care about
-        @articles = Article.where(:sampletag=>@sampletags).includes(:golds)
+        @articles = Article.where(:sampletag=>@sampletags).includes(:golds,:answers)
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
         # do some csv config
         @question_text = Article.question_text(@answer_type).downcase.gsub(/ /,"_")
