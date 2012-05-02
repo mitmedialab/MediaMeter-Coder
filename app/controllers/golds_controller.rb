@@ -66,11 +66,13 @@ class GoldsController < ApplicationController
       row_count = 0
       col_headers = Array.new
       question_text = Article.question_text(question_type).downcase.gsub(/ /,"_")
+      value_col = question_text + "_gold"
       reason_col = question_text + "_gold_reason"
       col_indices = {
         "id"=>nil,
         "answer_type"=>nil,
         reason_col=>nil,
+        value_col=>nil
       }
       # import
       parse_worked = true
@@ -80,6 +82,8 @@ class GoldsController < ApplicationController
           if row_count==0
             # check out col headers and validate we can find the 3 cols we need (id, _trusted_judgments, answer, confidence)
             col_headers = row
+            logger.info ""
+            logger.info col_headers.join(", ")
             found_all_cols = true
             col_indices.each_key do |key|
               col_indices[key] = col_headers.index(key)
@@ -98,6 +102,7 @@ class GoldsController < ApplicationController
             else
               article_id = row[ col_indices["id"] ]
               new_reason = row[ col_indices[reason_col] ]
+              new_value = row[ col_indices[value_col] ]
               # everything checks out, go ahead and create and save the answer
               matching_golds = Gold.where(:article_id=>article_id, :type=>Gold.classname_for_type(answer_type))
               if matching_golds.count==0
@@ -108,6 +113,7 @@ class GoldsController < ApplicationController
               else 
                 gold = matching_golds.first
                 gold.reason = new_reason
+                gold.answer = (new_value.downcase == 'yes')
                 gold.save
                 gold_count = gold_count + 1
               end
