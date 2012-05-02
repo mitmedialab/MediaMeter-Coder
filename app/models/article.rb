@@ -149,12 +149,8 @@ class Article < ActiveRecord::Base
   # assumes you've loaded the article with the linked has_many :golds
   def gold_by_type(type)
     gold = nil
-    found_golds = golds.select do |gold|
-      gold.is_type type
-    end
-    if found_golds.count > 0
-      gold = found_golds.first    # there should be only one!
-    end
+    found_golds = golds.select { |g| g.is_type type }
+    gold = found_golds.first if found_golds.count > 0   # there should be only one!
     gold
   end
 
