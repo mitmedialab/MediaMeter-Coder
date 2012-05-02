@@ -1,7 +1,7 @@
 class ArticlesController < ApplicationController
 
   def random_with_gold
-    random_article = Article.joins(:golds).offset(rand(Article.count)).first
+    random_article = Article.joins(:golds).order("RAND()").first
     logger.info random_article.id
     redirect_to article_path(random_article.id)
   end
