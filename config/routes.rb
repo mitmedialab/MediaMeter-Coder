@@ -4,6 +4,7 @@ UsWorldCoverage::Application.routes.draw do
   
   match 'articles/export_by_sampletags' => 'articles#export_by_sampletags'
   match 'articles/summary' => 'articles#summary'
+  match 'articles/random_with_gold' => 'articles#random_with_gold'
   resources :articles
   
   match 'golds/pick_reasons' => 'golds#pick_reasons'

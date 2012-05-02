@@ -1,5 +1,11 @@
 class ArticlesController < ApplicationController
 
+  def random_with_gold
+    random_article = Article.joins(:golds).offset(rand(Article.count)).first
+    logger.info random_article.id
+    redirect_to article_path(random_article.id)
+  end
+
   def summary
     @types = Gold.types
     @sources = Article.all_sources
