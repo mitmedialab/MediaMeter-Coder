@@ -64,6 +64,7 @@ class GoldsController < ApplicationController
       # prep to import
       gold_count = 0
       row_count = 0
+      ungolden_count = 0
       col_headers = Array.new
       question_text = Article.question_text(question_type).downcase.gsub(/ /,"_")
       value_col = question_text + "_gold"
@@ -112,9 +113,18 @@ class GoldsController < ApplicationController
                 end
               else 
                 gold = matching_golds.first
-                gold.reason = new_reason
-                gold.answer = (new_value.downcase == 'yes')
-                gold.save
+                if (new_value == nil) || (new_value == "")
+                  # blank value means article shouldn't be golden
+                  Gold.delete(gold.id)
+                  article = Article.find(article_id)
+                  article.golden = false
+                  article.save
+                  ungolden_count = ungolden_count + 1
+                else
+                  gold.reason = new_reason
+                  gold.answer = (new_value.downcase == 'yes')
+                  gold.save
+                end
                 gold_count = gold_count + 1
               end
             end
@@ -125,7 +135,7 @@ class GoldsController < ApplicationController
     end # is post
     # generate some feedback
     if parse_worked
-      flash.now[:notice] = "Imported #{gold_count} #{question_type} gold reasons (from #{upload.original_filename}, #{row_count} rows)"
+      flash.now[:notice] = "Imported #{gold_count} #{question_type} gold reasons, un-golded #{ungolden_count} articles (from #{upload.original_filename}, #{row_count} rows)"
     end
   end
 
