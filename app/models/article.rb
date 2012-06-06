@@ -191,6 +191,10 @@ class Article < ActiveRecord::Base
     Article.where("sampletag is not null").group(:sampletag).count
   end
 
+  def self.all_sampletags
+    Article.where("sampletag is not null").pluck(:sampletag).sort
+  end
+
   def self.all_sources
     Article.group(:source).pluck(:source).sort
   end
