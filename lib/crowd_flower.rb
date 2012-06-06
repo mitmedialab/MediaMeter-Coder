@@ -35,7 +35,7 @@ module CrowdFlower
         end 
         answer_id = nil
         answer_confidence = nil
-        if a.answers.length > 0
+        if (a.answers.length > 0) and (a.answers_by_type(answer_type).length > 0) 
           answer_id = a.answers_by_type(answer_type).first.id
           answer_confidence = a.answers_by_type(answer_type).first.confidence
         end
