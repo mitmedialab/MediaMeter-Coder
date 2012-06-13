@@ -192,7 +192,7 @@ class Article < ActiveRecord::Base
   end
 
   def self.all_sampletags
-    Article.where("sampletag is not null").pluck(:sampletag).sort
+    Article.where("sampletag is not null").pluck(:sampletag).uniq.sort
   end
 
   def self.all_sources
