@@ -15,8 +15,7 @@ module CrowdFlower
   end
   
   # export a file with all the article info for crowdflower
-  def self.export(answer_type, file_path)
-    sampletags = Article.all_sampletags
+  def self.export(answer_type, sampletags, file_path)
     question_text = Article.question_text(answer_type).downcase.gsub(/ /,"_")
     # pull out the articles we care about
     articles = Article.where(:sampletag=>sampletags).includes(:answers,:golds)
