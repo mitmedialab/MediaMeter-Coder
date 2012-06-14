@@ -92,4 +92,66 @@ class Answer < ActiveRecord::Base
     cleaned_results
   end
 
+  # Import answers from a big CSV
+  def self.import_from_csv(user, question_type, filepath)
+    # prep to import
+    answer_count = 0
+    col_headers = Array.new
+    question_text = Article.question_text(question_type).downcase.gsub(/ /,"_")
+    answer_col = question_text 
+    confidence_col = question_text+":confidence"
+    col_indices = {
+      "id"=>nil,
+      "_trusted_judgments"=>nil,
+      "newspaper"=>nil,
+      "page"=>nil,
+      "headline"=>nil,
+      "date"=>nil,
+      "content"=>nil,
+      "byline"=>nil,
+      "answer_type"=>nil,
+      answer_col=>nil,
+      confidence_col=>nil,
+    }
+    # import
+    parse_worked = true
+    results_string = nil
+    CSV.foreach(File.open(filepath)) do |row|
+      if parse_worked
+        if answer_count==0
+          # check out col headers and validate we can find the 3 cols we need (id, _trusted_judgments, answer, confidence)
+          col_headers = row
+          found_all_cols = true
+          col_indices.each_key do |key|
+            col_indices[key] = col_headers.index(key)
+            found_all_cols = false if col_indices[key]==nil  
+          end
+          if !found_all_cols
+            results_string = ("Didn't find some required coloumns! Couldn't find these columns: <ul><li>"+(col_indices.keys - col_headers).join("</li><li>")+"</li></ul>").html_safe
+            parse_worked = false
+          end
+        else
+          # verify answer info, just to be safe
+          answer_type = row[ col_indices["answer_type"] ]
+          if answer_type!=question_type
+            results_string = "Row #{answer_count} has the wrong type!  Expecting #{question_type} but found #{answer_type}"  
+            parse_worked = false       
+          else
+            # everything checks out, go ahead and create and save the answer
+            answer = Answer.new_by_type(answer_type)
+            answer.user_id = user.id
+            answer.article_id = row[ col_indices["id"] ].to_i
+            answer.confidence = row[ col_indices[confidence_col] ].to_f
+            answer.answer = (row[ col_indices[answer_col] ] == "Yes")
+            answer.judgements = row[ col_indices["_trusted_judgments"] ].to_i
+            answer.save
+          end
+        end # answer count
+      end # parse worked
+      answer_count = answer_count + 1
+    end # csv for each    
+    results_string = "Imported #{answer_count} #{question_type} answers for #{user.username}" if parse_worked
+    return parse_worked, results_string
+  end
+
 end

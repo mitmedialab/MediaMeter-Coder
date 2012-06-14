@@ -26,4 +26,13 @@ namespace :crowd do
     CrowdFlower::export(args.answer_type, [args.sampletag], filepath)
   end
   
+  
+  # run this like so:
+  # rake crowd:import[arts,crowdflower-20k,tmp/my_big_file.csv] --trace 
+  task :import, [:answer_type,:username,:filepath] => [:environment] do |t, args|
+    user = User.find_by_username(args.username)
+    Rails.logger.info "Starting to import #{user.username}'s #{args.answer_type} answers from #{args.filepath} --------------------------------"
+    import_worked, feedback = Answer.import_from_csv(user, args.answer_type, args.filepath)    
+  end
+  
 end
