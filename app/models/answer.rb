@@ -19,6 +19,11 @@ class Answer < ActiveRecord::Base
     ANSWER_TYPES[answer_type]
   end
 
+  def self.type_for_classname(class_name)
+    raise ArgumentError.new("#{class_name} is not a valid answer class") if !(ANSWER_TYPES.has_value? class_name)
+    ANSWER_TYPES.key class_name
+  end
+
   def self.new_by_type(answer_type, args={})
     classname = self.classname_for_type(answer_type)
     classname.constantize.new(args)
@@ -55,6 +60,34 @@ class Answer < ActiveRecord::Base
 
   def no?
     answer==false
+  end
+
+  def self.counts_by_type_source_year(sampletags,types,sources,years,user_ids)
+    # init the return storage
+    yes_counts = {} 
+    types.each do |type|
+      yes_counts[type] = {}
+      sources.each do |source| 
+        yes_counts[type][source] = {}
+        years.each do |year|
+          yes_counts[type][source][year] = 0
+        end
+      end
+    end
+    # fill in the counts
+    counts = Answer.includes(:article).
+      where('YEAR(articles.pub_date) > 0').
+      where('articles.sampletag'=>sampletags,'user_id'=>user_ids).
+      group(:type,'articles.source','YEAR(articles.pub_date)',:answer).count
+    counts.each do |groups, value|
+      type = Answer::type_for_classname(groups[0])
+      source = groups[1]
+      year = groups[2]
+      answer = groups[3]
+      yes_counts[type][source][year] = value if answer==true
+    end
+    # return
+    yes_counts
   end
 
   # group answers for a user by confidence

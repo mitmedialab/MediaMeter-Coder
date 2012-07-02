@@ -2,6 +2,8 @@ UsWorldCoverage::Application.routes.draw do
 
   root :to => 'articles#summary'
   
+  resources :users
+
   match 'articles/export_by_sampletags' => 'articles#export_by_sampletags'
   match 'articles/summary' => 'articles#summary'
   match 'articles/random_with_gold' => 'articles#random_with_gold'
@@ -11,10 +13,7 @@ UsWorldCoverage::Application.routes.draw do
   match 'golds/edit_reasons' => 'golds#edit_reasons', :via=>:put
   match 'golds/import_reasons' => 'golds#import_reasons'
   match 'golds/export_totals' => 'golds#export_totals'
-  
-  resources :users
-
-  resources :golds
+  resources :golds  
   resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :foreign_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :international_golds, :controller=>"golds", :type=>"ArtsGold"
@@ -35,8 +34,10 @@ UsWorldCoverage::Application.routes.draw do
   match 'session/create' => 'session#create'
 
   match 'crowd/:action' => 'crowd'
+
   match 'answers/:action' => 'answers'
   match 'answers/for_article/:id/:type' => 'answers#for_article'
+  match 'answers/export_totals' => 'articles#answers'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

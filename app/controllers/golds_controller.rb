@@ -5,7 +5,7 @@ class GoldsController < ApplicationController
     
     @sampletag = ""
     @all_sampletags = Article.sampletag_counts
-    @show_results = request.post?
+    @show_results = false
     if params.has_key? :sampletag
       # collect the passed params from the user 
       @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys

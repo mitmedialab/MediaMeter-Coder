@@ -1,0 +1,10 @@
+
+<fieldset>
+		<legend>Pick Users</legend>
+	<% @users.each do |user| %>
+		<div class="control-group">
+			<%= label_tag(user.id, check_box_tag(user.id) + user.username + " (" + @user_answer_counts[user.id].to_s + " answers)", 
+						  :class=>"checkbox", :html=>true) %>
+		</div>
+	<% end %>
+</fieldset>

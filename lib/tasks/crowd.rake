@@ -6,6 +6,7 @@ namespace :crowd do
   
   # run this like so:
   # rake crowd:export_all_sets[sports,tmp] --trace 
+  # bundle exec rake crowd:export_all_sets[foreign,tmp] --trace RAILS_ENV=production 
   task :export_all_sets, [:answer_type,:dir] => [:environment] do |t,args|
     Rails.logger.info "Starting to export --------------------------------"
     timestamp = Time.now.strftime('%Y-%m-%d_%H-%M-%S')
@@ -16,7 +17,7 @@ namespace :crowd do
   end
 
   # run this like so:
-  # rake crowd:export_all_sets[sports,crowdflower-round1,tmp] --trace 
+  # rake crowd:export[sports,crowdflower-round1,tmp] --trace 
   task :export, [:answer_type,:sampletag,:dir] => [:environment] do |t,args|
     Rails.logger.info "Starting to export --------------------------------"
     timestamp = Time.now.strftime('%Y-%m-%d_%H-%M-%S')
@@ -28,7 +29,8 @@ namespace :crowd do
   
   
   # run this like so:
-  # rake crowd:import[arts,crowdflower-20k,tmp/my_big_file.csv] --trace 
+  # rake crowd:import[arts,crowdflower-20k,tmp/my_big_file.csv] --trace
+  # bundle exec rake crowd:import[international,crowdflower-20k,tmp/20k-final/international-20k-final-a108387.csv] --trace RAILS_ENV=production 
   task :import, [:answer_type,:username,:filepath] => [:environment] do |t, args|
     user = User.find_by_username(args.username)
     Rails.logger.info "Starting to import #{user.username}'s #{args.answer_type} answers from #{args.filepath} --------------------------------"

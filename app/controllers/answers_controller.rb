@@ -21,6 +21,69 @@ class AnswersController < ApplicationController
     end # is post
   end
   
+  def export_totals
+    
+    @users = User.all
+    @user_answer_counts = Hash.new
+    @all_answer_types = Gold.types 
+    @users.each do |user|
+      @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
+    end
+
+    @show_results = false
+    @sampletag = ""
+    @all_sampletags = Article.sampletag_counts
+    if params.has_key? :sampletag
+      # collect the passed params from the user 
+      @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
+      # load users
+      user_ids = self.parse_out_selected_users.collect { |user| user.id }
+      # load general data
+      @all_sources = Article.all_sources
+      @all_years = Article.all_years
+      @all_answer_types = Answer.types
+      @all_genders = Article.all_genders 
+      # total articles
+      @total_articles = Article.counts_by_source_year(@sampletags)
+      # article type counts
+      @yes_by_type_source_year = Answer.counts_by_type_source_year(@sampletags,@all_answer_types,@all_sources,@all_years,user_ids)
+      # gender counts
+      @gender_by_source_year = Article.gender_counts_by_source_year(@sampletags)
+    end
+
+    respond_to do |format|
+      format.html
+      format.json {
+        @data = Hash.new
+        @all_sources.each do |source|
+          cleaned_source = source.parameterize.underscore
+          @data[cleaned_source] = Hash.new 
+          @all_years.each do |year|
+            @data[cleaned_source][year] = Hash.new
+            @data[cleaned_source][year][:total_articles] = @total_articles[source][year]
+            @all_answer_types.each do |type|
+              @data[cleaned_source][year][type] = @yes_by_type_source_year[type][source][year]
+            end
+            @all_genders.each do |gender|
+              cleaned_gender = Article.gender_name(gender).parameterize.underscore
+              total = @gender_by_source_year[gender][source][year]
+              total = 0 if total.nil?                
+              @data[cleaned_source][year][cleaned_gender] = total 
+            end
+          end
+        end
+        render json: @data
+      }
+      format.csv {
+        timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
+        # do some csv config
+        @filename = "article_types_by_source_year_" + timestamp + ".csv"
+        @output_encoding = 'UTF-8'
+      }
+    end
+
+  end
+  
   # pick users and a sample tag to see the aggregated answers for
   def pick
     @users = User.all
@@ -40,9 +103,7 @@ class AnswersController < ApplicationController
     @only_not_confident = params[:not_confident].to_i==1
     
     # parse out users we care about
-    @selected_users = User.all.select do |user|
-      params.keys.include? user.id.to_s
-    end
+    @selected_users = self.parse_out_selected_users
     user_ids = @selected_users.collect do |user|
       user.id
     end
@@ -146,6 +207,13 @@ class AnswersController < ApplicationController
               :username_map=>@username_map
     }
   
+  end
+
+  def parse_out_selected_users
+    # parse out users we care about
+    User.all.select do |user|
+      params.keys.include? user.id.to_s
+    end
   end
 
 end

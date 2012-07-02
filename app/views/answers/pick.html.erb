@@ -17,15 +17,7 @@
 
 <%= render :partial=>'articles/pick_question_types_field' %>
 
-<fieldset>
-		<legend>Pick Users</legend>
-	<% @users.each do |user| %>
-		<div class="control-group">
-			<%= label_tag(user.id, check_box_tag(user.id) + user.username + " (" + @user_answer_counts[user.id].to_s + " answers)", 
-						  :class=>"checkbox", :html=>true) %>
-		</div>
-	<% end %>
-</fieldset>
+<%= render :partial=>'answers/pick_users_field' %>
 
 <fieldset>
 	<legend>Options</legend>
@@ -42,3 +34,4 @@
 </div>
   
 <% end %>
+
