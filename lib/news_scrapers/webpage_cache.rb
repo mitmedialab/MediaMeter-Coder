@@ -3,7 +3,7 @@ require 'digest/md5'
 
 module NewsScrapers
 
-  # Simple file-based caching of webpage contents, key_fored by the url
+  # Simple file-based caching of webpage contents, keyed by the url
   class WebpageCache
   
     def initialize(dir)

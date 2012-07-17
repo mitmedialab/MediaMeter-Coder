@@ -36,7 +36,8 @@ class Article < ActiveRecord::Base
   
   before_save   ArticlePrepper.new
   
-  scope :completed, where(:queue_status=>:complete)
+  scope :completed, where(:queue_status=>:complete).order(:pub_date)
+  scope :with_scans, where("scan_src_url IS NOT NULL").order(:pub_date)
   
   GENDERS = {
     'F'=>'Female Author',
@@ -73,6 +74,33 @@ class Article < ActiveRecord::Base
     url = ""
     url = "http://"+File.join(NewsScrapers::public_base_url, scan_subdir, scan_local_filename) if has_scan_local_filename?
     url
+  end
+  
+  # has the scan file been download already?
+  def scan_local_file_exists?
+    return false if !has_scan_file_url?
+    return File.exists?( File.join( path_to_scan_dir, scan_local_filename ))
+  end
+  
+  def download_scan(requester=nil)
+    # bail if no scan file to download
+    return nil if !has_scan_file_url?
+    # create downloader
+    requester = NewsScrapers::requester if requester==nil
+    # download it
+    result = FALSE
+    extension = scan_file_url.split('.').pop()
+    scan_local_filename = id.to_s + "." + extension
+    begin
+      # request and save all in one step
+      requester.get(scan_file_url).save( File.join(path_to_scan_dir, scan_local_filename) )
+      result = TRUE
+    rescue Exception => e
+      logger.error "  FAILED: #{scan_file_url}"
+      set_queue_status(:in_progress_error)
+      save
+    end
+    result
   end
   
   # HACK for NYT edge case where some articles from the API don't have URLs :-(

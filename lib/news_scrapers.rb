@@ -13,6 +13,8 @@ module NewsScrapers
 
   @@logger_instance = nil
   
+  @@requester_instance = nil
+  
   @@cache = nil
     
   class << self
@@ -76,6 +78,41 @@ module NewsScrapers
       end
     end
   end
+  
+  # we lost all the scans in a hard drive crash, so this method will re-download them
+  # ASSUMPTIONS: all are from proquest
+  def self.download_all_scans
+    r = NewsScrapers::requester
+    # iterate over all articles with scans
+    total = Article.with_scans.count
+    current = 1
+    NewsScrapers.logger.info "Ready to download #{total} scans"
+    Article.with_scans.each do |article|
+      NewsScrapers.logger.info "  [ #{current} of #{total} ] Downloading for article #{article.id}"
+      if article.scan_local_file_exists?
+        NewsScrapers.logger.info "    scan local file already exists, not going to redownload it!"
+      else
+        doc = Nokogiri::HTML(r.get(article.scan_src_url).body)
+        new_scan_file_url = "http://proquest.umi.com.libproxy.mit.edu" + doc.css("frame")[1].attribute('src').value
+        article.scan_file_url = new_scan_file_url
+        article.save
+        article.download_scan
+      end
+      sleep(rand(5)+5) # sleep between 5 and 10 seconds... to not tax their server
+      current = current + 1
+    end
+    NewsScrapers.logger.info "Done!"
+  end
+  
+  # public API to fetch one static instance of the mechanize downloader 
+  def self.requester
+    if @@requester_instance == nil
+      @@requester_instance = Mechanize.new
+      @@requester_instance.log = Logger.new "log/mechanize.log"
+      @@requester_instance.user_agent_alias = 'Mac Safari'
+    end
+    @@requester_instance
+  end  
   
   # TODO: replace with sprintf (this is dumb, but was quick and easy)
   def self.prefix_with_zero number

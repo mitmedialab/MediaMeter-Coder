@@ -9,13 +9,8 @@ module NewsScrapers
 
   class HistoricalNewsScraper
     
-    MECHANIZE_LOG_FILE = "log/mechanize.log"
-    USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_7_2) AppleWebKit/534.52.7 (KHTML, like Gecko) Version/5.1.2 Safari/534.52.7"
-    
     def initialize
-      @requester = Mechanize.new
-      @requester.log = Logger.new MECHANIZE_LOG_FILE
-      @requester.user_agent_alias = 'Mac Safari'
+      @requester = NewsScrapers::requester
     end
   
     def blacklist_scrape(d)

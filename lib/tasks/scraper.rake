@@ -23,6 +23,10 @@ namespace :scraper do
   task :nytimes =>:environment do
     NewsScrapers::scrape_new_york_times
   end
+  
+  task :download_all_scans=>:environment do 
+    NewsScrapers::download_all_scans
+  end
 
 
 end
