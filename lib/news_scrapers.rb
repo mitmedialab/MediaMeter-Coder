@@ -87,8 +87,10 @@ module NewsScrapers
     total = Article.with_scans.count
     current = 1
     NewsScrapers.logger.info "Ready to download #{total} scans"
+    NewsScrapers.logger.flush # for production (hopefully)
     Article.with_scans.each do |article|
       NewsScrapers.logger.info "  [ #{current} of #{total} ] Downloading for article #{article.id}"
+      NewsScrapers.logger.flush # for production (hopefully)
       if article.scan_local_file_exists?
         NewsScrapers.logger.info "    scan local file already exists, not going to redownload it!"
       else
@@ -98,6 +100,7 @@ module NewsScrapers
         article.save
         article.download_scan
       end
+      NewsScrapers.logger.flush # for production (hopefully)
       sleep(rand(5)+5) # sleep between 5 and 10 seconds... to not tax their server
       current = current + 1
     end
