@@ -99,9 +99,9 @@ module NewsScrapers
         article.scan_file_url = new_scan_file_url
         article.save
         article.download_scan
+        sleep(rand(5)+5) # sleep between 5 and 10 seconds... to not tax their server
       end
       NewsScrapers.logger.flush # for production (hopefully)
-      sleep(rand(5)+5) # sleep between 5 and 10 seconds... to not tax their server
       current = current + 1
     end
     NewsScrapers.logger.info "Done!"
