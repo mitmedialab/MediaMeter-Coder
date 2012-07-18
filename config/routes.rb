@@ -24,12 +24,8 @@ UsWorldCoverage::Application.routes.draw do
 
   match 'scraper/:action' => 'scraper' 
 
-  match 'code/international' => 'code#international'
-  match 'code/foreign' => 'code#foreign'
-  match 'code/arts' => 'code#arts'
-  match 'code/local' => 'code#local'
-  match 'code/national' => 'code#national'
-  match 'code/sport' => 'code#sport'
+  match 'code/generic_one' => 'code#generic_one'
+  match 'code/generic_two' => 'code#generic_two'
   match 'code/answer' => 'code#answer'
   match 'session/new' => 'session#new'
   match 'session/create' => 'session#create'

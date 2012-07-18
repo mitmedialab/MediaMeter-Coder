@@ -6,12 +6,8 @@ class Answer < ActiveRecord::Base
   CONFIDENT_THRESHOLD = 0.75
 
   ANSWER_TYPES = {
-    "arts"=>"ArtsAnswer",
-    "foreign"=>"ForeignAnswer", 
-    "international"=>"InternationalAnswer", 
-    "local"=>"LocalAnswer", 
-    "national"=>"NationalAnswer", 
-    "sports"=>"SportsAnswer"
+    "generic_one"=>"GenericOneAnswer",
+    "generic_two"=>"GenericTwoAnswer"
   }
 
   def self.classname_for_type(answer_type)

@@ -1,0 +1,2 @@
+class GenericTwoAnswer < Answer
+end

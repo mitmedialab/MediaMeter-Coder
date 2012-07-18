@@ -5,12 +5,8 @@ class Gold < ActiveRecord::Base
   belongs_to      :article
 
   GOLD_TYPES = {
-    "arts"=>"ArtsGold",
-    "foreign"=>"ForeignGold", 
-    "international"=>"InternationalGold", 
-    "local"=>"LocalGold", 
-    "national"=>"NationalGold", 
-    "sports"=>"SportsGold"
+    "generic_one"=>"GenericOneGold",
+    "generic_two"=>"GenericTwoGold"
   }
 
   def self.classname_for_type(gold_type)

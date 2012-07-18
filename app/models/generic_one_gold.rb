@@ -1,0 +1,2 @@
+class GenericOneGold < Gold
+end

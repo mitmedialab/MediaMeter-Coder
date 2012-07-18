@@ -2,33 +2,13 @@ class CodeController < ApplicationController
 
   before_filter :require_username
  
-  def arts
-    @answer_type = "arts"
+  def generic_one
+    @answer_type = "generic_one"
     render :code
   end 
  
-  def international
-    @answer_type = "international"
-    render :code
-  end
-
-  def foreign
-    @answer_type = "foreign"
-    render :code
-  end
-  
-  def national
-    @answer_type = "national"
-    render :code
-  end
-  
-  def sports
-    @answer_type = "sports"
-    render :code
-  end
-
-  def local
-    @answer_type = "local"
+  def generic_two
+    @answer_type = "generic_two"
     render :code
   end
  

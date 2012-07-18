@@ -1,0 +1,2 @@
+class GenericOneAnswer < Answer
+end
