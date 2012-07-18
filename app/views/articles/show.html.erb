@@ -70,7 +70,7 @@
 		
 		<p>
 		  <b>Scan local filename</b><br>
-		  <%= @article.scan_local_filename %>
+		  <%= link_to @article.scan_local_filename, @article.url_to_scan_local_file %>
 		</p>
 		
 		<p>
