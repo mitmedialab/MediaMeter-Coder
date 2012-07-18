@@ -14,6 +14,11 @@ class ArticlesController < ApplicationController
     end
   end
 
+  def by_sampletag
+    @sampletag = params[:sampletag]
+    @articles = Article.where(:sampletag=>@sampletag).page(params[:page]).order(:pub_date,:source,:headline)
+  end
+
   def export_by_sampletags
 
     @users = User.all
