@@ -12,7 +12,7 @@ UsWorldCoverage::Application.routes.draw do
   match 'articles/by_source/:source' => 'articles#by_source'
   match 'articles/export_by_sampletags' => 'articles#export_by_sampletags'
   match 'articles/summary' => 'articles#summary'
-  match 'articles/random_with_gold' => 'articles#random_with_gold'
+  match 'articles/random' => 'articles#random'
   resources :articles
   
   match 'golds/pick_reasons' => 'golds#pick_reasons'
