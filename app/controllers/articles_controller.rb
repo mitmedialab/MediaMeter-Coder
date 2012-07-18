@@ -7,6 +7,8 @@ class ArticlesController < ApplicationController
   end
 
   def summary
+    @answer_count = Answer.count
+    @answer_count_users = Answer.group(:user_id).count.keys.length
     @article_count = Article.count
     @users = User.all
     @user_answer_counts = []
