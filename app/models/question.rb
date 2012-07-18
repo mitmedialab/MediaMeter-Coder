@@ -5,7 +5,7 @@ class Question < ActiveRecord::Base
   end
 
   def self.for_answer_type answer_type
-    Question.where(:key=>@answer_type.camelize).first
+    Question.where(:key=>answer_type.camelize).first
   end
 
 end

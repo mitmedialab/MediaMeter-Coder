@@ -49,7 +49,7 @@ class ArticlesController < ApplicationController
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
         # do some csv config
         @question_text = @question.export_safe_text
-        @filename = @answer_type + "_" + "articles" + "_" + timestamp + ".csv"
+        @filename = @question_text + "_" + "articles" + "_" + timestamp + ".csv"
         @output_encoding = 'UTF-8'
       }
     end
