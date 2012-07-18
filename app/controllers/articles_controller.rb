@@ -7,24 +7,11 @@ class ArticlesController < ApplicationController
   end
 
   def summary
-    @types = Gold.types
-    @sources = Article.all_sources
-    @years = Article.all_years
-    # chart of stories per day / source / year
-    @avg_stories_per_day_by_source_and_year = Article.average_stories_per_day_by_source_and_year
-    # answer confidence
-    @all_answer_types = Answer.types
-    @user_type_confidence = {}     
-    crowd_users = User.having_answers_with_confidence
-    crowd_users.each do |user|
-      @user_type_confidence[user] = {}
-      @all_answer_types.each do |type|
-        confidence_freq = Answer.confidence_frequency(user.id, type)
-        @user_type_confidence[user][type] = confidence_freq 
-      end
+    @article_count = Article.count
+    @users = User.all
+    @users.each do |user|
+      @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
     end
-    # gold status
-    @gold_reason_pcts = Gold.reasoned_percent_by_type
   end
 
   def export_by_sampletags
