@@ -69,10 +69,10 @@ class Article < ActiveRecord::Base
     QUESTIONS[type]
   end
   
-  # get the url to the local copy of the PDF file
+  # get the relative url to the local copy of the PDF file
   def url_to_scan_local_file
     url = ""
-    url = "http://"+File.join(NewsScrapers::public_base_url, scan_subdir, scan_local_filename) if has_scan_local_filename?
+    url = File.join(scan_subdir, scan_local_filename) if has_scan_local_filename?
     url
   end
   
@@ -80,27 +80,6 @@ class Article < ActiveRecord::Base
   def scan_local_file_exists?
     return false if !has_scan_file_url?
     return File.exists?( File.join( path_to_scan_dir, scan_local_filename ))
-  end
-  
-  def download_scan(requester=nil)
-    # bail if no scan file to download
-    return nil if !has_scan_file_url?
-    # create downloader
-    requester = NewsScrapers::requester if requester==nil
-    # download it
-    result = FALSE
-    extension = scan_file_url.split('.').pop()
-    scan_local_filename = id.to_s + "." + extension
-    begin
-      # request and save all in one step
-      requester.get(scan_file_url).save( File.join(path_to_scan_dir, scan_local_filename) )
-      result = TRUE
-    rescue Exception => e
-      logger.error "  FAILED: #{scan_file_url}"
-      set_queue_status(:in_progress_error)
-      save
-    end
-    result
   end
   
   # HACK for NYT edge case where some articles from the API don't have URLs :-(
