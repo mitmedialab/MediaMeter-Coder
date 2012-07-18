@@ -1,9 +1,15 @@
 
 <fieldset>
-		<legend>Pick Users</legend>
+		<legend>Pick Users 
+			<small>(
+			 <%=link_to_function 'all',"$('.user_chk').attr('checked','checked');"%>
+			 |
+			 <%=link_to_function 'none',"$('.user_chk').attr('checked',false);"%>
+			 )</small>
+		 </legend>
 	<% @users.each do |user| %>
 		<div class="control-group">
-			<%= label_tag(user.id, check_box_tag(user.id) + user.username + " (" + @user_answer_counts[user.id].to_s + " answers)", 
+			<%= label_tag(user.id, check_box_tag(user.id,1,nil,:class=>'user_chk') + user.username + " (" + @user_answer_counts[user.id].to_s + " answers)", 
 						  :class=>"checkbox", :html=>true) %>
 		</div>
 	<% end %>
