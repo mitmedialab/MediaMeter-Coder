@@ -3,7 +3,8 @@
 <input id="answer_type" name="answer_type" type="hidden" value="<%=@answer_type%>"/>
 
 <div class="hero-unit">
-	<h1>Is this an <%=@answer_type.capitalize%> Story?</h1>
+	<h1><%=@question.title%></h1>
+	<h2><%=@question.description%></h1>
 	<br />
 	<div id="articles">
 	</div>

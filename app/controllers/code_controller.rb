@@ -4,11 +4,13 @@ class CodeController < ApplicationController
  
   def generic_one
     @answer_type = "generic_one"
+    @question = Question.where(:key=>@answer_type.camelize).first
     render :code
   end 
  
   def generic_two
     @answer_type = "generic_two"
+    @question = Question.where(:key=>@answer_type.camelize).first
     render :code
   end
  

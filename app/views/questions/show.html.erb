@@ -1,0 +1,47 @@
+<h1>/Question</h1>
+
+<p>
+  <b>Title</b><br>
+  <%= @question.title %>
+</p>
+
+<p>
+  <b>Description</b><br>
+  <%= @question.description %>
+</p>
+
+<p>
+  <b>Key</b><br>
+  <%= @question.key %>
+</p>
+
+<p>
+  <b>Answer one</b><br>
+  <%= @question.answer_one %>
+</p>
+
+<p>
+  <b>Answer two</b><br>
+  <%= @question.answer_two %>
+</p>
+
+<p>
+  <b>Answer three</b><br>
+  <%= @question.answer_three %>
+</p>
+
+<p>
+  <b>Answer four</b><br>
+  <%= @question.answer_four %>
+</p>
+
+<p>
+  <b>Answer five</b><br>
+  <%= @question.answer_five %>
+</p>
+
+<div class="form-actions">
+  <%= link_to 'Back', questions_path, :class => 'btn'  %>
+  <%= link_to 'Edit', edit_question_path(@question), :class => 'btn' %>
+  <%= link_to 'Delete', question_path(@question), :method => 'delete', :confirm => 'Are you sure?', :class => 'btn btn-danger' %>
+</div>

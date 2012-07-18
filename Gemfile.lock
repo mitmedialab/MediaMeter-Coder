@@ -47,7 +47,6 @@ GEM
       multi_json (~> 1.0)
     gchart (1.0.0)
     hike (1.2.1)
-    htmlentities (4.3.1)
     i18n (0.6.0)
     journey (1.0.3)
     jquery-rails (2.0.1)
@@ -80,8 +79,6 @@ GEM
     net-http-persistent (2.6)
     nokogiri (1.5.2)
     ntlm-http (0.1.1)
-    nytimes-articles (0.4.1)
-      htmlentities
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -152,7 +149,6 @@ DEPENDENCIES
   mechanize
   mysql2
   nokogiri
-  nytimes-articles
   rails (= 3.2.0)
   sass-rails
   sqlite3

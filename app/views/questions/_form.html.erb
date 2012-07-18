@@ -1,0 +1,66 @@
+<%= form_for @question, :html => { :class => 'form-horizontal' } do |f| %>
+  <fieldset>
+    <legend><%= controller.action_name.capitalize %> /Question</legend>
+
+    <div class="control-group">
+      <%= f.label :title, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_field :title, :class => 'text_field' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :description, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :description, :class => 'text_area' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :key, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :key, :class => 'text_area' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :answer_one, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :answer_one, :class => 'text_area' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :answer_two, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :answer_two, :class => 'text_area' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :answer_three, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :answer_three, :class => 'text_area' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :answer_four, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :answer_four, :class => 'text_area' %>
+      </div>
+    </div>
+
+    <div class="control-group">
+      <%= f.label :answer_five, :class => 'control-label' %>
+      <div class="controls">
+        <%= f.text_area :answer_five, :class => 'text_area' %>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to 'Cancel', questions_path, :class => 'btn' %>
+    </div>
+  </fieldset>
+<% end %>

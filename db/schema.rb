@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120416152753) do
+ActiveRecord::Schema.define(:version => 20120718192159) do
 
   create_table "answers", :force => true do |t|
     t.string   "type"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20120416152753) do
     t.float    "gender_prob"
   end
 
+  add_index "articles", ["headline"], :name => "headline_fulltext_index"
   add_index "articles", ["queue_status"], :name => "index_articles_on_queue_status"
   add_index "articles", ["sampletag"], :name => "index_articles_on_sampletag"
   add_index "articles", ["source"], :name => "source_index"
@@ -70,6 +71,19 @@ ActiveRecord::Schema.define(:version => 20120416152753) do
 
   add_index "golds", ["article_id"], :name => "index_golds_on_article_id"
   add_index "golds", ["type"], :name => "index_golds_on_type"
+
+  create_table "questions", :force => true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.text     "key"
+    t.text     "answer_one"
+    t.text     "answer_two"
+    t.text     "answer_three"
+    t.text     "answer_four"
+    t.text     "answer_five"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
 
   create_table "users", :force => true do |t|
     t.string   "username"

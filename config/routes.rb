@@ -1,8 +1,12 @@
 UsWorldCoverage::Application.routes.draw do
 
+  resources :questions
+
   root :to => 'articles#summary'
   
   resources :users
+  
+  resources :questions
 
   match 'articles/by_sampletag/:sampletag' => 'articles#by_sampletag'
   match 'articles/by_source/:source' => 'articles#by_source'
