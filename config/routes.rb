@@ -5,6 +5,7 @@ UsWorldCoverage::Application.routes.draw do
   resources :users
 
   match 'articles/by_sampletag/:sampletag' => 'articles#by_sampletag'
+  match 'articles/by_source/:source' => 'articles#by_source'
   match 'articles/export_by_sampletags' => 'articles#export_by_sampletags'
   match 'articles/summary' => 'articles#summary'
   match 'articles/random_with_gold' => 'articles#random_with_gold'
@@ -21,8 +22,6 @@ UsWorldCoverage::Application.routes.draw do
   resources :local_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :national_golds, :controller=>"golds", :type=>"ArtsGold"
   resources :sports_golds, :controller=>"golds", :type=>"ArtsGold"
-
-  match 'scraper/:action' => 'scraper' 
 
   match 'code/generic_one' => 'code#generic_one'
   match 'code/generic_two' => 'code#generic_two'

@@ -31,6 +31,8 @@ class Article < ActiveRecord::Base
 
   self.per_page = 100
 
+  alias_attribute :name, :headline
+
   has_many      :answers
   has_many      :golds
   

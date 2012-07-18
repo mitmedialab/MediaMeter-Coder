@@ -18,6 +18,15 @@ class ArticlesController < ApplicationController
   def by_sampletag
     @sampletag = params[:sampletag]
     @articles = Article.where(:sampletag=>@sampletag).page(params[:page]).order(:pub_date,:source,:headline)
+    @prefix = @sampletag
+    render 'index'
+  end
+
+  def by_source
+    @source = params[:source]
+    @articles = Article.where(:source=>@source).page(params[:page]).order(:pub_date,:source,:headline)
+    @prefix = @source
+    render 'index'
   end
 
   def export_by_sampletags
@@ -48,7 +57,7 @@ class ArticlesController < ApplicationController
   # GET /articles.json
   def index
     @articles = Article.page(params[:page]).order(:pub_date,:source,:headline)
-
+    
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @articles }

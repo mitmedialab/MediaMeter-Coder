@@ -1,4 +1,4 @@
-<h1>Articles</h1>
+<h1><%=@prefix if @prefix!=nil %> Articles</h1>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -16,13 +16,10 @@
       <tr>
         <td><%= article.id %></td>
         <td><%= article.pub_date %></td>
-        <td><%= article.source %></td>
+        <td><%= link_to article.source, articles_path+"/by_source/"+article.source if !article.source.nil? %></td>
         <td><%= link_to article.headline, article_path(article) %></td>
         <td><%= article.byline %></td>
-        <td><%= 
-        	     link_to article.sampletag, articles_path+"/by_sampletag/"+article.sampletag if article.sampletag != nil
-        	   	
-        	%></td>
+        <td><%= link_to article.sampletag, articles_path+"/by_sampletag/"+article.sampletag if !article.sampletag.nil? %></td>
         <td>
           <%= link_to 'Edit', edit_article_path(article), :class => 'btn btn-mini' %>
           <%= link_to 'Destroy', article_path(article), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
