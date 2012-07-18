@@ -1,2 +1,0 @@
-class ForeignGold < Gold
-end

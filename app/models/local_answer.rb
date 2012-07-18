@@ -1,2 +1,0 @@
-class LocalAnswer < Answer
-end

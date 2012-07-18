@@ -10,7 +10,7 @@ class CodeController < ApplicationController
  
   def generic_two
     @answer_type = "generic_two"
-    @question = Question.where(:key=>@answer_type.camelize).first
+    @question = Queston.for_answer_type @answer_type
     render :code
   end
  

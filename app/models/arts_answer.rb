@@ -1,2 +1,0 @@
-class ArtsAnswer < Answer
-end

@@ -48,27 +48,12 @@ class Article < ActiveRecord::Base
     'X'=>'No Author'
   }
   
-  # we need these held here so we can export the CSV for CrowdFlower correcltly
-  # @see https://crowdflower.com/solutions/self-service/#learning_resources 
-  QUESTIONS = {
-    "arts"=>"Is this newspaper clip about the arts or entertainment",
-    "foreign"=>"Does this article contain International News that does not involve the United States", 
-    "international"=>"Is this newspaper clip about International News that involves the United States or NATO", 
-    "local"=>"Does this article contain local news about a town city state or region in the United States", 
-    "national"=>"Does this newspaper clip contain United States National news", 
-    "sports"=>"Is this article about sports"
-  }
-  
   def self.all_genders
     GENDERS.keys.sort
   end
   
   def self.gender_name key
     GENDERS[key]
-  end
-  
-  def self.question_text type
-    QUESTIONS[type]
   end
   
   # get the relative url to the local copy of the PDF file

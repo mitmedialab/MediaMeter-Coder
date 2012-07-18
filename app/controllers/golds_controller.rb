@@ -66,7 +66,8 @@ class GoldsController < ApplicationController
       row_count = 0
       ungolden_count = 0
       col_headers = Array.new
-      question_text = Article.question_text(question_type).downcase.gsub(/ /,"_")
+      question = Question.for_answer_type(question_type)
+      question_text = question.export_safe_text
       value_col = question_text + "_gold"
       reason_col = question_text + "_gold_reason"
       col_indices = {

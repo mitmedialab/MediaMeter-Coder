@@ -6,13 +6,12 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "get next unanswered article" do
-    article = @user.get_next_unanswered_article("international")
+    article = @user.get_next_unanswered_article("generic_one")
     assert_equal articles(:one), article
   end
 
   test "get answer count for answer type" do
-    assert_equal 1, users(:bob).find_answers_by_type("international").size
-    assert_equal 1, users(:bob).find_answers_by_type("arts").size
-    assert_equal 0, users(:bob).find_answers_by_type("local").size
+    assert_equal 1, users(:bob).find_answers_by_type("generic_one").size
+    assert_equal 0, users(:bob).find_answers_by_type("generic_two").size
   end
 end

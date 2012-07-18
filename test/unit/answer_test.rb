@@ -3,40 +3,16 @@ require 'test_helper'
 class AnswerTest < ActiveSupport::TestCase
   
   test "new by type" do
-    local = Answer.new_by_type "local", {:user=>users(:bob), 
+    generic_one = Answer.new_by_type "generic_one", {:user=>users(:bob), 
                                          :article=>articles(:one), 
                                          :source=>"MediaMeter Coder"}
-    answer_test(local, "LocalAnswer", users(:bob), articles(:one), "MediaMeter Coder")
+    answer_test(generic_one, "GenericOneAnswer", users(:bob), articles(:one), "MediaMeter Coder")
 
 
-    international = Answer.new_by_type "international", {:user=>users(:bob), 
+    generic_two = Answer.new_by_type "generic_two", {:user=>users(:bob), 
                                                          :article=>articles(:one), 
                                                          :source=>"MediaMeter Coder"}
-    answer_test(international, "InternationalAnswer", users(:bob), articles(:one), "MediaMeter Coder")
-
-
-    foreign = Answer.new_by_type "foreign", {:user=>users(:bob), 
-                                             :article=>articles(:one), 
-                                             :source=>"MediaMeter Coder"}
-    answer_test(foreign, "ForeignAnswer", users(:bob), articles(:one), "MediaMeter Coder")
-
-
-    arts = Answer.new_by_type "arts", {:user=>users(:bob), 
-                                       :article=>articles(:one), 
-                                       :source=>"MediaMeter Coder"}
-    answer_test(arts, "ArtsAnswer", users(:bob), articles(:one), "MediaMeter Coder")
-
-
-    sports = Answer.new_by_type "sports", {:user=>users(:bob), 
-                                           :article=>articles(:one), 
-                                            :source=>"MediaMeter Coder"}
-    answer_test(sports, "SportsAnswer", users(:bob), articles(:one), "MediaMeter Coder")
-
-
-    national = Answer.new_by_type "national", {:user=>users(:bob), 
-                                               :article=>articles(:one), 
-                                               :source=>"MediaMeter Coder"}
-    answer_test(national, "NationalAnswer", users(:bob), articles(:one), "MediaMeter Coder")
+    answer_test(generic_two, "GenericTwoAnswer", users(:bob), articles(:one), "MediaMeter Coder")
 
   end
 

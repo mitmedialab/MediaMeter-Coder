@@ -1,21 +1,21 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  title: MyString
-  description: MyText
-  key: MyText
-  answer_one: MyText
-  answer_two: MyText
-  answer_three: MyText
-  answer_four: MyText
-  answer_five: MyText
+  title: Q1
+  description: Is this right?
+  key: GenericOne
+  answer_one: yes
+  answer_two: no
+  answer_three: 
+  answer_four: 
+  answer_five: 
 
 two:
-  title: MyString
-  description: MyText
-  key: MyText
-  answer_one: MyText
-  answer_two: MyText
-  answer_three: MyText
-  answer_four: MyText
-  answer_five: MyText
+  title: Q2
+  description: Is this wrong?
+  key: GenericTwo
+  answer_one: yes
+  answer_two: no
+  answer_three: maybe
+  answer_four: 
+  answer_five: 

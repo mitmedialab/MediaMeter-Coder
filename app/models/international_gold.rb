@@ -1,2 +1,0 @@
-class InternationalGold < Gold
-end

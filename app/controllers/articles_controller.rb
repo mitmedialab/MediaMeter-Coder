@@ -43,11 +43,12 @@ class ArticlesController < ApplicationController
         # collect the passed params from the user 
         @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
         @answer_type = params[:answer]['type']
+        @question = Question.for_answer_type @answer_type
         # pull out the articles we care about
         @articles = Article.where(:sampletag=>@sampletags).includes(:answers,:golds)
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
         # do some csv config
-        @question_text = Article.question_text(@answer_type).downcase.gsub(/ /,"_")
+        @question_text = @question.export_safe_text
         @filename = @answer_type + "_" + "articles" + "_" + timestamp + ".csv"
         @output_encoding = 'UTF-8'
       }

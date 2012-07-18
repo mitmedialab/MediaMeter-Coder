@@ -1,2 +1,0 @@
-class NationalAnswer < Answer
-end

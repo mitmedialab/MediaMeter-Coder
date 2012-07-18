@@ -10,16 +10,16 @@ class CodeControllerTest < ActionController::TestCase
 
     assert_no_difference('Answer.count') do
       post :answer,
-        {:answer_type=>"international"},
+        {:answer_type=>"generic_one"},
         {:username=>@user.username}
         assert_equal articles(:one), assigns[:article]
         assert_select 'a[href=?]', "/article_scans/12345.pdf", :text=>"Read PDF for detail"
     end
 
     assert_difference('Answer.count') do
-      assert_difference('InternationalAnswer.count') do
+      assert_difference('GenericOneAnswer.count') do
         post :answer, 
-             {:id=> @article.id, :answer_type=>"international", :answer=>"yes"},
+             {:id=> @article.id, :answer_type=>"generic_one", :answer=>"yes"},
              {:username=>@user.username}
         assert assigns[:answer]
         assert_equal @article.id, assigns[:answer].article.id
@@ -29,9 +29,9 @@ class CodeControllerTest < ActionController::TestCase
     end
 
     assert_difference('Answer.count') do
-      assert_difference('InternationalAnswer.count') do
+      assert_difference('GenericOneAnswer.count') do
         post :answer,
-             {:id=> @article.id, :answer_type=>"international", :answer=>"no"},
+             {:id=> @article.id, :answer_type=>"generic_one", :answer=>"no"},
              {:username=>@user.username}
       end
     end
@@ -44,7 +44,7 @@ class CodeControllerTest < ActionController::TestCase
       }
       assert_match(/not a valid answer type status/, e.message)
       post :answer,
-           {:id=> @article.id, :answer_type=>"international", :answer=>"wiggle"},
+           {:id=> @article.id, :answer_type=>"generic_one", :answer=>"wiggle"},
            {:username=>@user.username}
     end
   end

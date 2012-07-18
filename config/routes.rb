@@ -20,12 +20,8 @@ UsWorldCoverage::Application.routes.draw do
   match 'golds/import_reasons' => 'golds#import_reasons'
   match 'golds/export_totals' => 'golds#export_totals'
   resources :golds  
-  resources :arts_golds, :controller=>"golds", :type=>"ArtsGold"
-  resources :foreign_golds, :controller=>"golds", :type=>"ArtsGold"
-  resources :international_golds, :controller=>"golds", :type=>"ArtsGold"
-  resources :local_golds, :controller=>"golds", :type=>"ArtsGold"
-  resources :national_golds, :controller=>"golds", :type=>"ArtsGold"
-  resources :sports_golds, :controller=>"golds", :type=>"ArtsGold"
+  resources :generic_one_golds, :controller=>"golds", :type=>"GenericOneGold"
+  resources :generic_two_golds, :controller=>"golds", :type=>"GenericTwoGold"
 
   match 'code/generic_one' => 'code#generic_one'
   match 'code/generic_two' => 'code#generic_two'

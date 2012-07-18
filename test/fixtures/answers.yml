@@ -1,7 +1,7 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  type: InternationalAnswer
+  type: GenericOneAnswer
   created_at: "2011-12-19 11:47:27"
   confidence: 1
   answer: false
@@ -9,7 +9,7 @@ one:
   article: two
 
 two: 
-  type: InternationalAnswer 
+  type: GenericOneAnswer 
   created_at: "2011-12-19 11:47:27"
   confidence: 1
   answer: false
@@ -17,7 +17,7 @@ two:
   article: one
 
 three:
-  type: ArtsAnswer
+  type: GenericTwoAnswer
   created_at: "2011-12-19 11:47:27"
   confidence: 1
   answer: false

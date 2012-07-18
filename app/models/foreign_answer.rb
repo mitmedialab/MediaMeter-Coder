@@ -1,2 +1,0 @@
-class ForeignAnswer < Answer
-end

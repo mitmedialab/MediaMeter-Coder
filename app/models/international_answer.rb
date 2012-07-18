@@ -1,2 +1,0 @@
-class InternationalAnswer < Answer
-end

@@ -126,7 +126,8 @@ class Answer < ActiveRecord::Base
     # prep to import
     answer_count = 0
     col_headers = Array.new
-    question_text = Article.question_text(question_type).downcase.gsub(/ /,"_")
+    question = Question.for_answer_type(question_type)
+    question_text = question.export_safe_text
     answer_col = question_text 
     confidence_col = question_text+":confidence"
     col_indices = {
