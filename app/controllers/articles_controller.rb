@@ -9,6 +9,7 @@ class ArticlesController < ApplicationController
   def summary
     @article_count = Article.count
     @users = User.all
+    @user_answer_counts = []
     @users.each do |user|
       @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
     end
