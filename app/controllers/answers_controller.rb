@@ -88,7 +88,7 @@ class AnswersController < ApplicationController
   def pick
     @users = User.all
     @user_answer_counts = Hash.new
-    @all_answer_types = Gold.types 
+
     @users.each do |user|
       @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
     end
@@ -113,15 +113,8 @@ class AnswersController < ApplicationController
     end
     
     # parse out the questions we care about
-    @selected_types = Gold.types.select do |type|
-      params[:answer_type].keys.include? type
-    end
-    @selected_type_gold_classnames = @selected_types.collect do |type|
-      Gold.classname_for_type(type)
-    end 
-    @selected_type_answer_classnames = @selected_types.collect do |type|
-      Answer.classname_for_type(type)
-    end 
+    @selected_questions = Question.all { |q| params[:question].keys.include? q.id }
+    @selected_question_ids = @selected_questions.collect { |q| q.id }
     
     # load all the articles
     extra_where_clause = ""
@@ -133,18 +126,17 @@ class AnswersController < ApplicationController
         where('answers.user_id'=>user_ids).where(extra_where_clause)      
     else
       @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
-        where('golds.type'=>@selected_type_gold_classnames).
-        where('answers.type'=>@selected_type_answer_classnames).
+        where('golds.question_id'=>@selected_question_ids).
+        where('answers.question_id'=>@selected_question_ids).
         where('answers.user_id'=>user_ids).where(extra_where_clause)      
     end
     
     # compute inter-coder agreement info
-    @types = @selected_types
     @agreement_by_article = Hash.new
     @articles.each do |article|
       @agreement_by_article[article.id] = Hash.new
-      @types.each do |type|
-        @agreement_by_article[article.id][type] = article.agreement_info_for_type(type)
+      @selected_question_ids.each do |question_id|
+        @agreement_by_article[article.id][question_id] = article.agreement_info_for_question(question_id)
       end
     end
     

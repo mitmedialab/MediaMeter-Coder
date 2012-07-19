@@ -34,7 +34,6 @@ class ArticlesController < ApplicationController
 
     @users = User.all
     @all_sampletags = Article.sampletag_counts
-    @all_questions = Question.all 
     
     respond_to do |format|
       format.html
