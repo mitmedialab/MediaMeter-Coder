@@ -23,14 +23,6 @@ class Answer < ActiveRecord::Base
     answer!=nil
   end
 
-  def yes?
-    answer==true
-  end
-
-  def no?
-    answer==false
-  end
-
   def self.counts_by_type_source_year(sampletags,types,sources,years,user_ids)
     # init the return storage
     yes_counts = {} 

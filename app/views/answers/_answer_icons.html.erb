@@ -39,19 +39,9 @@ if gold!=nil
 	end
 else
 	# if no gold, and just one answer, show it
-	if agreement_info[:yes] == 1
 	%>
-		<em>Yes?</em>
+	<em class="answer_<%=agreement_info[:likely_answer]%>"><%=question.answer_text(agreement_info[:likely_answer])%></em>
 	<%
-	elsif agreement_info[:no] == 1
-	%>
-		<em>No?</em>
-	<%
-	elsif agreement_info[:count] > 0
-	%>
-		<small>?</small>
-	<%
-	end
 end
 %>
 
@@ -68,7 +58,7 @@ answers.each do |answer|
   tip = username
   tip = tip + " (" + answer.confidence.to_s + ")" if answer.has_confidence?
   not_confident = true if answer.not_confident?
-%>    <a href="#" rel="tooltip" title="<%=tip%>"><%=image_tag image, :alt=>answer.user_id.to_s %></a> <%
+%>    <a href="#" rel="tooltip" title="<%=tip%>"><span class="answer_<%=agreement_info[:likely_answer]%>">&bull;</span></a> <%
 end
 %>
 </div>

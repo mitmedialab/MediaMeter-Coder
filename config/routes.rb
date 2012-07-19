@@ -31,7 +31,7 @@ UsWorldCoverage::Application.routes.draw do
   match 'crowd/:action' => 'crowd'
 
   match 'answers/:action' => 'answers'
-  match 'answers/for_article/:id/:type' => 'answers#for_article'
+  match 'answers/for_article/:id/:question_id' => 'answers#for_article'
   match 'answers/export_totals' => 'articles#answers'
 
   # The priority is based upon order of creation:

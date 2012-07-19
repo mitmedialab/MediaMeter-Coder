@@ -24,7 +24,8 @@ Showing coding results (<%=(@selected_questions.collect { |q| q.title}).join(", 
         	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>
         </td>
 <% @selected_questions.each do |q| %>
-        <td id="wrapped-article-<%=article.id%>-<%=type%>"><%= render :partial => 'answer_icons', :locals=> {
+        <td id="wrapped-article-<%=article.id%>-<%=q.id%>"><%= render :partial => 'answer_icons', :locals=> {
+        			:question=>q,
         			:agreement_info=>@agreement_by_article[article.id][q.id],
         			:answers=>article.answers_to_question(q.id),
         			:gold=>article.gold_for_question(q.id),
@@ -53,10 +54,10 @@ function updateGold(evt){
 	td_id = $(evt.target).closest('td')[0].id;
 	article_parts = td_id.split('-');
 	article_id = article_parts[2];
-	type = parts[1];
+	question_id = parts[1];
 	gold_id = parts[parts.length-1];
-	answer_data = {'id': gold_id, 'type':type+"_gold"};
-	answer_data[type+'_gold[answer]'] = checked ? '1' : '0'
+	answer_data = {'id': gold_id, 'question_id':type};
+	answer_data['gold[answer]'] = checked ? '1' : '0'
 	loadingFadeIn();
 	$.ajax({
 		url:'/golds/'+gold_id+'.json',
@@ -70,7 +71,7 @@ function updateGold(evt){
 			200: function() {
 				loadingFadeOut();
 				var tdSelector = '#'+td_id; 
-				$(tdSelector).load('/answers/for_article/'+article_id+'/'+type,
+				$(tdSelector).load('/answers/for_article/'+article_id+'/'+question_id,
 					{'uids':[<%=@user_id_to_name.keys.join(",")%>]},
 					function(){
 						// attach listeners to new element  

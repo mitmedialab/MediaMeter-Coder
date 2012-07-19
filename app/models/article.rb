@@ -151,20 +151,21 @@ class Article < ActiveRecord::Base
   # return a summary hash about agreement between the answers already loaded
   def agreement_info_for_question(question_id)
     answers_list = answers_to_question(question_id)
-    info = {
-      :yes => (answers_list.count {|a| (a.answer==true)}).to_f / answers_list.count.to_f,
-      :no => (answers_list.count {|a| (a.answer==false)}).to_f / answers_list.count.to_f,
-      :count => answers_list.count
-    }
-    info[:yes] = 0 if info[:yes].nan?
-    info[:no] = 0 if info[:no].nan?
-    if info[:yes] > info[:no]
-      info[:is_of_type] = true 
-    elsif info[:no] > info[:yes]
-      info[:is_of_type] = false
-    else 
-      info[:is_of_type] = nil
+
+    info = {:count => answers_list.count}
+    likely_answer = nil
+    likely_answer_count = 0
+    (1..5).each do |possible_answer|
+      matching_count = answers_list.count {|a| (a.answer==possible_answer)}
+      info[possible_answer] = matching_count.to_f / answers_list.count.to_f
+      info[possible_answer] = 0 if info[possible_answer].nan?
+      if matching_count > likely_answer_count
+        likely_answer = possible_answer
+        likely_answer_count = matching_count
+      end
     end
+    
+    info[:likely_answer] = likely_answer
     info
   end   
   

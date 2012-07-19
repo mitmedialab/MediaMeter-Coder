@@ -104,32 +104,30 @@ class AnswersController < ApplicationController
     
     # parse out users we care about
     @selected_users = self.parse_out_selected_users
-    user_ids = @selected_users.collect do |user|
-      user.id
-    end
+    user_ids = @selected_users.collect { |user| user.id }
     @user_id_to_name = Hash.new
-    @selected_users.each do |user|
-      @user_id_to_name[user.id] = user.username
-    end
+    @selected_users.each { |user| @user_id_to_name[user.id] = user.username }
     
     # parse out the questions we care about
     @selected_questions = Question.all { |q| params[:question].keys.include? q.id }
     @selected_question_ids = @selected_questions.collect { |q| q.id }
     
     # load all the articles
-    extra_where_clause = ""
-    if @only_not_confident
-      extra_where_clause  = 'answers.confidence < ' + Answer::CONFIDENT_THRESHOLD.to_s
-    end 
-    if @generate_golds
-      @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
-        where('answers.user_id'=>user_ids).where(extra_where_clause)      
-    else
-      @articles = Article.where(:sampletag=>@sampletag).includes([:answers,:golds]).
-        where('golds.question_id'=>@selected_question_ids).
-        where('answers.question_id'=>@selected_question_ids).
-        where('answers.user_id'=>user_ids).where(extra_where_clause)      
+    
+    @articles = Article.where(:sampletag=>@sampletag)
+    @articles.each do |article|
+      if @generate_golds
+        article.golds = Gold.where(:article_id=>article.id,:question_id=>@selected_question_ids)
+      end
+      extra_where_clause = ""
+      if @only_not_confident
+        extra_where_clause  = 'answers.confidence < ' + Answer::CONFIDENT_THRESHOLD.to_s
+      end 
+      article.answers = Answer.where(:article_id=>article.id,:question_id=>@selected_question_ids,
+        :user_id=>user_ids).where(extra_where_clause)      
     end
+    
+    print "articles: #{@articles.count}"
     
     # compute inter-coder agreement info
     @agreement_by_article = Hash.new
@@ -176,13 +174,13 @@ class AnswersController < ApplicationController
   def for_article
     
     article_id = params[:id]
-    type = params[:type]
+    question_id = params[:question_id]
     uids = params[:uids]
     @article = Article.includes([:answers,:golds]).where('answers.user_id'=>uids).find(article_id)
 
-    @agreement_info = @article.agreement_info_for_type(type) 
-    @answers = @article.answers_by_type(type)
-    @gold = @article.gold_by_type(type)
+    @agreement_info = @article.agreement_info_for_question(question_id) 
+    @answers = @article.answers_to_question(question_id)
+    @gold = @article.gold_for_question(question_id)
     @username_map = Hash.new
     User.all.each do |user|
       @username_map[user.id] = user.username
