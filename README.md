@@ -1,14 +1,16 @@
-Us vs. World News Coverage
-==========================
+MediaMedia Coder
+================
 
-I put the scraper public methods in `lib/news_scrapers.rb`, which refers to 
-classes in `lib/news_scrapers`.
+MediaMeter Coder is a tool for coding a set of text articles based on a set of 
+questions.  The idea is that you can send the coding url to a set of trusted peers, and 
+they can quickly code the set of articles based on questions you create.  Then you can
+review their inter-coder agreement and create "gold" answers.
 
 Installation
 ------------
 
 Make sure you have Ruby 1.9.2 (we use rvm to get it).
-Run `bundle` to get all the dependencies.
+Run `bundle install` to get all the dependencies.
 To create the db, run `rake db:migrate`.
 
 On a production Ubuntu machine do:
@@ -17,28 +19,11 @@ sudo apt-get install libmysqlclient-dev
 bundle install --deployment
 ```
 
-Scraping
---------
+Set up a mysql database and enter the user/password into the `config/database.yml` file.
 
-You can try out scraping by running in the console:
+Setup
+-----
 
-```
-> rails console
-jruby-1.6.5 :001 > require 'news_scrapers'
-jruby-1.6.5 :001 > NewsScrapers.scrape_all
-```
-
-or as a rake task (referring to `lib/tasks/scraper.rake`):
-
-```
-> rake scraper:all --trace
-> rake scraper:nytimes --trace
-> rake scraper:latimes --trace
-> rake scraper:chictrib --trace
-> rake scraper:washpo --trace
-```
-
-Watch the log for lots of informative messages:
-```
-tail -f log/development.log 
-```
+Visit the "Questions" page and add questions.  The question title, description, and
+answers are shown on the coding page.  The title of each question will show up as an
+option under the "Code" menu.
