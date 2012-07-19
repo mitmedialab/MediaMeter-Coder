@@ -1,4 +1,4 @@
-<div class="well"<%if !@article.nil? %> id="<%=@article.id=%>"<%end%>>
+<div class="well"<%if !@article.nil? %> id="article_<%=@article.id=%>"<%end%>>
 
 <% if @article.nil? %>
   
@@ -18,6 +18,58 @@
       <%= link_to "Read PDF for detail", "/article_scans/" + @article.source.downcase.gsub(" ","_") + "/" + @article.pub_date.year.to_s + "/" + @article.pub_date.month.to_s + "/" + @article.pub_date.day.to_s + "/" + @article.scan_local_filename %>
     <% end %>
     </p>
+
+<form class="form-vertical">
+	<input type="hidden" class="article_id" name="id" value="<%=@article.id%>">
+	<fieldset>
+		<div class="control-group">
+			<div class="controls">
+			<% if !@question.answer_one != "" %>
+				<label class="radio">
+					<input type="radio" id="answer_one" class="radio" name="answer" value="1" 
+						onclick="code_codeArticle(<%=@article.id%>,1);"
+					/>
+					<%=@question.answer_one%> <small>( 1 )</small>
+				</label>
+			<% end %>
+			<% if !@question.answer_two != "" %>
+				<label class="radio">
+					<input type="radio" id="answer_two" class="radio" name="answer" value="2"
+						onclick="code_codeArticle(<%=@article.id%>,2);"
+					/>					
+					<%=@question.answer_two%> <small>( 5 )</small>
+				</label>
+			<% end %>
+			<% if !@question.answer_three != "" %>
+				<label class="radio">
+					<input type="radio" id="answer_three" class="radio" name="answer" value="3"
+						onclick="code_codeArticle(<%=@article.id%>,3);"
+					/>
+					<%=@question.answer_three%> <small>( 0 )</small>
+				</label>
+			<% end %>
+			<% if @question.answer_four != "" %>
+				<label class="radio">
+					<input type="radio" id="answer_four" class="radio" name="answer" value="4"
+						onclick="code_codeArticle(<%=@article.id%>,4);"
+					/>					
+					<%=@question.answer_four%> <small>( d )</small>
+				</label>
+			<% end %>
+			<% if @question.answer_five != "" %>
+				<label class="radio">
+					<input type="radio" id="answer_five" class="radio" name="answer" value="5"
+						onclick="code_codeArticle(<%=@article.id%>,5);"
+					/>
+					<%=@question.answer_five%>  <small>( m )</small>
+				</label>
+			<% end %>
+			</div>
+		</div>
+	</fieldset>
+</form>
+
+
 <% end %>
 
 </div>
