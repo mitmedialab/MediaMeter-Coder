@@ -43,32 +43,6 @@ class Gold < ActiveRecord::Base
     end
     pcts
   end
-  
-  def self.counts_by_type_source_year(sampletags,types,sources,years)
-    # init the return storage
-    yes_counts = {} 
-    types.each do |type|
-      yes_counts[type] = {}
-      sources.each do |source| 
-        yes_counts[type][source] = {}
-        years.each do |year|
-          yes_counts[type][source][year] = 0
-        end
-      end
-    end
-    # fill in the counts
-    counts = Gold.includes(:article).where('YEAR(articles.pub_date) > 0').where('articles.sampletag'=>sampletags).
-      group(:type,'articles.source','YEAR(articles.pub_date)',:answer).count
-    counts.each do |groups, value|
-      type = Gold::type_for_classname(groups[0])
-      source = groups[1]
-      year = groups[2]
-      answer = groups[3]
-      yes_counts[type][source][year] = value if answer==true
-    end
-    # return
-    yes_counts
-  end
 
 end
 

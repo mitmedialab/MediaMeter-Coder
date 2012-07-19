@@ -8,10 +8,6 @@ class Question < ActiveRecord::Base
     title.downcase.gsub(/ /,"_")
   end
 
-  def self.for_answer_type answer_type
-    Question.where(:key=>answer_type.camelize).first
-  end
-  
   def answer_list
     list = {}
     (1..5).each do |answer_num|

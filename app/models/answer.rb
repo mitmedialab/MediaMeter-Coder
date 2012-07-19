@@ -23,37 +23,8 @@ class Answer < ActiveRecord::Base
     answer!=nil
   end
 
-  def self.counts_by_type_source_year(sampletags,types,sources,years,user_ids)
-    # init the return storage
-    yes_counts = {} 
-    types.each do |type|
-      yes_counts[type] = {}
-      sources.each do |source| 
-        yes_counts[type][source] = {}
-        years.each do |year|
-          yes_counts[type][source][year] = 0
-        end
-      end
-    end
-    # fill in the counts
-    counts = Answer.includes(:article).
-      where('YEAR(articles.pub_date) > 0').
-      where('articles.sampletag'=>sampletags,'user_id'=>user_ids).
-      group(:type,'articles.source','YEAR(articles.pub_date)',:answer).count
-    counts.each do |groups, value|
-      type = Answer::type_for_classname(groups[0])
-      source = groups[1]
-      year = groups[2]
-      answer = groups[3]
-      yes_counts[type][source][year] = value if answer==true
-    end
-    # return
-    yes_counts
-  end
-
   # group answers for a user by confidence
-  def self.confidence_frequency(user_id, answer_type)
-    type_class = Answer::classname_for_type(answer_type)
+  def self.confidence_frequency(user_id, question_id)
     # inspired by http://stackoverflow.com/questions/232387/in-sql-how-can-you-group-by-in-ranges
     results = self.connection.execute(sanitize_sql(["
       select s.confidence_group as confidence_range, count(*) as frequency from (
@@ -69,10 +40,10 @@ class Answer < ActiveRecord::Base
           when confidence between 0.8 and 0.9 then '0.8 to 0.9'
           when confidence between 0.9 and 1.0 then '0.9 to 1.0'
         end as confidence_group, confidence
-        from answers where user_id=? and type=?) s
+        from answers where user_id=? and question_id=?) s
       group by confidence_group
       order by confidence_group desc
-      ",user_id,type_class]))
+      ",user_id,question_id]))
     cleaned_results = Hash.new
     ranges = [ '0 to 0.1', '0.1 to 0.2','0.2 to 0.3', '0.3 to 0.4', '0.4 to 0.5', 
                '0.5 to 0.6', '0.6 to 0.7', '0.7 to 0.8', '0.8 to 0.9', '0.9 to 1.0' ]
@@ -86,12 +57,12 @@ class Answer < ActiveRecord::Base
     cleaned_results
   end
 
-  # Import answers from a big CSV
-  def self.import_from_csv(user, question_type, filepath)
+  # Import answers from a big CrowdFlower CSV
+  def self.import_from_csv(user, question_id, filepath)
     # prep to import
     answer_count = 0
     col_headers = Array.new
-    question = Question.for_answer_type(question_type)
+    question = Question.find(question_id)
     question_text = question.export_safe_text
     answer_col = question_text 
     confidence_col = question_text+":confidence"
@@ -104,7 +75,7 @@ class Answer < ActiveRecord::Base
       "date"=>nil,
       "content"=>nil,
       "byline"=>nil,
-      "answer_type"=>nil,
+      "question_id"=>nil,
       answer_col=>nil,
       confidence_col=>nil,
     }
@@ -126,26 +97,21 @@ class Answer < ActiveRecord::Base
             parse_worked = false
           end
         else
-          # verify answer info, just to be safe
-          answer_type = row[ col_indices["answer_type"] ]
-          if answer_type!=question_type
-            results_string = "Row #{answer_count} has the wrong type!  Expecting #{question_type} but found #{answer_type}"  
-            parse_worked = false       
-          else
-            # everything checks out, go ahead and create and save the answer
-            answer = Answer.new_by_type(answer_type)
-            answer.user_id = user.id
-            answer.article_id = row[ col_indices["id"] ].to_i
-            answer.confidence = row[ col_indices[confidence_col] ].to_f
-            answer.answer = (row[ col_indices[answer_col] ] == "Yes")
-            answer.judgements = row[ col_indices["_trusted_judgments"] ].to_i
-            answer.save
-          end
+          # everything checks out, go ahead and create and save the answer
+          answer = Answer.new({
+            :user_id => user.id,
+            :question_id => question_id,
+            :article_id => row[ col_indices["id"] ].to_i,
+            :confidence => row[ col_indices[confidence_col] ].to_f,
+            :answer => row[ col_indices[answer_col] ],
+            :judgements => row[ col_indices["_trusted_judgments"], ].to_i
+          })
+          answer.save
         end # answer count
       end # parse worked
       answer_count = answer_count + 1
     end # csv for each    
-    results_string = "Imported #{answer_count} #{question_type} answers for #{user.username}" if parse_worked
+    results_string = "Imported #{answer_count} #{question.title} answers for #{user.username}" if parse_worked
     return parse_worked, results_string
   end
 

@@ -18,7 +18,6 @@ UsWorldCoverage::Application.routes.draw do
   match 'golds/pick_reasons' => 'golds#pick_reasons'
   match 'golds/edit_reasons' => 'golds#edit_reasons', :via=>:put
   match 'golds/import_reasons' => 'golds#import_reasons'
-  match 'golds/export_totals' => 'golds#export_totals'
   resources :golds  
   resources :generic_one_golds, :controller=>"golds", :type=>"GenericOneGold"
   resources :generic_two_golds, :controller=>"golds", :type=>"GenericTwoGold"
@@ -32,7 +31,6 @@ UsWorldCoverage::Application.routes.draw do
 
   match 'answers/:action' => 'answers'
   match 'answers/for_article/:id/:question_id' => 'answers#for_article'
-  match 'answers/export_totals' => 'articles#answers'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

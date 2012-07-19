@@ -1,5 +1,5 @@
 
-<h1><%=@answer_type.capitalize%> Golds: <%=@sampletags.join(", ")%></h1>
+<h1><%=@question.title%> Golds: <%=@sampletags.join(", ")%></h1>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -13,7 +13,7 @@
     	gold_answer_text = ""
     	answer_css = ""
     	gold = nil
-    	gold = article.gold_by_type(@answer_type) if article.has_gold_by_type(@answer_type) 
+    	gold = article.gold_for_question(@question.id) if article.has_gold_for_question(@question.id) 
     	if gold
 			gold_answer_text = gold.yes?.to_s
 			answer_css = "uwc-gold-answer-"+gold_answer_text
@@ -38,11 +38,3 @@
     <% end %>
   </tbody>
 </table>
-
-<script type="text/javascript">
-//<![CDATA[
-
-// TODO: write script that updates reason TD area with response of ajax post
-
-//]]>
-</script>
