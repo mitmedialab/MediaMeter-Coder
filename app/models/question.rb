@@ -12,6 +12,18 @@ class Question < ActiveRecord::Base
     Question.where(:key=>answer_type.camelize).first
   end
   
+  def answer_list
+    list = {}
+    (1..5).each do |answer_num|
+      list[answer_text(answer_num)] = answer_num if has_answer answer_num
+    end
+    list
+  end
+  
+  def has_answer answer_num
+    !(answer_text answer_num).empty? 
+  end
+  
   def answer_text answer_num
     text = ""
     case answer_num

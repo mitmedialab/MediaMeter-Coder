@@ -74,7 +74,9 @@ end
 <% if gold!=nil %>
 
 	<%= form_for gold, :remote=>true do |f| %>
-	  <%= f.check_box :answer %> <small><%=link_to "Edit Gold", edit_gold_path(gold)%></small>
+	  <%= f.select :answer, question.answer_list %>
+	  <br />
+	  <small><%=link_to "Edit Gold", edit_gold_path(gold)%></small>
 	<% end %>
 	
 <%

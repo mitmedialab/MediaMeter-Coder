@@ -172,20 +172,19 @@ class AnswersController < ApplicationController
   # handle ajax requests when people change things in the UI
   def for_article
     
-    article_id = params[:id]
-    question_id = params[:question_id]
+    @article = Article.find(params[:id])
+    @question = Question.find(params[:question_id])
     uids = params[:uids]
-    @article = Article.includes([:answers,:golds]).where('answers.user_id'=>uids).find(article_id)
-
-    @agreement_info = @article.agreement_info_for_question(question_id) 
-    @answers = @article.answers_to_question(question_id)
-    @gold = @article.gold_for_question(question_id)
+    #@article.golds = Gold.where(:article_id=>article_id,:question_id=>question_id)
+    #@article.answers = Answer.where(:article_id=>article_id,:question_id=>question_id,:user_id=>uids)
+    @agreement_info = @article.agreement_info_for_question(@question.id) 
+    @answers = @article.answers_to_question(@question.id)
+    @gold = @article.gold_for_question(@question.id)
     @username_map = Hash.new
-    User.all.each do |user|
-      @username_map[user.id] = user.username
-    end
-  
+    User.all.each { |user| @username_map[user.id] = user.username }
+    
     render :partial => "answer_icons", :locals => { 
+              :question=>@question,
               :agreement_info=>@agreement_info,
               :answers=>@answers,
               :gold=>@gold,

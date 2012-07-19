@@ -45,29 +45,31 @@ Showing coding results (<%=(@selected_questions.collect { |q| q.title}).join(", 
 function initTooltips(parentSelector){
 	$(parentSelector+" [rel='tooltip']").tooltip();
 }
-function initCheckboxes(parentSelector){
-	$(parentSelector+" input[type='checkbox']").click(updateGold)
+function initSelect(parentSelector){
+	$(parentSelector+" select").change(updateGold)
 }
 function updateGold(evt){
-	checked = $(evt.target).is(':checked')
+	answer = $(evt.target).val();
 	parts = $(evt.target).closest('form')[0].id.split('_');
+	gold_id = parts[2];
 	td_id = $(evt.target).closest('td')[0].id;
 	article_parts = td_id.split('-');
 	article_id = article_parts[2];
-	question_id = parts[1];
-	gold_id = parts[parts.length-1];
-	answer_data = {'id': gold_id, 'question_id':type};
-	answer_data['gold[answer]'] = checked ? '1' : '0'
+	question_id = article_parts[3];
+	gold_data = { 'id':gold_id,'question_id':question_id };
+	gold_data['gold[id]'] = gold_id;
+	gold_data['gold[answer]'] = answer;
 	loadingFadeIn();
 	$.ajax({
 		url:'/golds/'+gold_id+'.json',
 		dataType: 'text',
-		data: answer_data,
+		data: gold_data,
 		type: 'PUT',
 		error: function (jqXHR, textStatus, errorThrown){
 			console.log('error '+errorThrown);
 		},
 		statusCode: {
+			// once it has saved, update the table-cell display
 			200: function() {
 				loadingFadeOut();
 				var tdSelector = '#'+td_id; 
@@ -76,7 +78,7 @@ function updateGold(evt){
 					function(){
 						// attach listeners to new element  
 						initTooltips(tdSelector);
-						initCheckboxes(tdSelector);
+						initSelect(tdSelector);
 					}
 				);
 
@@ -86,7 +88,7 @@ function updateGold(evt){
 }
 
 $(initTooltips(""));
-$(initCheckboxes(""));
+$(initSelect(""));
 
 $(function(){$("table").stickyTableHeaders();});
 
