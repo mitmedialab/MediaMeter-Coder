@@ -15,7 +15,5 @@ class ApplicationController < ActionController::Base
     @user = User.find_by_username(session[:username])
     redirect_to :controller=>:session, :action=>:new and return if @user.nil?
   end
-  
-  
-  
+
 end

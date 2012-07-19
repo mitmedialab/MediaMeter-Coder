@@ -58,7 +58,7 @@ answers.each do |answer|
   tip = username
   tip = tip + " (" + answer.confidence.to_s + ")" if answer.has_confidence?
   not_confident = true if answer.not_confident?
-%>    <a href="#" rel="tooltip" title="<%=tip%>"><span class="answer_<%=agreement_info[:likely_answer]%>">&bull;</span></a> <%
+%>    <a href="#" rel="tooltip" title="<%=tip%>"><span class="answer_<%=answer.answer%>">&bull;</span></a> <%
 end
 %>
 </div>

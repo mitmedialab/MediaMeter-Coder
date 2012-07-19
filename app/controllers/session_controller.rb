@@ -8,6 +8,6 @@ class SessionController < ApplicationController
     @user = User.create(:username=>params[:username]) if @user.nil?
     @user.save!
     session[:username] = @user.username
-    redirect_to :controller=>:code, :action=>:generic_one and return
+    redirect_to :controller=>:articles, :action=>:summary and return
   end
 end
