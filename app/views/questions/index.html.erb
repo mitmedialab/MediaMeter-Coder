@@ -3,7 +3,6 @@
   <thead>
     <tr>
       <th>ID</th>
-      <th>Key</th>
       <th>Title</th>
       <th>Created at</th>
       <th>Actions</th>
@@ -13,7 +12,6 @@
     <% @questions.each do |question| %>
       <tr>
         <td><%= question.id %></td>
-        <td><%= question.key %></td>
         <td><%= link_to question.title, question_path(question) %></td>
         <td><%= question.created_at %></td>
         <td>
