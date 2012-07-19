@@ -1,8 +1,7 @@
 
-<h1>Coding Results: Sample <%=@sampletag%></h1>
+<h1>Coding Results: "<%=@sampletag%>" Sampleset</h1>
 <p>
 Showing coding results (<%=@selected_types.join(", ")%>) from <%= @user_id_to_name.values.join(", ") %>.
-<b>Disagreement on <%=@disagreement_count%> article (<%=(@disagreement_count.to_f/@articles.count.to_f).round(2) %>%). 
 </p>
 <table class="table table-striped" id="uwc-answers-list">
   <thead>

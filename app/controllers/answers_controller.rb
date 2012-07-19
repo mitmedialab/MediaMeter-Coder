@@ -138,17 +138,13 @@ class AnswersController < ApplicationController
         where('answers.user_id'=>user_ids).where(extra_where_clause)      
     end
     
-    # compute agreement
-    @disagreement_count = 0
+    # compute inter-coder agreement info
     @types = @selected_types
     @agreement_by_article = Hash.new
     @articles.each do |article|
       @agreement_by_article[article.id] = Hash.new
       @types.each do |type|
         @agreement_by_article[article.id][type] = article.agreement_info_for_type(type)
-        if @agreement_by_article[article.id][type][:is_of_type]==nil
-          @disagreement_count = @disagreement_count + 1
-        end
       end
     end
     

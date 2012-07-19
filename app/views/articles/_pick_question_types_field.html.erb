@@ -7,9 +7,11 @@
 			 )</small>
 		 </legend>
 
-	<% @all_answer_types.each do |type| %>
+	<% @questions.each do |question| 
+		type = question.key.underscore
+	%>
 		<div class="control-group">
-			<%= label_tag('answer_type['+type+']',check_box_tag('answer_type['+type+']',1,nil,:class=>'question_type_chk') + type , :class=>"checkbox")%>
+			<%= label_tag('answer_type['+type+']',check_box_tag('answer_type['+type+']',1,nil,:class=>'question_type_chk') + question.title + " ("+type+")" , :class=>"checkbox")%>
 		</div>
 	<% end %>
 </fieldset>
