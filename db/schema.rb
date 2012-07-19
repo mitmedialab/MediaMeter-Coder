@@ -11,22 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120718192159) do
+ActiveRecord::Schema.define(:version => 20120719141737) do
 
   create_table "answers", :force => true do |t|
-    t.string   "type"
     t.float    "confidence"
     t.boolean  "answer"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "judgements"
     t.integer  "article_id"
-    t.string   "source",     :default => "CrowdFlower"
-    t.integer  "user_id",                               :null => false
+    t.string   "source",      :default => "CrowdFlower"
+    t.integer  "user_id",                                :null => false
+    t.integer  "question_id"
   end
 
   add_index "answers", ["article_id"], :name => "index_answers_on_article_id"
-  add_index "answers", ["type"], :name => "index_answers_on_type"
   add_index "answers", ["user_id"], :name => "index_answers_on_user_id"
 
   create_table "articles", :force => true do |t|
@@ -62,20 +61,18 @@ ActiveRecord::Schema.define(:version => 20120718192159) do
 
   create_table "golds", :force => true do |t|
     t.integer  "article_id"
-    t.string   "type"
     t.boolean  "answer"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "reason",     :limit => 1000
+    t.string   "reason",      :limit => 1000
+    t.integer  "question_id"
   end
 
   add_index "golds", ["article_id"], :name => "index_golds_on_article_id"
-  add_index "golds", ["type"], :name => "index_golds_on_type"
 
   create_table "questions", :force => true do |t|
     t.string   "title"
     t.text     "description"
-    t.text     "key"
     t.text     "answer_one"
     t.text     "answer_two"
     t.text     "answer_three"

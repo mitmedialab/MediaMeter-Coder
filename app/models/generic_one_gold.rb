@@ -1,2 +1,0 @@
-class GenericOneGold < Gold
-end

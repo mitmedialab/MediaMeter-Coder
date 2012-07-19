@@ -23,8 +23,7 @@ UsWorldCoverage::Application.routes.draw do
   resources :generic_one_golds, :controller=>"golds", :type=>"GenericOneGold"
   resources :generic_two_golds, :controller=>"golds", :type=>"GenericTwoGold"
 
-  match 'code/generic_one' => 'code#generic_one'
-  match 'code/generic_two' => 'code#generic_two'
+  match 'code/by_question/:question_id' => 'code#by_question'
   match 'code/answer' => 'code#answer'
   match 'session/new' => 'session#new'
   match 'session/create' => 'session#create'

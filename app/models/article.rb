@@ -126,24 +126,24 @@ class Article < ActiveRecord::Base
   end
 
   # assumes you've loaded the article with the linked has_many :articles
-  def answers_by_type(type)
+  def answers_to_question(question_id)
     answers.select do |answer|
-      answer.is_type type
+      answer.question_id==question_id
     end
   end
 
-  def missing_gold_by_type(type)
-    gold_by_type(type) == nil
+  def missing_gold_for_question(question_id)
+    gold_for_question(question_id) == nil
   end
   
-  def has_gold_by_type(type)
-    !missing_gold_by_type(type)
+  def has_gold_for_question(question_id)
+    !missing_gold_for_question(question_id)
   end
 
   # assumes you've loaded the article with the linked has_many :golds
-  def gold_by_type(type)
+  def gold_for_question(question_id)
     gold = nil
-    found_golds = golds.select { |g| g.is_type type }
+    found_golds = golds.select { |g| g.question_id==question_id }
     gold = found_golds.first if found_golds.count > 0   # there should be only one!
     gold
   end

@@ -1,2 +1,0 @@
-class GenericTwoAnswer < Answer
-end

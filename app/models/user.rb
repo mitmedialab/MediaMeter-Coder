@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
  
   alias_attribute :name, :username
  
-  def get_next_unanswered_article(answer_type)
+  def get_next_unanswered_article(question_id)
     next_unanswered_article = nil
     query_string = ""
     query_string << <<-SQL
@@ -13,7 +13,7 @@ SELECT articles.*,
   LEFT OUTER JOIN (
     SELECT * from answers 
      WHERE answers.user_id = #{id}
-       AND type = "#{Answer.classname_for_type(answer_type)}")
+       AND answers.question_id = "#{question_id}")
     AS selected_answers 
     ON articles.id = selected_answers.article_id 
   WHERE selected_answers.user_id IS NULL 
@@ -30,10 +30,10 @@ SQL
     next_unanswered_article
   end
 
-  def find_answers_by_type(answer_type)
-    answers.find_all_by_type(Answer.classname_for_type(answer_type))
+  def find_answers_by_question_id(question_id)
+    answers.find_all_by_question_id(question_id)
   end
-  
+
   # return a list of user_ids that have any answers with confidence
   # (ie. any users from CrowdFlower)
   def self.having_answers_with_confidence

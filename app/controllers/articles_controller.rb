@@ -34,15 +34,14 @@ class ArticlesController < ApplicationController
 
     @users = User.all
     @all_sampletags = Article.sampletag_counts
-    @all_answer_types = Gold.types 
+    @all_questions = Question.all 
     
     respond_to do |format|
       format.html
       format.csv {
         # collect the passed params from the user 
         @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
-        @answer_type = params[:answer]['type']
-        @question = Question.for_answer_type @answer_type
+        @question = Question.find(params[:question][:id])
         # pull out the articles we care about
         @articles = Article.where(:sampletag=>@sampletags).includes(:answers,:golds)
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')

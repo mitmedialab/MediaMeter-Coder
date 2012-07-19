@@ -53,7 +53,7 @@
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">Code<b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<% @questions.each do |q| %>
-							<li><%= link_to q.title, "/code/"+q.key.underscore%></li>
+							<li><%= link_to q.title, "/code/by_question/"+q.id.to_s%></li>
 						<% end %>
 					</ul>
 				</li>

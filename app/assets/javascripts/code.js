@@ -2,8 +2,8 @@
 
 function code_loadFirstArticle(){
 	var authenticityToken =$('#authenticity_token').val();
-	var answerType = $('#answer_type').val();
-	var dataToSubmit = { answer_type: answerType, authenticity_token: authenticityToken};
+	var questionId = $('#question_id').val();
+	var dataToSubmit = { question_id: questionId, authenticity_token: authenticityToken};
 	$.ajax({
 		url:'/code/answer',
 		data: dataToSubmit,
@@ -29,9 +29,9 @@ function code_handleKeyPress(evt){
 
 function code_codeArticle(articleId, answer){
 	var authenticityToken =$('#authenticity_token').val();
-	var answerType = $('#answer_type').val();
-	var dataToSubmit = { id: articleId, answer_type: answerType, answer: answer,  
-		answer_type: answerType, authenticity_token: authenticityToken};
+	var questionId = $('#question_id').val();
+	var dataToSubmit = { id: articleId, question_id: questionId, answer: answer,  
+		authenticity_token: authenticityToken};
 	$.ajax({
 		url:'/code/answer',
 		data: dataToSubmit,

@@ -1,6 +1,6 @@
 
 <input id="authenticity_token" name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>"/>
-<input id="answer_type" name="answer_type" type="hidden" value="<%=@answer_type%>"/>
+<input id="question_id" name="question_id" type="hidden" value="<%=@question.id%>"/>
 
 <div class="hero-unit">
 	<h1><%=@question.title%></h1>

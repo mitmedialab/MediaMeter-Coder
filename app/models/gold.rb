@@ -3,34 +3,7 @@ class Gold < ActiveRecord::Base
   self.per_page = 100
 
   belongs_to      :article
-
-  GOLD_TYPES = {
-    "generic_one"=>"GenericOneGold",
-    "generic_two"=>"GenericTwoGold"
-  }
-
-  def self.classname_for_type(gold_type)
-    raise ArgumentError.new("#{gold_type} is not a valid gold type") if !(GOLD_TYPES.has_key? gold_type)
-    GOLD_TYPES[gold_type]
-  end
-
-  def self.type_for_classname(class_name)
-    raise ArgumentError.new("#{class_name} is not a valid gold class") if !(GOLD_TYPES.has_value? class_name)
-    GOLD_TYPES.key class_name
-  end
-
-  def self.new_by_type(gold_type, args={})
-    classname = self.classname_for_type(gold_type)
-    classname.constantize.new(args)
-  end
-
-  def self.types
-    GOLD_TYPES.keys.sort
-  end
-
-  def is_type(type)
-    Gold::classname_for_type(type)==self.class.name
-  end
+  belongs_to      :question
   
   def unanswered?
     answer==nil
