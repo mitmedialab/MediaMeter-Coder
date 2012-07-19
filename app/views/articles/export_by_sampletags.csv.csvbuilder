@@ -16,12 +16,14 @@ csv << ["id", "newspaper", "page", "headline","date","content","byline","content
 		answer_id = a.answers_to_question(@question.id).first.id
 		answer_confidence = a.answers_to_question(@question.id).first.confidence
 	end
+	pub_date = ""
+	pub_date = (a.pub_date.year.to_s+"/"+a.pub_date.month.to_s+"/"+a.pub_date.day.to_s) if a.pub_date
     # output row to CSV
     csv << [  a.id, 
               a.source, 
               a.page, 
               a.headline, 
-              (a.pub_date.year.to_s+"/"+a.pub_date.month.to_s+"/"+a.pub_date.day.to_s),
+              pub_date,
               a.abstract,
               a.byline,
               a.url_to_scan_local_file,
