@@ -11,10 +11,14 @@ if gold!=nil
 	end  
 	# mark suspicious ones that you have gold for
 	gold_was_forced = false
-	if gold.answered? && !(agreement_info[:yes] > 0.7 || agreement_info[:no] > 0.7)
+	has_above_threshold_answer = false
+	(1..5).each do |possible_answer|
+		has_above_threshold_answer = has_above_threshold_answer || (agreement_info[possible_answer] > 0.7)
+	end
+	if gold.answered? && !has_above_threshold_answer
 		gold_was_forced = true 
 	end 
-	if gold.answered? && (gold.yes?!=agreement_info[:is_of_type])
+	if gold.answered? && (gold.answer!=agreement_info[:likely_answer])
 		gold_was_forced = true
 	end
 	agreement_css_classes << "uwc-agreement-forced " if gold_was_forced
@@ -25,16 +29,12 @@ end
 
 <%
 if gold!=nil
-	if gold.yes?
-	%>	<em>Yes</em> <small><%=(agreement_info[:yes]*100).round.to_s + "%" if agreement_info[:count]>0%></small>
-	<%
-	elsif gold.no?
-	%>
-		<em>No</em> <small><%=(agreement_info[:no]*100).round.to_s + "%" if agreement_info[:count]>0%></small>
-	<%
+	if gold.answer
+	%>	<em class="answer_<%=gold.answer%>"><%=question.answer_text(gold.answer)%></em>
+		<small><%=(agreement_info[gold.answer]*100).round.to_s + "%" if agreement_info[:count]>0%></small>
+	<%		
 	else 
-	%>
-		<em>???</em> <small><%=(agreement_info[:yes]*100).round.to_s + "%" if agreement_info[:count]>0%> / <%=(agreement_info[:no]*100).round.to_s + "%" if agreement_info[:count]>0%></small>
+	%>	<em>???</em>
 	<%
 	end
 else

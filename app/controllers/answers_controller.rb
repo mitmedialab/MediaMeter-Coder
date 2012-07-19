@@ -141,29 +141,28 @@ class AnswersController < ApplicationController
     # init golds as needed
     if @generate_golds
       @articles.each do |article|
-        @types.each do |type|
+        @selected_questions.each do |q|
           # figure out the gold answer to use, based on agreement in answers
-          agreement_info = @agreement_by_article[article.id][type]
+          agreement_info = @agreement_by_article[article.id][q.id]
           threshold = 0.70 #should be a magic constant somewhere (this is based on our first round of CF testing)
-          if (agreement_info[:yes] > threshold) || (agreement_info[:no] > threshold)
-            computed_answer = (agreement_info[:yes] > threshold)
-          else 
-            computed_answer = nil
+          computed_answer = nil
+          (1..5).each do |possible_answer|
+            if agreement_info[possible_answer] > threshold
+              computed_answer = possible_answer
+            end  
           end
           # create or update the gold with the new aggregate answer
           this_gold = nil
-          if article.missing_gold_by_type(type)
+          if article.missing_gold_for_question(q.id)
             # create a new gold
-            this_gold = Gold.new_by_type(type)
-            this_gold.article_id = article.id
-            this_gold.answer = computed_answer
+            this_gold = Gold.new( {:article_id=>article.id, :answer=>computed_answer, :question_id=>q.id})
           else 
             #it has a gold, update that gold
-            this_gold = article.gold_by_type(type)
+            this_gold = article.gold_for_question(q.id)
             this_gold.answer = computed_answer 
           end
           this_gold.save
-          article.golds = Gold.where(:article_id=>article.id)
+          article.golds = Gold.where(:article_id=>article.id) # greedy to reload them all
         end
       end
     end

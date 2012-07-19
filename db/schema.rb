@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120719185042) do
+ActiveRecord::Schema.define(:version => 20120719191428) do
 
   create_table "answers", :force => true do |t|
     t.float    "confidence"
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(:version => 20120719185042) do
 
   create_table "golds", :force => true do |t|
     t.integer  "article_id"
-    t.boolean  "answer"
+    t.integer  "answer"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "reason",      :limit => 1000
