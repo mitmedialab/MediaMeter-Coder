@@ -13,12 +13,11 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp
-lib/news_scrapers_development.log
 *.swp
 
-public/article_scans
 public/assets
 .sass-cache
 .bundle
 
 vendor/bundle
+db/db_backup

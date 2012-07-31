@@ -36,7 +36,9 @@ gem 'jquery-rails'
 gem 'mysql2'  # on os x lion you may need to run: sudo ln -s /usr/local/mysql/lib/libmysqlclient.18.dylib /usr/lib/libmysqlclient.18.dylib
 gem 'nokogiri'
 gem 'mechanize'
-gem "twitter-bootstrap-rails"
-gem "will_paginate"
-gem "csv_builder"
-gem "gchart"
+gem 'twitter-bootstrap-rails'
+gem 'will_paginate'
+gem 'csv_builder'
+gem 'gchart'
+gem 'backup'
+gem 'backup-task'
