@@ -55,3 +55,7 @@ th small {
 .answer_5 {
 	color: #66A61E;
 }
+
+a.btn:visited {
+	color: #ffffff;	
+}

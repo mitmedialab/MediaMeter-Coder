@@ -1,11 +1,25 @@
-<h1>Summary</h1>
 
-<h2>Article Summary</h2>
+<div class="hero-unit">
+	<h1>Here to Code Stories?</h1>
+	<br />
+	<p>
+	You can use this website to answer questions about snippets of text.  Click one of these buttons to get started.
+	</p>
+	<p>
+	<% @questions.each do |q| %>
+		<a href="code/by_question/<%=q.id%>" class="btn btn-primary btn-large"><%=q.title%></a>
+	<% end %>
+	</p>
+</div>
 
+<br />
+<br />
+<br />
+
+<h2>Articles</h2>
 <ul>
 	<li><%= link_to @article_count.to_s+" articles", articles_path %></li>
 </ul>
-
 
 <br />
 
