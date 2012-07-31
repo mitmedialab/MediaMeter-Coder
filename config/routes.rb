@@ -1,4 +1,4 @@
-UsWorldCoverage::Application.routes.draw do
+MediaMeterCodingEngine::Application.routes.draw do
 
   resources :questions
 
