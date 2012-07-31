@@ -1,12 +1,19 @@
 
-<h1>Coding Results: "<%=@sampletag%>" Sampleset</h1>
+<h1>Review Answers / Generate Golds</h1>
+
 <p>
-Showing coding results (<%=(@selected_questions.collect { |q| q.title}).join(", ")%>) from <%= @user_id_to_name.values.join(", ") %>.
+<ul>
+<li><b>Sampletags:</b> <%=@sampletags.join ", " %></li>
+<li><b>Users:</b> <%= @user_id_to_name.values.join(", ") %></li>
+<li><b>Questions:</b> <%=(@selected_questions.collect { |q| q.title}).join(", ")%></li>
+</ul>
 </p>
+
 <table class="table table-striped" id="uwc-answers-list">
   <thead>
     <tr>
       <th>ID</th>
+      <th>Tag</th>
       <th>Info</th>
 <% @selected_questions.each do |q| %>
       <th style="text-align:center;">
@@ -19,6 +26,7 @@ Showing coding results (<%=(@selected_questions.collect { |q| q.title}).join(", 
     <% @articles.each do |article| %>
       <tr>
         <td><%= article.id %></td>
+        <td><%= article.sampletag %></td>
         <td>
         	<b><%= link_to article.headline, article_path(article) %></b><br />
         	<%= article.pub_date %>, <%= article.byline %>, <%= article.source %>

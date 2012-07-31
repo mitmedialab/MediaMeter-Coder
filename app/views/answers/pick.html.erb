@@ -6,14 +6,7 @@
 <!-- this has to be a get so that the pagination of results works -->
 <%= form_tag("/answers/for_users", :method => "post", :class=>'form-vertical') do %>
 
-<fieldset>
-		<legend>Pick a Sample Set of Articles</legend>
-	<% @all_sampletags.each do |tag,article_count| %>
-		<div class="control-group">
-			<%= label('tag','name', radio_button('tag','name',tag)+tag+" ("+article_count.to_s+" articles)" , :class=>"radio")%>
-		</div>
-	<% end %>
-</fieldset>
+<%= render :partial=>'articles/pick_sampletags_field' %>
 
 <%= render :partial=>'articles/pick_question_types_field' %>
 

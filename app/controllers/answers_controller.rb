@@ -34,7 +34,7 @@ class AnswersController < ApplicationController
   # show the aggregated answers, and gold, for a set of users against a sampleset of articles
   def for_users
     
-    @sampletag = params[:tag][:name]
+    @sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
     @generate_golds = params[:generate_golds].to_i==1
     @only_not_confident = params[:not_confident].to_i==1
     
@@ -50,7 +50,7 @@ class AnswersController < ApplicationController
     
     # load all the articles
     
-    @articles = Article.where(:sampletag=>@sampletag)
+    @articles = Article.where(:sampletag=>@sampletags)
     @articles.each do |article|
       if @generate_golds
         article.golds = Gold.where(:article_id=>article.id,:question_id=>@selected_question_ids)
