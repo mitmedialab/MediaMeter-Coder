@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
  
   def load_global_vars
     @questions = Question.all
+    @application_name = MediaMeterCodingEngine::Application.config.application_name
   end
  
   def require_username
