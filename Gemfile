@@ -41,3 +41,5 @@ gem "twitter-bootstrap-rails"
 gem "will_paginate"
 gem "csv_builder"
 gem "gchart"
+gem 'backup'
+gem 'backup-task'

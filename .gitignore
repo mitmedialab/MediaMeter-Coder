@@ -22,3 +22,4 @@ public/assets
 .bundle
 
 vendor/bundle
+db/db_backup
