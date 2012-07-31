@@ -3,8 +3,9 @@ class User < ActiveRecord::Base
  
   alias_attribute :name, :username
  
-  def get_next_unanswered_article(question_id)
+  def get_next_unanswered_article(question_id, answer_limit=nil)
     next_unanswered_article = nil
+    # find all the unanswered articles for a user
     query_string = ""
     query_string << <<-SQL
 SELECT articles.*, 
@@ -13,20 +14,21 @@ SELECT articles.*,
   LEFT OUTER JOIN (
     SELECT * from answers 
      WHERE answers.user_id = #{id}
-       AND answers.question_id = "#{question_id}")
+       AND answers.question_id = #{question_id})
     AS selected_answers 
     ON articles.id = selected_answers.article_id 
   WHERE selected_answers.user_id IS NULL 
-  LIMIT 1;
 SQL
-    result = Article.find_by_sql(query_string)
-    next_unanswered_article = result[0] if result.size > 0
-#    Article.find() do |article|
-#      if !answers.detect{|answer| answer.article == article}
-#        next_unanswered_article = article
-#        break
-#      end
-#    end
+    unanswered_articles = Article.find_by_sql(query_string)
+    # now make sure we don't get too many answers for each article
+    if answer_limit != nil
+      logger.info "check limit"
+      unanswered_articles.select! do |article|
+        (Answer.where(:article_id=>article.id,:question_id=>question_id).count < answer_limit)
+      end
+    end
+    logger.info "count = "+unanswered_articles.count.to_s
+    next_unanswered_article = unanswered_articles[0] if unanswered_articles.size > 0
     next_unanswered_article
   end
 
