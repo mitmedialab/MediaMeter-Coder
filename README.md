@@ -10,16 +10,30 @@ Installation
 ------------
 
 Make sure you have Ruby 1.9.2 (we use rvm to get it).
-Run `bundle install` to get all the dependencies.
-To create the db, run `rake db:migrate`.
+Set up a database and enter the user/password into the `config/database.yml` file (we use mysql).
+```
+git clone url_to_repo
+git checkout coding_engine
+```
 
-On a production Ubuntu machine do:
+### Development Server
+
+```
+bundle install
+rake db:migrate
+```
+
+### Production Server
+
+If you're on Ubuntu machine make sure to do this so the mysql2 gem installs correctly:
 ```
 sudo apt-get install libmysqlclient-dev
-bundle install --deployment
 ```
 
-Set up a mysql database and enter the user/password into the `config/database.yml` file.
+```
+bundle install --deployment
+bundle exec rake db:migrate RAILS_ENV=production`
+```
 
 Setup
 -----
@@ -27,3 +41,11 @@ Setup
 Visit the "Questions" page and add questions.  The question title, description, and
 answers are shown on the coding page.  The title of each question will show up as an
 option under the "Code" menu.
+
+Backup
+------
+
+To backup your db to the tmp dir on a production server, run this:
+```
+bundle exec rake db:backup RAILS_ENV=production
+```
