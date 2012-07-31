@@ -1,0 +1,5 @@
+# Be sure to restart your server when you modify this file.
+
+MediaMeterCodingEngine::Application.config.application_name = "MediaMeter Coding Engine"
+
+MediaMeterCodingEngine::Application.config.max_answers_per_article = nil

@@ -21,3 +21,4 @@ public/assets
 
 vendor/bundle
 db/db_backup
+config/initializers/coding_engine.rb

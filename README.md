@@ -38,6 +38,9 @@ bundle exec rake db:migrate RAILS_ENV=production`
 Setup
 -----
 
+Copy `config/initializers/coding_engine.rb.template` to `config/initializers/coding_engine.rb`
+and edit any settings in there you'd like to.
+
 Visit the "Questions" page and add questions.  The question title, description, and
 answers are shown on the coding page.  The title of each question will show up as an
 option under the "Code" menu.
