@@ -108,7 +108,9 @@
 			<% @article.golds.each do |gold| 
 				%>
 				<p>
-				<b><%= gold.question.title %></b>: <%= gold.yes?%>
+				<b><%= gold.question.title %></b>:
+				<br />
+				<%= gold.question.answer_text gold.answer %>
 				<small><%= link_to "edit", edit_gold_path(gold)%></small> 
 				<% if gold.has_reason? %>
 					<br />
@@ -122,7 +124,9 @@
 			<h2>Answers</h2>
 			<% @article.answers.each do |answer| %>
 				<p>
-				<b><%= answer.question.title %></b>: <%= answer.yes?%>
+				<b><%= answer.question.title %></b>:
+				<br/>
+				<%= answer.question.answer_text answer.answer %>
 				<small><%= link_to answer.user.username, edit_user_path(answer.user)%></small> 
 				<% if answer.has_confidence? %>
 					<br />
