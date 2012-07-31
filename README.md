@@ -42,3 +42,12 @@ Watch the log for lots of informative messages:
 ```
 tail -f log/development.log 
 ```
+
+DB Backup
+---------
+
+To backup the database on a produciton machine, do this:
+
+```
+bundle exec rake db:backup RAILS_ENV=production
+```
