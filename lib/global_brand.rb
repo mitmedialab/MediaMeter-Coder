@@ -33,4 +33,63 @@ module GlobalBrand
     Rails.logger.info "Imported #{article_count} articles"
   end
   
+  def self.update_from_log(log_file)
+    
+    st_find_post = 1
+    st_find_insert = 2
+    
+    Rails.logger.info "------------------------------------------------------------"
+    Rails.logger.info "Updating answer.article_id from log file (#{log_file})"
+
+    f = File.open('tmp/file_article_ids.sql','w')
+
+    answer_count = 0
+    error_count = 0
+    article_id = nil
+    state = st_find_post
+    File.open(log_file, "r").each_line do |line|
+      case state
+      when st_find_post
+        if (line =~ /^Started GET \"\/code\/answer\?id\=/ )
+          url_params = CGI::parse(line.split('?')[1])
+          article_id = url_params['id'].first
+          state = st_find_insert
+        end
+      when 
+        if (line =~ /INSERT INTO `answers`/)
+          insert_parts = line.split(',')
+          date = insert_parts[11].strip!
+          date['\''] = ''
+          date['\''] = ''
+          answers = Answer.where(:created_at=>date)
+          if answers.length == 1
+            answer = answers.first
+            if article_id != nil
+              sql = "UPDATE `answer` SET article_id='#{article_id}' WHERE id=#{answer.id}"
+              f.write(sql+"\n") 
+              answer.update_attribute(:article_id,article_id)
+            else
+              str = "  ERROR: didn't find and article_id"
+              print str+"\n"
+              Rails.logger.info str
+              error_count = error_count + 1                
+            end
+          else
+            str = "  ERROR: can't find answer matching date of #{date} (#{answers.length} found)"
+            print str+"\n"
+            Rails.logger.info str
+            error_count = error_count + 1 
+          end
+          state = st_find_post
+          article_id = nil
+        end
+      end
+    end
+
+    f.close
+    Rails.logger.info "Found and updated #{answer_count} record (#{error_count} errors)"
+    Rails.logger.info "------------------------------------------------------------"
+        
+  end
+  
 end

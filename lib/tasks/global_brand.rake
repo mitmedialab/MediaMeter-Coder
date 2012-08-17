@@ -10,5 +10,9 @@ namespace :brand do
   task :import, [:dir] => [:environment] do |t,args|
     GlobalBrand::import_from_evernote(args.dir)
   end
+
+  task :update_from_log, [:log] => [:environment] do |t,args|
+    GlobalBrand::update_from_log(args.log)
+  end
   
 end
