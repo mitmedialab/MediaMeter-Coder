@@ -4,4 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-UsWorldCoverage::Application.load_tasks
+MediaMeterCodingEngine::Application.load_tasks
