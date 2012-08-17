@@ -63,8 +63,6 @@ class AnswersController < ApplicationController
         :user_id=>user_ids).where(extra_where_clause)      
     end
     
-    print "articles: #{@articles.count}"
-    
     # compute inter-coder agreement info
     @agreement_by_article = Hash.new
     @articles.each do |article|
