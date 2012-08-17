@@ -50,11 +50,6 @@ end
 not_confident = false
 answers.each do |answer|
   username = username_map[answer.user_id] 
-  if answer.answer
-  	image = "green-dot.png"
-  else
-  	image = "red-dot.png"
-  end
   tip = username
   tip = tip + " (" + answer.confidence.to_s + ")" if answer.has_confidence?
   not_confident = true if answer.not_confident?
