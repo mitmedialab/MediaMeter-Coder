@@ -17,7 +17,16 @@
       <th>Info</th>
 <% @selected_questions.each do |q| %>
       <th style="text-align:center;">
-      	<%=q.title%>?
+      	<%=q.title%> 
+      	<br />
+      	(
+      	<% (1..5).each do |answer_num| 
+      			if q.has_answer answer_num 
+      	%>
+      				<span class="answer_<%=answer_num%>"><%=q.answer_text answer_num%></span>
+      	<% 		end %>
+      	<% end %>
+      	)
       </th>      
 <% end %>
     </tr>
