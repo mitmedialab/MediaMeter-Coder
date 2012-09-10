@@ -1,5 +1,12 @@
 
-csv << ["id", "newspaper", "page", "headline","date","content","byline","content_link"] + (@selected_users.collect { |u| u.name })
+columns = ["id", "newspaper", "page", "headline","date","content","byline","content_link","gold_answer"] 
+
+@selected_users.each do |u|
+	columns << u.name
+	columns << u.name + "_confidence"
+end 
+
+csv << columns 
 
 @articles.each do |a|
     # output row to CSV
@@ -11,12 +18,15 @@ csv << ["id", "newspaper", "page", "headline","date","content","byline","content
               a.abstract,
               a.byline,
               a.url_to_scan_local_file,
+              (a.gold_by_type @selected_type).answer.to_s
             ]
     @selected_users.each do |u|
       	answers = (a.answers_from_user_for_type u.id,@selected_type) 
     	if answers.length > 0
 	    	info << answers.first.answer.to_s
+	    	info << answers.first.confidence.to_s
 	    else 
+	    	info << "" 
 	    	info << "" 
 	    end
     end
