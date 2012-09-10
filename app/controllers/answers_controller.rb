@@ -21,14 +21,43 @@ class AnswersController < ApplicationController
     end # is post
   end
   
+  # export a list of a specific set of users answers
+  def export
+    @users = User.all
+    @all_sampletags = Article.sampletag_counts
+    @user_answer_counts = Answer.total_by_user_id
+    
+    @show_results = false
+    if params.has_key? :sampletag
+      @show_results = true
+      # collect the passed params from the user 
+      @selected_sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
+      # load users
+      @selected_users = self.parse_out_selected_users
+      @selected_user_ids = self.parse_out_selected_users.collect {|u| u.id}
+      # load answers
+      @articles = Article.where(:sampletag=>@selected_sampletags)
+    end
+    
+    respond_to do |format|
+      format.html {
+      }
+      format.csv {
+        timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
+        # do some csv config
+        @filename = "raw_answers_" + @selected_sampletags.join("_") + "_" + timestamp + ".csv"
+        @output_encoding = 'UTF-8'
+      }
+    end
+    
+  end
+  
+  
   def export_totals
     
     @users = User.all
-    @user_answer_counts = Hash.new
+    @user_answer_counts = Answer.total_by_user_id
     @all_answer_types = Gold.types 
-    @users.each do |user|
-      @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
-    end
 
     @show_results = false
     @sampletag = ""
@@ -87,11 +116,8 @@ class AnswersController < ApplicationController
   # pick users and a sample tag to see the aggregated answers for
   def pick
     @users = User.all
-    @user_answer_counts = Hash.new
     @all_answer_types = Gold.types 
-    @users.each do |user|
-      @user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
-    end
+    @user_answer_counts = Answer.total_by_user_id
     @all_sampletags = Article.sampletag_counts
   end  
   

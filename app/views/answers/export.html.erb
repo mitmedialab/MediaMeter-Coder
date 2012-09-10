@@ -1,0 +1,40 @@
+<h1>Export Raw Answers</h1>
+
+<% if @show_results %>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Title</th>
+	  <% @selected_users.each do |user| %>
+	  <th><%= user.name.capitalize %></th>
+	  <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @articles.each do |a| %>
+      <tr>
+        <td><%= a.headline %></td>
+      <% @selected_users.each do |u| %>
+      	<td><%= (a.answers_from_user u.id).first.answer.to_s %></td>
+      <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% else %>
+
+	<%= form_tag("/answers/export.csv", :method => "post", :class=>'form-vertical') do %>
+	
+	<%= render :partial=>'articles/pick_sampletags_field' %>
+
+	<%= render :partial=>'answers/pick_users_field' %>
+	
+	<div class="form-actions">
+	  <%= submit_tag("Download CSV of Answers",:class=>"btn btn-primary") %>
+	</div>
+	  
+	<% end %>
+
+<% end %>

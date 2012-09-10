@@ -166,6 +166,12 @@ class Article < ActiveRecord::Base
     end
   end
 
+  def answers_from_user uid
+    answers.select do |answer|
+      answer.user_id == uid
+    end
+  end
+
   def missing_gold_by_type(type)
     gold_by_type(type) == nil
   end

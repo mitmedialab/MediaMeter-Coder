@@ -1,0 +1,19 @@
+
+csv << ["id", "newspaper", "page", "headline","date","content","byline","content_link"] + (@selected_users.collect { |u| u.name })
+
+@articles.each do |a|
+    # output row to CSV
+    info = [  a.id, 
+              a.source, 
+              a.page, 
+              a.headline, 
+              (a.pub_date.year.to_s+"/"+a.pub_date.month.to_s+"/"+a.pub_date.day.to_s),
+              a.abstract,
+              a.byline,
+              a.url_to_scan_local_file,
+            ]
+    @selected_users.each do |u|
+    	info << (a.answers_from_user u.id).first.answer.to_s
+    end
+    csv << info
+end
