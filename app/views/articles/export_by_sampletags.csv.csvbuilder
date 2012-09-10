@@ -1,25 +1,35 @@
 
-csv << ["id", "newspaper", "page", "headline","date","content","byline","content_link", "question_title", "question_id", "_golden", "answer_id", "answer_confidence", @question_text+"_gold", @question_text+"_gold_reason"]
+csv << ["id", "sampletag", "newspaper", "page", "headline","date","content","byline","content_link", "question_title", "question_id", "_golden", "answer_id", "answer_confidence", @question_text+"_gold", @question_text+"_gold_reason"]
 
 @articles.each do |a|
     # figure out gold answer
     is_gold = a.has_gold_for_question(@question.id)
     gold_answer = nil
     gold_reason = nil
+
     if is_gold
-	    gold_answer = a.gold_for_question(@question.id).yes? ? "Yes": "No"
-	    gold_reason = a.gold_for_question(@question.id).reason
-	end 
-	answer_id = nil
-	answer_confidence = nil
-	if (a.answers.length > 0) and (a.answers_to_question(@question.id).length > 0) 
-		answer_id = a.answers_to_question(@question.id).first.id
-		answer_confidence = a.answers_to_question(@question.id).first.confidence
-	end
-	pub_date = ""
-	pub_date = (a.pub_date.year.to_s+"/"+a.pub_date.month.to_s+"/"+a.pub_date.day.to_s) if a.pub_date
+      gold_db_answer = a.gold_for_question(@question.id).answer
+      if(gold_db_answer.nil?)
+        gold_answer = ""
+      else
+        gold_answer = @question.answer_text gold_db_answer
+      end
+      gold_reason = a.gold_for_question(@question.id).reason
+    end 
+
+    answer_id = nil
+    answer_confidence = nil
+
+    if (a.answers.length > 0) and (a.answers_to_question(@question.id).length > 0) 
+      answer_id = a.answers_to_question(@question.id).first.id
+      answer_confidence = a.answers_to_question(@question.id).first.confidence
+    end
+
+    pub_date = ""
+    pub_date = (a.pub_date.year.to_s+"/"+a.pub_date.month.to_s+"/"+a.pub_date.day.to_s) if a.pub_date
     # output row to CSV
     csv << [  a.id, 
+              a.sampletag,
               a.source, 
               a.page, 
               a.headline, 
