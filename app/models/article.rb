@@ -166,9 +166,9 @@ class Article < ActiveRecord::Base
     end
   end
 
-  def answers_from_user uid
+  def answers_from_user_for_type(uid, type)
     answers.select do |answer|
-      answer.user_id == uid
+      answer.user_id == uid && answer.type == Answer.classname_for_type(type)
     end
   end
 

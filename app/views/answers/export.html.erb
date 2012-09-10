@@ -2,6 +2,7 @@
 
 <% if @show_results %>
 
+<h2><%=@selected_type%></h2>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -14,9 +15,11 @@
   <tbody>
     <% @articles.each do |a| %>
       <tr>
-        <td><%= a.headline %></td>
-      <% @selected_users.each do |u| %>
-      	<td><%= (a.answers_from_user u.id).first.answer.to_s %></td>
+        <td><%= link_to a.headline, article_path(a) %></td>
+      <% @selected_users.each do |u| 
+      		answers = (a.answers_from_user_for_type u.id,@selected_type) 
+      %>
+      	<td><%= answers.first.answer.to_s if answers.length > 0%></td>
       <% end %>
       </tr>
     <% end %>
@@ -28,6 +31,8 @@
 	<%= form_tag("/answers/export.csv", :method => "post", :class=>'form-vertical') do %>
 	
 	<%= render :partial=>'articles/pick_sampletags_field' %>
+
+	<%= render :partial=>'articles/pick_question_type_field' %>
 
 	<%= render :partial=>'answers/pick_users_field' %>
 	

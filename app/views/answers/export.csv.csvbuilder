@@ -13,7 +13,12 @@ csv << ["id", "newspaper", "page", "headline","date","content","byline","content
               a.url_to_scan_local_file,
             ]
     @selected_users.each do |u|
-    	info << (a.answers_from_user u.id).first.answer.to_s
+      	answers = (a.answers_from_user_for_type u.id,@selected_type) 
+    	if answers.length > 0
+	    	info << answers.first.answer.to_s
+	    else 
+	    	info << "" 
+	    end
     end
     csv << info
 end

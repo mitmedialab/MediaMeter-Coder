@@ -26,10 +26,12 @@ class AnswersController < ApplicationController
     @users = User.all
     @all_sampletags = Article.sampletag_counts
     @user_answer_counts = Answer.total_by_user_id
+    @all_answer_types = Answer.types 
     
     @show_results = false
     if params.has_key? :sampletag
       @show_results = true
+      @selected_type = params[:answer][:type]
       # collect the passed params from the user 
       @selected_sampletags = (params[:sampletag].keep_if {|k,v| v.to_i==1}).keys
       # load users
@@ -45,7 +47,7 @@ class AnswersController < ApplicationController
       format.csv {
         timestamp = Time.now.strftime('%Y-%m-%d_%H:%M:%S')
         # do some csv config
-        @filename = "raw_answers_" + @selected_sampletags.join("_") + "_" + timestamp + ".csv"
+        @filename = "raw_" + @selected_type + "_answers_" + @selected_sampletags.join("_") + "_" + timestamp + ".csv"
         @output_encoding = 'UTF-8'
       }
     end
