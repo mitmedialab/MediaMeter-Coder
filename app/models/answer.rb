@@ -115,4 +115,12 @@ class Answer < ActiveRecord::Base
     return parse_worked, results_string
   end
 
+  def self.total_by_user_id 
+    user_answer_counts = Hash.new
+    User.all.each do |user|
+      user_answer_counts[user.id] = Answer.where(:user_id=>user.id).count
+    end
+    user_answer_counts
+  end
+  
 end

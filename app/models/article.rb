@@ -131,7 +131,13 @@ class Article < ActiveRecord::Base
       answer.question_id==question_id
     end
   end
-
+  
+  def answers_to_question_from_user(question_id,user_id)
+    answers.select do |answer|
+      answer.question_id==question_id && answer.user_id == user_id
+    end
+  end
+  
   def missing_gold_for_question(question_id)
     gold_for_question(question_id) == nil
   end
