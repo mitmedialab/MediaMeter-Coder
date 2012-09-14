@@ -3,3 +3,5 @@
 MediaMeterCodingEngine::Application.config.application_name = "MediaMeter Coding Engine"
 
 MediaMeterCodingEngine::Application.config.max_answers_per_article = nil
+
+MediaMeterCodingEngine::Application.config.code_articles_with_gold = true

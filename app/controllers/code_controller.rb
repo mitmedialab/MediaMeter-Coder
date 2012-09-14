@@ -9,11 +9,12 @@ class CodeController < ApplicationController
   
   def answer 
     max_answers_per_article = MediaMeterCodingEngine::Application.config.max_answers_per_article
+    include_articles_with_gold = MediaMeterCodingEngine::Application.config.code_articles_with_gold
     @article = nil
 
     @question = Question.find(params[:question_id])
     if(params[:answer].nil? or params[:id].nil?)
-      @article = @user.get_next_unanswered_article(@question.id,max_answers_per_article)
+      @article = @user.get_next_unanswered_article(@question.id,max_answers_per_article,include_articles_with_gold)
     else
       answer = params[:answer]
 
@@ -26,7 +27,7 @@ class CodeController < ApplicationController
          :answer=>answer
       })
       @answer.save
-      @article = @user.get_next_unanswered_article(@question.id,max_answers_per_article)
+      @article = @user.get_next_unanswered_article(@question.id,max_answers_per_article,include_articles_with_gold)
     end
 
     render :partial => "answer"
