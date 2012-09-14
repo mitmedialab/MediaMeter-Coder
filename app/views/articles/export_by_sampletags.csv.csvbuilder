@@ -3,7 +3,7 @@ csv << ["id", "sampletag", "newspaper", "page", "headline","date","content","byl
 
 @articles.each do |a|
     # figure out gold answer
-    is_gold = a.has_gold_for_question(@question.id)
+    is_gold = a.has_gold_for_question? @question.id
     gold_answer = nil
     gold_reason = nil
 

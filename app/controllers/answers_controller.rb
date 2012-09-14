@@ -115,7 +115,7 @@ class AnswersController < ApplicationController
           end
           # create or update the gold with the new aggregate answer
           this_gold = nil
-          if article.missing_gold_for_question(q.id)
+          if article.missing_gold_for_question? q.id
             # create a new gold
             this_gold = Gold.new( {:article_id=>article.id, :answer=>computed_answer, :question_id=>q.id})
           else 

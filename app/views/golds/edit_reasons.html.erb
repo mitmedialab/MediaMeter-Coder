@@ -13,7 +13,7 @@
     	gold_answer_text = ""
     	answer_css = ""
     	gold = nil
-    	gold = article.gold_for_question(@question.id) if article.has_gold_for_question(@question.id) 
+    	gold = article.gold_for_question(@question.id) if article.has_gold_for_question? @question.id 
     	if gold
 			gold_answer_text = gold.yes?.to_s
 			answer_css = "uwc-gold-answer-"+gold_answer_text

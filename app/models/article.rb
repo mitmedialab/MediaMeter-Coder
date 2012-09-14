@@ -138,12 +138,12 @@ class Article < ActiveRecord::Base
     end
   end
   
-  def missing_gold_for_question(question_id)
+  def missing_gold_for_question?(question_id)
     gold_for_question(question_id) == nil
   end
   
-  def has_gold_for_question(question_id)
-    !missing_gold_for_question(question_id)
+  def has_gold_for_question?(question_id)
+    !missing_gold_for_question?(question_id)
   end
 
   # assumes you've loaded the article with the linked has_many :golds
