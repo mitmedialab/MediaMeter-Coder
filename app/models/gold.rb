@@ -13,14 +13,6 @@ class Gold < ActiveRecord::Base
     answer!=nil
   end
 
-  def yes?
-    answer==true
-  end
-
-  def no?
-    answer==false
-  end
-  
   def has_reason?
     (reason!=nil) && (reason.length > 0)
   end
