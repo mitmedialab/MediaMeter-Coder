@@ -33,6 +33,8 @@ module GlobalBrand
     Rails.logger.info "Imported #{article_count} articles"
   end
   
+  # script to recover from a catastrophic bug that set the article_id of all answers to NULL!
+  # :-(
   def self.update_from_log(log_file)
     
     st_find_post = 1
@@ -65,9 +67,9 @@ module GlobalBrand
           if answers.length == 1
             answer = answers.first
             if article_id != nil
-              sql = "UPDATE `answer` SET article_id='#{article_id}' WHERE id=#{answer.id}"
+              sql = "UPDATE `answers` SET article_id='#{article_id}' WHERE id=#{answer.id};"
               f.write(sql+"\n") 
-              answer.update_attribute(:article_id,article_id)
+              #answer.update_attribute(:article_id,article_id)
             else
               str = "  ERROR: didn't find and article_id"
               print str+"\n"
