@@ -8,6 +8,9 @@
       <th>Headline</th>
       <th>Byline</th>
       <th>Sampletag</th>
+      <% @questions.each do |q| %>
+      	<th>Gold: <%=q.title%></th>
+      <% end %>
       <th>Actions</th>
     </tr>
   </thead>
@@ -20,6 +23,16 @@
         <td><%= link_to article.headline, article_path(article) %></td>
         <td><%= article.byline %></td>
         <td><%= link_to article.sampletag, articles_path+"/by_sampletag/"+article.sampletag if !article.sampletag.nil? %></td>
+	      <% @questions.each do |q| 
+	      		gold_text = ""
+	      		css_class = ""
+	      		if article.has_gold_for_question? q.id
+	      			answer_id = article.gold_for_question(q.id).answer
+	      			gold_text = q.answer_text(answer_id)
+	      			css_class = "answer_"+answer_id.to_s
+	      		end 
+	      %><td><span class="<%=css_class%>"><%=gold_text%></span></td>
+	      <% end %>
         <td>
           <%= link_to 'Edit', edit_article_path(article), :class => 'btn btn-mini' %>
           <%= link_to 'Destroy', article_path(article), :method => :delete, :confirm => 'Are you sure?', :class => 'btn btn-mini btn-danger' %>
