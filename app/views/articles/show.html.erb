@@ -90,7 +90,7 @@
 		
 		<p>
 		  <b>Sampletag</b><br>
-		  <%= @article.sampletag %>
+        <td><%= link_to @article.sampletag, articles_path+"/by_sampletag/"+@article.sampletag if !@article.sampletag.nil? %></td>
 		</p>
 		
 		<div class="form-actions">
@@ -110,7 +110,7 @@
 				<p>
 				<b><%= gold.question.title %></b>:
 				<br />
-				<%= gold.question.answer_text gold.answer %>
+				<span class="answer_<%=gold.answer.to_s%>"><%= gold.question.answer_text gold.answer %></span>
 				<small><%= link_to "edit", edit_gold_path(gold)%></small> 
 				<% if gold.has_reason? %>
 					<br />
@@ -126,7 +126,7 @@
 				<p>
 				<b><%= answer.question.title %></b>:
 				<br/>
-				<%= answer.question.answer_text answer.answer %>
+				<span class="answer_<%=answer.answer.to_s%>"><%= answer.question.answer_text answer.answer %><span>
 				<small><%= link_to answer.user.username, edit_user_path(answer.user)%></small> 
 				<% if answer.has_confidence? %>
 					<br />
