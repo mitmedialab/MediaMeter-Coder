@@ -15,9 +15,10 @@ group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
   gem 'uglifier'
-  gem 'less'
 end
 
+gem 'therubyracer'
+gem "less-rails"
 gem 'jquery-rails'
 
 # To use ActiveModel has_secure_password
